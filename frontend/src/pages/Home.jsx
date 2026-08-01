@@ -393,14 +393,13 @@ export default function Home() {
             </section>
 
             {/* ══════════════════════════════════
-                STATS SECTION
+                STATS SECTION — Light & Clean
             ══════════════════════════════════ */}
             <section className="stats-section" ref={statsRef}>
-                <div className="stats-overlay" />
                 <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-                    <div className="section-title" style={{ marginBottom: '50px' }}>
-                        <p className="tagline" style={{ color: '#FFD700' }}>Real Impact</p>
-                        <h2 style={{ color: 'white' }}>Field Action Numbers</h2>
+                    <div className="section-title" style={{ marginBottom: '40px' }}>
+                        <p className="tagline">Real Impact</p>
+                        <h2>Field Action Numbers</h2>
                     </div>
                     <div className="stats-grid">
                         {stats.map((stat, i) => (

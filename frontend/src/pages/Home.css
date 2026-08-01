@@ -538,68 +538,51 @@
 /* ─── STATS ─── */
 .stats-section {
   position: relative;
-  background: var(--gradient-dark);
-  padding: 80px 0;
-  overflow: hidden;
-}
-
-.stats-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='40' cy='40' r='40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-
-.stats-overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--gradient-dark);
-  opacity: 0.95;
+  background: #FFF8F5;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 70px 0;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 28px;
+  gap: 24px;
 }
 
 .stat-card {
   text-align: center;
-  padding: 36px 20px;
-  background: rgba(255, 255, 255, 0.06);
+  padding: 32px 20px;
+  background: white;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   transition: var(--transition);
 }
 
 .stat-card:hover {
-  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-6px);
-  border-color: rgba(255, 107, 53, 0.4);
+  border-color: var(--primary);
+  box-shadow: 0 10px 24px rgba(232, 90, 28, 0.12);
 }
 
 .stat-icon {
-  font-size: 34px;
-  color: var(--primary-light);
-  margin-bottom: 14px;
+  font-size: 32px;
+  color: var(--primary);
+  margin-bottom: 12px;
 }
 
 .stat-number {
-  font-size: clamp(34px, 5vw, 50px);
+  font-size: clamp(32px, 4vw, 46px);
   font-weight: 800;
-  color: white;
-  margin-bottom: 8px;
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-dark);
+  margin-bottom: 6px;
 }
 
 .stat-label {
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--text-gray);
+  font-weight: 600;
 }
 
 /* ─── LATEST ACTIVITIES ─── */

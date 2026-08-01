@@ -1,10 +1,9 @@
-/* ═══ TOP BAR — HUMANIZED NGO TRUST HEADER ═══ */
+/* ═══ TOP BAR — SIMPLE & SWEET NGO HEADER ═══ */
 .top-bar {
-    background: #101828;
-    color: rgba(255, 255, 255, 0.88);
+    background: #0F172A;
+    color: rgba(255, 255, 255, 0.9);
     font-size: 12.5px;
     font-weight: 500;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     z-index: 1001;
 }
@@ -13,7 +12,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 24px;
+    padding: 7px 24px;
     gap: 16px;
 }
 
@@ -28,7 +27,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.88);
     text-decoration: none;
     transition: var(--transition);
 }
@@ -45,83 +44,74 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    background: rgba(255, 107, 53, 0.15);
-    color: #FF8C00;
+    background: rgba(232, 90, 28, 0.18);
+    color: #FF8A50;
     padding: 3px 10px;
     border-radius: 50px;
     font-size: 11.5px;
     font-weight: 700;
-    border: 1px solid rgba(255, 107, 53, 0.3);
 }
 
 .tax-badge {
-    background: rgba(39, 174, 96, 0.15);
-    color: #2ECC71;
-    border-color: rgba(39, 174, 96, 0.3);
+    background: rgba(22, 163, 74, 0.18);
+    color: #4ADE80;
 }
 
-/* ═══ CLEAN HEADER CSS ═══ */
+/* ═══ CLEAN & SWEET NAVBAR ═══ */
 .header {
     position: fixed;
-    top: 38px;
+    top: 35px;
     left: 0;
     right: 0;
     z-index: 1000;
-    background: transparent;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
     transition: var(--transition);
 }
 
 .header.scrolled {
     top: 0;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 24px;
+    padding: 12px 24px;
     gap: 20px;
     transition: var(--transition);
 }
 
 .header.scrolled .header-inner {
-    padding: 10px 24px;
+    padding: 8px 24px;
 }
 
-/* Logo - Bigger design */
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     text-decoration: none;
     flex-shrink: 0;
 }
 
 .logo-img-wrap {
     background-color: #ffffff;
-    padding: 3px;
-    border-radius: 10px;
+    padding: 2px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: var(--transition);
-    height: 72px;
-    width: 72px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    height: 56px;
+    width: 56px;
 }
 
 .header.scrolled .logo-img-wrap {
-    height: 54px;
-    width: 54px;
-    padding: 2px;
-    border-radius: 8px;
+    height: 48px;
+    width: 48px;
 }
 
 .logo-img {
@@ -134,77 +124,48 @@
 .nav-desktop {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .nav-link {
-    padding: 9px 16px;
+    padding: 8px 15px;
     border-radius: 50px;
     font-size: 14.5px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--text-dark);
     transition: var(--transition);
     white-space: nowrap;
 }
 
 .nav-link:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.15);
+    color: var(--primary);
+    background: #FFF8F5;
 }
 
 .nav-link.active {
-    color: white;
-    background: var(--primary);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    color: white !important;
+    background: var(--primary) !important;
+    box-shadow: 0 4px 12px rgba(232, 90, 28, 0.25);
 }
 
-.header.scrolled .nav-link {
-    color: var(--text-dark);
-}
-
-.header.scrolled .nav-link:hover {
-    color: var(--primary);
-    background: rgba(255, 107, 53, 0.08);
-}
-
-.header.scrolled .nav-link.active {
-    color: white;
-    background: var(--primary);
-}
-
-/* Donate Buttons */
+/* Donate Button */
 .donate-btn {
-    padding: 11px 24px;
+    padding: 10px 22px;
     font-size: 14px;
     white-space: nowrap;
     flex-shrink: 0;
 }
 
-/* Mobile toggle */
+/* Mobile Toggle */
 .menu-toggle {
     display: none;
     background: none;
     border: none;
-    font-size: 24px;
-    color: #ffffff;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
-    transition: var(--transition);
-}
-
-.header.scrolled .menu-toggle {
+    font-size: 22px;
     color: var(--text-dark);
-}
-
-.menu-toggle:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-}
-
-.header.scrolled .menu-toggle:hover {
-    background: var(--bg-light);
-    color: var(--primary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
 }
 
 /* Mobile Nav */
@@ -224,12 +185,11 @@
 }
 
 .mobile-nav-link {
-    padding: 14px 0;
-    font-size: 16px;
+    padding: 12px 0;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text-dark);
     border-bottom: 1px solid var(--border);
-    transition: var(--transition);
 }
 
 .mobile-nav-link:hover,
@@ -238,7 +198,7 @@
 }
 
 .mobile-donate-btn {
-    margin-top: 16px;
+    margin-top: 14px;
     justify-content: center;
 }
 
