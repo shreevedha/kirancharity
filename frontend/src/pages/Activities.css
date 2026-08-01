@@ -1,0 +1,120 @@
+/* Activities Page */
+.activities-full-list {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.activity-item {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 50px;
+    align-items: center;
+    padding: 40px;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.activity-item:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.activity-item.reverse {
+    grid-template-columns: 1fr 280px;
+}
+
+.activity-item.reverse .activity-item-visual {
+    order: 2;
+}
+
+.activity-item-visual {
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.act-icon-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+}
+
+.act-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.act-tag {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.act-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-gray);
+}
+
+.activity-item-content h2 {
+    font-size: 26px;
+    color: var(--text-dark);
+}
+
+.act-highlights {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.act-highlights li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-gray);
+}
+
+.hl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+
+    .activity-item,
+    .activity-item.reverse {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-item.reverse .activity-item-visual {
+        order: 0;
+    }
+
+    .act-highlights {
+        grid-template-columns: 1fr;
+    }
+}

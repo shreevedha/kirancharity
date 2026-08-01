@@ -1,0 +1,36 @@
+/* App-level styles - design tokens are in index.css */
+main {
+  min-height: 100vh;
+}
+
+/* Page banner - shared banner circles */
+.banner-circles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.banner-circles::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 300px;
+  height: 300px;
+  border-radius: 24px;
+  background: rgba(255, 107, 53, 0.1);
+  transform: rotate(15deg);
+}
+
+.banner-circles::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  background: rgba(255, 215, 0, 0.06);
+  transform: rotate(-10deg);
+}

@@ -1,0 +1,343 @@
+/* Gallery Page */
+.gallery-filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.gallery-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 50px;
+    border: 2px solid var(--border);
+    background: white;
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.gallery-filter-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.gallery-filter-btn.active {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.35);
+}
+
+.gallery-section-title {
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gallery-section-title svg {
+    color: var(--primary);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.gallery-item {
+    cursor: pointer;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: white;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.gallery-item:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-thumb {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+}
+
+.gallery-thumb-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-emoji {
+    font-size: 52px;
+    opacity: 0.6;
+}
+
+.gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.gallery-expand-btn {
+    background: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--primary);
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover .gallery-expand-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.gallery-item-label {
+    padding: 14px;
+}
+
+.gallery-cat-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    background: var(--bg-light);
+    color: var(--text-gray);
+}
+
+.gallery-cat-medical {
+    background: #fde8e7;
+    color: #C0392B;
+}
+
+.gallery-cat-events {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.gallery-cat-food {
+    background: #e8f8ee;
+    color: #27AE60;
+}
+
+.gallery-cat-education {
+    background: #e6f4ea;
+    color: var(--primary);
+}
+
+.gallery-cat-blood {
+    background: #fde8e8;
+    color: #922B21;
+}
+
+.gallery-item-label p {
+    font-size: 13px;
+    color: var(--text-dark);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Videos */
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.video-card {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.video-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.video-iframe-wrap {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-iframe-wrap iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.video-info {
+    padding: 16px;
+    background: white;
+}
+
+.video-info h4 {
+    font-size: 15px;
+    color: var(--text-dark);
+}
+
+/* Lightbox */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lightbox-close:hover {
+    background: var(--primary);
+}
+
+.lightbox-content {
+    max-width: 700px;
+    width: 90%;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    animation: fadeInUp 0.3s ease;
+}
+
+.lightbox-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-emoji {
+    font-size: 100px;
+    opacity: 0.6;
+}
+
+.lightbox-caption {
+    background: white;
+    padding: 20px 24px;
+}
+
+.lightbox-caption h3 {
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.lightbox-caption p {
+    font-size: 14px;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Real Image styling in grid */
+.gallery-img-tag {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: var(--transition);
+}
+
+.gallery-item:hover .gallery-img-tag {
+    transform: scale(1.05);
+}
+
+/* Lightbox Wrapper & popup image */
+.lightbox-img-wrap {
+    width: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-real-img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    display: block;
+}

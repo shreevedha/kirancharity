@@ -1,0 +1,13 @@
+{
+  "name": "kiran-charitable-trust-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kiran Charitable Trust Web Application & API",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "install-frontend": "cd frontend && npm install",
+    "install-backend": "cd backend && npm install",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev"
+  }
+}
