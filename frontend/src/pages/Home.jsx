@@ -251,12 +251,6 @@ export default function Home() {
                         />
                     ))}
                 </div>
-
-                {/* Scroll hint */}
-                <div className="hero-scroll-hint">
-                    <div className="scroll-mouse"><div className="scroll-wheel" /></div>
-                    <span>Scroll Down</span>
-                </div>
             </section>
 
             {/* ══════════════════════════════════
