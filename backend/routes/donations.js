@@ -16,12 +16,13 @@ router.post('/', async (req, res) => {
         }
 
         const isCash = donationType !== 'item';
+        const numAmount = isCash ? Number(amount) || 0 : undefined;
 
         if (isCash) {
             if (!amount || !purpose || !paymentMethod) {
                 return res.status(400).json({ success: false, message: 'Amount, purpose and payment method are required for cash donation' });
             }
-            if (amount < 1) {
+            if (numAmount < 1) {
                 return res.status(400).json({ success: false, message: 'Donation amount must be at least ₹1' });
             }
         } else {
@@ -31,20 +32,19 @@ router.post('/', async (req, res) => {
         }
 
         const donation = new Donation({
-            donationType: donationType || 'cash',
+            donationType: isCash ? 'cash' : 'item',
             fullName,
             mobile,
             email,
             address,
-            amount: isCash ? parseFloat(amount) : undefined,
-            purpose: isCash ? purpose : undefined,
-            paymentMethod: isCash ? paymentMethod : undefined,
-            itemCategory: !isCash ? itemCategory : undefined,
-            itemName: !isCash ? itemName : undefined,
-            itemQuantity: !isCash ? itemQuantity : undefined,
-            deliveryMethod: !isCash ? deliveryMethod : undefined,
-            status: isCash ? 'completed' : 'pending',
-            transactionId: isCash ? 'TXN-' + Date.now() : undefined
+            amount: isCash ? numAmount : undefined,
+            purpose: isCash ? String(purpose) : undefined,
+            paymentMethod: isCash ? String(paymentMethod) : undefined,
+            itemCategory: !isCash ? String(itemCategory) : undefined,
+            itemName: !isCash ? String(itemName) : undefined,
+            itemQuantity: !isCash ? String(itemQuantity) : undefined,
+            deliveryMethod: !isCash ? String(deliveryMethod) : undefined,
+            status: isCash ? 'completed' : 'pending'
         });
 
         await donation.save();
@@ -57,8 +57,8 @@ router.post('/', async (req, res) => {
             data: donation
         });
     } catch (error) {
-        console.error('Donation error:', error);
-        res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+        console.error('Donation error:', error.message || error);
+        res.status(500).json({ success: false, message: error.message || 'Server error. Please try again.' });
     }
 });
 
@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const donations = await Donation.find().sort({ createdAt: -1 });
-        const totalAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+        const totalAmount = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
         res.json({ success: true, data: donations, totalAmount, count: donations.length });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error' });
