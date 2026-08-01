@@ -52,8 +52,12 @@ const connectDB = async () => {
 
 // Database auto-connection middleware for serverless invocations
 app.use(async (req, res, next) => {
-    if (mongoose.connection.readyState < 1) {
-        await connectDB();
+    try {
+        if (mongoose.connection.readyState < 1) {
+            await connectDB();
+        }
+    } catch (err) {
+        console.error('⚠️ DB connection middleware notice:', err.message);
     }
     next();
 });
