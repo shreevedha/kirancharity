@@ -5,11 +5,12 @@
 /* ─── HERO ─── */
 .hero-section {
   position: relative;
-  min-height: 540px;
-  max-height: 820px;
-  height: 85vh;
+  min-height: 580px;
+  max-height: 850px;
+  height: 88vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
@@ -37,8 +38,9 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 900px;
-  padding: 0 20px;
+  max-width: 960px;
+  padding: 60px 24px 30px;
+  margin: 0 auto;
   animation: fadeInUp 0.9s ease forwards;
 }
 
