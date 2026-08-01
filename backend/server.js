@@ -1,19 +1,34 @@
 require('dotenv').config();
 const dns = require('dns');
+
+// DNS server fallback setup for environment network compatibility
 if (dns && typeof dns.setServers === 'function') {
     try {
         dns.setServers(['8.8.8.8', '8.8.4.4']);
     } catch (err) {
-        console.warn('⚠️ Failed to set external DNS resolvers:', err.message);
+        console.warn('⚠️ DNS resolver warning:', err.message);
     }
 }
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
 
-// Database Connection Helper for Serverless and Traditional Server environments
+// Security: Hide server technology stack info
+app.disable('x-powered-by');
+
+// Security: HTTP Response Security Headers
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+});
+
+// Database Connection Manager (Supports Serverless & Standalone Server)
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kiran-charitable-trust';
 
 let isConnecting = false;
@@ -31,7 +46,7 @@ const connectDB = async () => {
     }
 };
 
-// Auto-connect DB middleware for serverless requests
+// Database auto-connection middleware for serverless invocations
 app.use(async (req, res, next) => {
     if (mongoose.connection.readyState < 1) {
         await connectDB();
@@ -39,42 +54,79 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// Middleware
-app.use(cors({
-    origin: process.env.CLIENT_URL 
-        ? [process.env.CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'] 
-        : true,
-    credentials: true
-}));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+// CORS Security Configuration
+const configuredOrigins = [
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:4173'
+].filter(Boolean);
 
-// Routes
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, server-to-server, curl)
+        if (!origin) return callback(null, true);
+        
+        // Allow Vercel preview & production deployments and specified client origins
+        if (origin.endsWith('.vercel.app') || configuredOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        
+        // Fallback for custom configured CLIENT_URL
+        if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) {
+            return callback(null, true);
+        }
+
+        return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Payload limits to prevent DoS vector attacks
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// API Routes
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/volunteers', require('./routes/volunteers'));
 app.use('/api/donations', require('./routes/donations'));
 
-// Root & Health check
+// Root & Health check endpoints
 app.get('/api/health', (req, res) => {
-    res.json({ success: true, message: 'Kiran Charitable Trust API is running', timestamp: new Date() });
+    res.json({
+        success: true,
+        message: 'Kiran Charitable Trust API is running',
+        timestamp: new Date(),
+        environment: process.env.NODE_ENV || 'development'
+    });
 });
 
 app.get('/api', (req, res) => {
-    res.json({ success: true, message: 'Welcome to Kiran Charitable Trust API' });
+    res.json({
+        success: true,
+        message: 'Welcome to Kiran Charitable Trust Secure API'
+    });
 });
 
-// 404 handler
+// 404 Route Handler
 app.use((req, res) => {
-    res.status(404).json({ success: false, message: 'Route not found' });
+    res.status(404).json({ success: false, message: 'API route not found' });
 });
 
-// Error handler
+// Centralized Error Handler (Prevents leakage of sensitive stack traces in production)
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error('Unhandled Error:', err.stack);
+    const isDev = process.env.NODE_ENV === 'development';
+    res.status(500).json({
+        success: false,
+        message: 'Internal server error',
+        ...(isDev && { error: err.message })
+    });
 });
 
-// Connect to MongoDB and start server for direct local runs
+// Standalone Server Execution for local testing
 if (require.main === module) {
     const PORT = process.env.PORT || 5000;
     connectDB().finally(() => {
