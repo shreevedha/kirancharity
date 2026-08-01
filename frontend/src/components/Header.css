@@ -57,7 +57,7 @@
     color: #86EFAC;
 }
 
-/* ═══ CLEAN & SWEET NAVBAR ═══ */
+/* ═══ CLEAN & SWEET NAVBAR — Bigger Prominent Logo ═══ */
 .header {
     position: fixed;
     top: 35px;
@@ -88,7 +88,7 @@
     padding: 8px 24px;
 }
 
-/* Logo */
+/* Logo — Bigger & Prominent */
 .logo {
     display: flex;
     align-items: center;
@@ -99,19 +99,22 @@
 
 .logo-img-wrap {
     background-color: #ffffff;
-    padding: 2px;
-    border-radius: 8px;
+    padding: 3px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    height: 54px;
-    width: 54px;
+    height: 76px;
+    width: 76px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: var(--transition);
 }
 
 .header.scrolled .logo-img-wrap {
-    height: 46px;
-    width: 46px;
+    height: 58px;
+    width: 58px;
 }
 
 .logo-img {
@@ -161,7 +164,7 @@
     display: none;
     background: none;
     border: none;
-    font-size: 22px;
+    font-size: 24px;
     color: var(--text-dark);
     cursor: pointer;
     padding: 6px;
@@ -231,5 +234,9 @@
     }
     .top-bar {
         display: none;
+    }
+    .logo-img-wrap {
+        height: 60px;
+        width: 60px;
     }
 }

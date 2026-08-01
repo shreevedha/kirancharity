@@ -354,20 +354,21 @@
 }
 
 .leader-img-wrap {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
+    width: 100%;
+    height: 260px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
     margin-bottom: 20px;
-    border: 4px solid var(--primary-light);
+    border: 2px solid var(--border);
     box-shadow: var(--shadow);
+    background: #F1F5F9;
 }
 
 .leader-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: top center;
 }
 
 .leader-card h3 {
