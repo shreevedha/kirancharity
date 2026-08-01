@@ -161,7 +161,6 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 30% 40%, rgba(255, 107, 53, 0.2), transparent 60%);
 }
 
 .map-inner {

@@ -18,14 +18,14 @@ import galleryHero1 from '../assets/hero1.png'
 import galleryHero3 from '../assets/hero3.png'
 import './Home.css'
 
-/* ─── Humanized Hero Slides ─── */
+/* ─── Hero Slides — Clean Solid Overlay, No Gradients ─── */
 const heroSlides = [
     {
         id: 1,
         img: slide1,
-        overlay: 'linear-gradient(120deg, rgba(15, 23, 42, 0.82) 0%, rgba(232, 90, 28, 0.45) 100%)',
+        overlay: 'rgba(15, 23, 42, 0.75)',
         icon: <FaGraduationCap />,
-        accentColor: '#FFD700',
+        accentColor: '#F59E0B',
         tagline: 'DIRECT FIELD ACTION IN ANDHRA PRADESH',
         heading: 'Empowering Children Through Education',
         subtext: 'Every child deserves books, uniform, and a safe learning environment. We provide direct educational support to rural students in Vijayawada.',
@@ -34,9 +34,9 @@ const heroSlides = [
     {
         id: 2,
         img: slide2,
-        overlay: 'linear-gradient(120deg, rgba(15, 28, 15, 0.82) 0%, rgba(39, 174, 96, 0.45) 100%)',
+        overlay: 'rgba(15, 23, 42, 0.75)',
         icon: <FaUtensils />,
-        accentColor: '#4ade80',
+        accentColor: '#4ADE80',
         tagline: 'NO ONE SLEEPS HUNGRY',
         heading: 'Daily Fresh Meal & Ration Drives',
         subtext: 'Serving fresh cooked meals and dry food kits to daily-wage workers, homeless elders, and struggling families across Vijayawada.',
@@ -45,9 +45,9 @@ const heroSlides = [
     {
         id: 3,
         img: slide3,
-        overlay: 'linear-gradient(120deg, rgba(15, 23, 42, 0.82) 0%, rgba(52, 152, 219, 0.45) 100%)',
+        overlay: 'rgba(15, 23, 42, 0.75)',
         icon: <FaStethoscope />,
-        accentColor: '#7dd3fc',
+        accentColor: '#60A5FA',
         tagline: 'HEALTHCARE AT THEIR DOORSTEP',
         heading: 'Free Community Health Camps',
         subtext: 'Providing free doctor consultations, diagnostic tests, and essential medicines to underserved rural villages and urban slums.',

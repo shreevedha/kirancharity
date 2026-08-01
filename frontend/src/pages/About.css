@@ -148,7 +148,7 @@
     top: 0;
     bottom: 0;
     width: 3px;
-    background: linear-gradient(to bottom, var(--primary), var(--accent));
+    background: var(--primary);
     transform: translateX(-50%);
     z-index: 0;
 }
