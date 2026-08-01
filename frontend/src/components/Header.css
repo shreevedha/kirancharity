@@ -92,35 +92,42 @@
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0;
     text-decoration: none;
     flex-shrink: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .logo-img-wrap {
     background-color: #ffffff;
-    padding: 3px;
-    border-radius: 10px;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    height: 76px;
-    width: 76px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    height: 104px;
+    width: 104px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     transition: var(--transition);
+    overflow: hidden;
 }
 
 .header.scrolled .logo-img-wrap {
-    height: 58px;
-    width: 58px;
+    height: 76px;
+    width: 76px;
+    padding: 0;
+    margin: 0;
 }
 
 .logo-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transform: scale(1.08);
 }
 
 /* Nav Desktop */
