@@ -16,6 +16,8 @@ import ctaBgImg from '../assets/cta-bg.png'
 import galleryHero from '../assets/medical_camp.png'
 import galleryHero1 from '../assets/hero1.png'
 import galleryHero3 from '../assets/hero3.png'
+import imgDonFood1 from '../assets/6370f4a620b583aed909dadf8fb377b0.jpg'
+import imgDonEdu1 from '../assets/childrens-home.jpg'
 import './Home.css'
 
 /* ─── Hero Slides — Clean Solid Overlay, No Gradients ─── */
@@ -468,19 +470,19 @@ export default function Home() {
                         </div>
                         <div className="fg-card">
                             <div className="fg-img-wrap">
-                                <img src={galleryHero1} alt="Rations Distribution Drive" className="fg-img" />
+                                <img src={imgDonFood1} alt="Daily Hot Meal & Ration Drive" className="fg-img" />
                             </div>
                             <div className="fg-info">
-                                <h4>Essential Ration Packs</h4>
-                                <p>Providing monthly grocery support to elderly citizens and struggling families.</p>
+                                <h4>Daily Hot Meal & Ration Drive</h4>
+                                <p>Providing fresh meals and monthly grocery support to struggling families.</p>
                             </div>
                         </div>
                         <div className="fg-card">
                             <div className="fg-img-wrap">
-                                <img src={galleryHero3} alt="Educational Classroom Support" className="fg-img" />
+                                <img src={imgDonEdu1} alt="Children Education & Care Support" className="fg-img" />
                             </div>
                             <div className="fg-info">
-                                <h4>Children School Kit Drive</h4>
+                                <h4>Children Education & Care Support</h4>
                                 <p>Distributing notebooks, bags, and writing kits for rural primary students.</p>
                             </div>
                         </div>

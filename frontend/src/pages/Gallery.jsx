@@ -2,134 +2,154 @@ import { useState } from 'react'
 import { FaTimes, FaPlay, FaCamera, FaVideo, FaCalendarAlt, FaStethoscope, FaUtensils, FaGraduationCap, FaTint, FaSearch } from 'react-icons/fa'
 import './Gallery.css'
 
-// Import actual images
-import imgWelcome from '../assets/help.png'
+// Import actual donation images uploaded by client
+import imgDonFood1 from '../assets/6370f4a620b583aed909dadf8fb377b0.jpg'
+import imgDonEvent1 from '../assets/Screenshot 2026-08-01 234507.png'
+import imgDonEvent2 from '../assets/WhatsApp-Image-2022-09-17-at-7.10.44-PM.webp'
+import imgDonSenior1 from '../assets/akshaya-trust-pallikaranai-chennai-ngos-uxgw7fh5s3.avif'
+import imgDonEdu1 from '../assets/childrens-home.jpg'
+import imgDonFood2 from '../assets/gettyimages-2171791945-612x612.jpg'
+import imgDonRelief1 from '../assets/help-1265227_1280.jpg'
+import imgDonHealth1 from '../assets/images (1).jpg'
+import imgDonWomen1 from '../assets/images.jpg'
+import imgDonFood3 from '../assets/man-is-cooking-with-group-children_976492-67921-1024x600.jpg'
+import imgDonFood4 from '../assets/people-collecting-food-donations-medium-shot_23-2149182020.avif'
+import imgDonCommunity1 from '../assets/11a5ebb8-f252-4f58-aa67-9dc462f7945d.webp'
+import imgDonEdu2 from '../assets/360_F_497455841_1TSJ07nyEcSOIzYJ4nevIGtEe0VOPWTF.jpg'
+
+// Additional assets
 import imgKids from '../assets/gallery_kids.png'
-import imgDistribution from '../assets/gallery_distribution.png'
 import imgHealth from '../assets/gallery_health.png'
-import imgWomen from '../assets/gallery_women.png'
 import imgAnimal from '../assets/gallery_animal.png'
-import imgSenior from '../assets/gallery_senior.png'
 import imgDisaster from '../assets/cause_disaster.png'
-import imgHero from '../assets/medical_camp.png'
-import imgHero1 from '../assets/hero1.png'
-import imgHero3 from '../assets/hero3.png'
-import imgFun from '../assets/fun.png'
 
 const categories = [
-    { id: 'all', label: 'All', icon: <FaCamera /> },
-    { id: 'events', label: 'Events', icon: <FaCalendarAlt /> },
+    { id: 'all', label: 'All Photos', icon: <FaCamera /> },
+    { id: 'food', label: 'Food Drives', icon: <FaUtensils /> },
+    { id: 'education', label: 'Child Education', icon: <FaGraduationCap /> },
     { id: 'medical', label: 'Medical Camps', icon: <FaStethoscope /> },
-    { id: 'food', label: 'Food Distribution', icon: <FaUtensils /> },
-    { id: 'education', label: 'Education', icon: <FaGraduationCap /> },
-    { id: 'blood', label: 'Blood Donation', icon: <FaTint /> },
+    { id: 'events', label: 'Community Events', icon: <FaCalendarAlt /> },
 ]
 
 const galleryItems = [
     {
         id: 1,
         type: 'image',
-        category: 'events',
-        label: 'Annual Trust Meet - Kiran Charitable Trust Members & Donors',
-        img: imgWelcome,
+        category: 'food',
+        label: 'Daily Hot Food Distribution for Underprivileged Families',
+        img: imgDonFood1,
     },
     {
         id: 2,
         type: 'image',
-        category: 'education',
-        label: 'Distribution of Free Notebooks & School Bags to Rural Children',
-        img: imgKids,
+        category: 'events',
+        label: 'Kiran Trust Field Volunteers Gathering & Community Drive',
+        img: imgDonEvent1,
     },
     {
         id: 3,
         type: 'image',
-        category: 'food',
-        label: 'Daily Hot Food Distribution for Underprivileged Families',
-        img: imgDistribution,
+        category: 'education',
+        label: 'Children Home Support & Educational Materials Distribution',
+        img: imgDonEdu1,
     },
     {
         id: 4,
         type: 'image',
-        category: 'medical',
-        label: 'General Health Diagnostics and Free Medicine Distribution Camp',
-        img: imgHealth,
+        category: 'food',
+        label: 'Nutritious Meal Serving Program for Children & Elders',
+        img: imgDonFood2,
     },
     {
         id: 5,
         type: 'image',
-        category: 'events',
-        label: 'Sewing Machines and Skill Development Project for Women',
-        img: imgWomen,
+        category: 'medical',
+        label: 'Free Health Checkup and Medicine Support Diagnostics Camp',
+        img: imgDonHealth1,
     },
     {
         id: 6,
         type: 'image',
         category: 'events',
-        label: 'Stray Animal Rescue, Feeding and Treatment Drive',
-        img: imgAnimal,
+        label: 'Elderly Support Visit & Care Home Rations Distribution',
+        img: imgDonSenior1,
     },
     {
         id: 7,
         type: 'image',
         category: 'events',
-        label: 'Elderly Support Visit - Distributing Rations and Essentials',
-        img: imgSenior,
+        label: 'Women Self-Reliance & Skill Development Workshop',
+        img: imgDonWomen1,
     },
     {
         id: 8,
         type: 'image',
-        category: 'events',
-        label: 'Emergency Flood Relief - Temporary Shelter and Rations Support',
-        img: imgDisaster,
+        category: 'food',
+        label: 'Community Kitchen Meal Preparation for Needy Families',
+        img: imgDonFood3,
     },
     {
         id: 9,
         type: 'image',
         category: 'education',
-        label: 'Computer Training and Digital Literacy for School Kids',
-        img: imgKids,
+        label: 'Notebooks & School Supplies Distribution for Rural Students',
+        img: imgDonEdu2,
     },
     {
         id: 10,
         type: 'image',
-        category: 'medical',
-        label: 'Blood Pressure and Sugar Screening Diagnostics Camps',
-        img: imgHealth,
+        category: 'food',
+        label: 'Ration Kits & Grocery Collection Drive for Underprivileged',
+        img: imgDonFood4,
     },
     {
         id: 11,
         type: 'image',
         category: 'events',
-        label: 'Community Medical Support and Gathering Camp',
-        img: imgHero,
+        label: 'On-Ground Volunteer Outreach & Community Assistance',
+        img: imgDonEvent2,
     },
     {
         id: 12,
         type: 'image',
-        category: 'food',
-        label: 'Distribution of Dry Ration Kits to Needy Families',
-        img: imgHero1,
+        category: 'events',
+        label: 'Emergency Community Relief & Helping Hands Initiative',
+        img: imgDonRelief1,
     },
     {
         id: 13,
         type: 'image',
-        category: 'education',
-        label: 'Notebook and Classroom Resources Support for Kids',
-        img: imgHero3,
+        category: 'events',
+        label: 'Rural Community Aid & Grassroots Support Project',
+        img: imgDonCommunity1,
     },
     {
         id: 14,
         type: 'image',
+        category: 'medical',
+        label: 'General Healthcare Screening & Primary Diagnostics Camp',
+        img: imgHealth,
+    },
+    {
+        id: 15,
+        type: 'image',
+        category: 'education',
+        label: 'Digital Literacy & Computer Resources for School Kids',
+        img: imgKids,
+    },
+    {
+        id: 16,
+        type: 'image',
         category: 'events',
-        label: 'Community Fun & Group Engagement Events',
-        img: imgFun,
+        label: 'Stray Animal Welfare & Emergency Medical Treatment',
+        img: imgAnimal,
     },
 ]
 
 const videos = [
-    { title: 'Kiran Charitable Trust - Our Journey', embedUrl: 'https://www.youtube.com/embed/TqhNILVX8IE' },
-    { title: 'Making a Difference in Communities', embedUrl: 'https://www.youtube.com/embed/gP6p7_Sd3MU' },
-    { title: 'Our Impact Stories', embedUrl: 'https://www.youtube.com/embed/6Oix9n4vEUk' },
+    { title: 'Kiran Charitable Trust - Community Impact Journey', embedUrl: 'https://www.youtube.com/embed/TqhNILVX8IE' },
+    { title: 'Food & Ration Distribution Drives in Amaravathi Region', embedUrl: 'https://www.youtube.com/embed/gP6p7_Sd3MU' },
+    { title: 'Healthcare & Child Education Field Stories', embedUrl: 'https://www.youtube.com/embed/6Oix9n4vEUk' },
 ]
 
 export default function Gallery() {
@@ -145,8 +165,8 @@ export default function Gallery() {
             <div className="page-banner">
                 <div className="banner-circles" />
                 <div className="container">
-                    <h1>Our Gallery</h1>
-                    <p className="breadcrumb"><span>Home / </span>Gallery</p>
+                    <h1>Field Gallery & Media</h1>
+                    <p className="breadcrumb"><span>Home / </span>Field Gallery</p>
                 </div>
             </div>
 
@@ -166,47 +186,39 @@ export default function Gallery() {
                     </div>
 
                     {/* Photos Grid */}
-                    <h3 className="gallery-section-title"><FaCamera /> Photos</h3>
+                    <h3 className="gallery-section-title"><FaCamera /> Real On-Ground Action Photos ({filtered.length})</h3>
                     <div className="gallery-grid">
                         {filtered.map(item => (
-                            <div
-                                key={item.id}
-                                className="gallery-item"
-                                onClick={() => setLightbox(item)}
-                            >
+                            <div key={item.id} className="gallery-item" onClick={() => setLightbox(item)}>
                                 <div className="gallery-thumb">
                                     <img src={item.img} alt={item.label} className="gallery-img-tag" />
                                     <div className="gallery-overlay">
-                                        <button className="gallery-expand-btn" aria-label="View full size">
-                                            <FaSearch />
-                                        </button>
+                                        <FaSearch className="gallery-zoom-icon" />
                                     </div>
                                 </div>
-                                <div className="gallery-item-label">
-                                    <span className={`gallery-cat-badge gallery-cat-${item.category}`}>
-                                        {categories.find(c => c.id === item.category)?.label}
-                                    </span>
+                                <div className="gallery-caption">
+                                    <span className="gallery-category-badge">{item.category}</span>
                                     <p>{item.label}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* Videos Section */}
-                    <h3 className="gallery-section-title" style={{ marginTop: 60 }}><FaVideo /> Visualizations & Camps</h3>
+                    {/* Videos Grid */}
+                    <h3 className="gallery-section-title" style={{ marginTop: '60px' }}><FaVideo /> Field Impact Videos</h3>
                     <div className="videos-grid">
-                        {videos.map((v, i) => (
-                            <div key={i} className="video-card">
-                                <div className="video-iframe-wrap">
+                        {videos.map((vid, idx) => (
+                            <div key={idx} className="video-card">
+                                <div className="video-embed-wrap">
                                     <iframe
-                                        src={v.embedUrl}
-                                        title={v.title}
+                                        src={vid.embedUrl}
+                                        title={vid.title}
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
                                     ></iframe>
                                 </div>
                                 <div className="video-info">
-                                    <h4>{v.title}</h4>
+                                    <h4>{vid.title}</h4>
                                 </div>
                             </div>
                         ))}
@@ -214,19 +226,19 @@ export default function Gallery() {
                 </div>
             </section>
 
-            {/* Lightbox */}
+            {/* Lightbox Modal */}
             {lightbox && (
-                <div className="lightbox" onClick={() => setLightbox(null)}>
-                    <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close">
-                        <FaTimes />
-                    </button>
+                <div className="lightbox-backdrop" onClick={() => setLightbox(null)}>
                     <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+                        <button className="lightbox-close" onClick={() => setLightbox(null)}>
+                            <FaTimes />
+                        </button>
                         <div className="lightbox-img-wrap">
                             <img src={lightbox.img} alt={lightbox.label} className="lightbox-real-img" />
                         </div>
-                        <div className="lightbox-caption">
+                        <div className="lightbox-info">
+                            <span className="gallery-category-badge">{lightbox.category}</span>
                             <h3>{lightbox.label}</h3>
-                            <p>{categories.find(c => c.id === lightbox.category)?.label}</p>
                         </div>
                     </div>
                 </div>
@@ -234,4 +246,3 @@ export default function Gallery() {
         </div>
     )
 }
-
