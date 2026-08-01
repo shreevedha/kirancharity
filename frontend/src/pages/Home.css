@@ -39,14 +39,15 @@
   position: relative;
   z-index: 2;
   max-width: 960px;
-  padding: 60px 24px 30px;
+  padding: 100px 24px 40px;
   margin: 0 auto;
   animation: fadeInUp 0.9s ease forwards;
 }
 
 .hero-icon-badge {
-  font-size: 56px;
-  margin-bottom: 14px;
+  font-size: 38px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   display: inline-block;
   animation: float 3s ease-in-out infinite;
   filter: drop-shadow(0 4px 16px rgba(255, 255, 255, 0.2));
