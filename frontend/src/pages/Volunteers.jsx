@@ -213,11 +213,11 @@ export default function Volunteers() {
                                         Apply for Careers
                                     </button>
                                 </div>
-                                <div style={{ padding: '24px 28px 0', textAlign: 'center' }}>
-                                    <h3 style={{ fontSize: '20px', color: 'var(--text-dark)' }}>
+                                <div style={{ padding: '24px 28px', textAlign: 'center', background: 'var(--primary)', color: 'white' }}>
+                                    <h3 style={{ fontSize: '22px', color: 'white', fontWeight: '800', marginBottom: '4px' }}>
                                         {actionType === 'volunteer' ? 'Volunteer Registration Form' : 'Job Application Form'}
                                     </h3>
-                                    <p style={{ fontSize: '13px', color: 'var(--text-gray)', marginTop: '4px' }}>
+                                    <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.9)' }}>
                                         {actionType === 'volunteer' ? 'Get started and be a ray of hope today' : 'Submit your profiling data below'}
                                     </p>
                                 </div>
