@@ -32,14 +32,13 @@ const donationSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-donationSchema.pre('save', function (next) {
+donationSchema.pre('save', function () {
     if (!this.receiptNumber) {
         this.receiptNumber = 'KCT-' + Date.now() + '-' + Math.floor(100000 + Math.random() * 900000);
     }
     if (!this.transactionId && this.donationType === 'cash') {
         this.transactionId = 'TXN-' + Date.now() + '-' + Math.floor(1000 + Math.random() * 9000);
     }
-    next();
 });
 
 module.exports = mongoose.model('Donation', donationSchema);
