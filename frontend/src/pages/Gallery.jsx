@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FaTimes, FaPlay, FaCamera, FaVideo, FaCalendarAlt, FaStethoscope, FaUtensils, FaGraduationCap, FaTint, FaSearch } from 'react-icons/fa'
+import { FaTimes, FaPlay, FaCamera, FaVideo, FaCalendarAlt, FaStethoscope, FaUtensils, FaGraduationCap, FaTint } from 'react-icons/fa'
 import './Gallery.css'
 
 // Import actual donation images uploaded by client
@@ -17,11 +17,10 @@ import imgDonFood4 from '../assets/people-collecting-food-donations-medium-shot_
 import imgDonCommunity1 from '../assets/11a5ebb8-f252-4f58-aa67-9dc462f7945d.webp'
 import imgDonEdu2 from '../assets/360_F_497455841_1TSJ07nyEcSOIzYJ4nevIGtEe0VOPWTF.jpg'
 
-// Additional assets
-import imgKids from '../assets/gallery_kids.png'
-import imgHealth from '../assets/gallery_health.png'
-import imgAnimal from '../assets/gallery_animal.png'
-import imgDisaster from '../assets/cause_disaster.png'
+// Newly uploaded client images
+import imgDonHealth2 from '../assets/medicnes_real.jpg'
+import imgDonEdu3 from '../assets/education_real.jpg'
+import imgDonBox1 from '../assets/donation_box_real.png'
 
 const categories = [
     { id: 'all', label: 'All Photos', icon: <FaCamera /> },
@@ -99,7 +98,7 @@ const galleryItems = [
         id: 10,
         type: 'image',
         category: 'food',
-        label: 'Ration Kits & Grocery Collection Drive for Underprivileged',
+        label: 'Ration Kits & Grocery Collection Drive for Needy Families',
         img: imgDonFood4,
     },
     {
@@ -127,22 +126,22 @@ const galleryItems = [
         id: 14,
         type: 'image',
         category: 'medical',
-        label: 'General Healthcare Screening & Primary Diagnostics Camp',
-        img: imgHealth,
+        label: 'Free Essential Medicines & Healthcare Diagnostics Drive',
+        img: imgDonHealth2,
     },
     {
         id: 15,
         type: 'image',
         category: 'education',
-        label: 'Digital Literacy & Computer Resources for School Kids',
-        img: imgKids,
+        label: 'Primary School Classroom Resources & Educational Kit Drive',
+        img: imgDonEdu3,
     },
     {
         id: 16,
         type: 'image',
-        category: 'events',
-        label: 'Stray Animal Welfare & Emergency Medical Treatment',
-        img: imgAnimal,
+        category: 'food',
+        label: 'Food & Essential Supplies Box Packing by Volunteers',
+        img: imgDonBox1,
     },
 ]
 
@@ -192,9 +191,7 @@ export default function Gallery() {
                             <div key={item.id} className="gallery-item" onClick={() => setLightbox(item)}>
                                 <div className="gallery-thumb">
                                     <img src={item.img} alt={item.label} className="gallery-img-tag" />
-                                    <div className="gallery-overlay">
-                                        <FaSearch className="gallery-zoom-icon" />
-                                    </div>
+                                    <div className="gallery-overlay" />
                                 </div>
                                 <div className="gallery-caption">
                                     <span className="gallery-category-badge">{item.category}</span>
