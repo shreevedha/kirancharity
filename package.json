@@ -4,7 +4,7 @@
   "private": true,
   "description": "Kiran Charitable Trust Web Application & API",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "npm install && cd frontend && npm install && npm run build",
     "install-frontend": "cd frontend && npm install",
     "install-backend": "cd backend && npm install",
     "dev:frontend": "cd frontend && npm run dev",
