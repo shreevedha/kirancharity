@@ -153,9 +153,10 @@
 }
 
 .nav-link.active {
-    color: white !important;
-    background: var(--primary) !important;
-    box-shadow: 0 4px 12px rgba(15, 82, 186, 0.2);
+    color: var(--primary) !important;
+    background: #EFF6FF !important;
+    font-weight: 700;
+    box-shadow: none !important;
 }
 
 /* Donate Button */
