@@ -482,4 +482,8 @@
         gap: 30px;
         padding: 30px 20px;
     }
+    .chairman-img-card {
+        aspect-ratio: 4/5;
+        max-height: 380px;
+    }
 }
