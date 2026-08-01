@@ -7,7 +7,6 @@ const donationSchema = new mongoose.Schema({
     address: { type: String, required: true },
     donationType: {
         type: String,
-        enum: ['cash', 'item'],
         default: 'cash'
     },
     amount: {
@@ -17,27 +16,28 @@ const donationSchema = new mongoose.Schema({
     },
     purpose: {
         type: String,
-        required: function () { return this.donationType === 'cash'; },
-        enum: ['general', 'education', 'medical', 'food', 'blood_camp', 'other', 'blood']
+        required: function () { return this.donationType === 'cash'; }
     },
     paymentMethod: {
         type: String,
-        required: function () { return this.donationType === 'cash'; },
-        enum: ['upi', 'netbanking', 'debit_card', 'credit_card', 'wallet', 'debit', 'credit']
+        required: function () { return this.donationType === 'cash'; }
     },
     itemCategory: { type: String },
     itemName: { type: String },
     itemQuantity: { type: String },
     deliveryMethod: { type: String },
     transactionId: { type: String },
-    receiptNumber: { type: String, unique: true },
-    status: { type: String, default: 'pending', enum: ['pending', 'completed', 'failed'] },
+    receiptNumber: { type: String },
+    status: { type: String, default: 'pending' },
     createdAt: { type: Date, default: Date.now }
 });
 
 donationSchema.pre('save', function (next) {
     if (!this.receiptNumber) {
-        this.receiptNumber = 'KCT-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+        this.receiptNumber = 'KCT-' + Date.now() + '-' + Math.floor(100000 + Math.random() * 900000);
+    }
+    if (!this.transactionId && this.donationType === 'cash') {
+        this.transactionId = 'TXN-' + Date.now() + '-' + Math.floor(1000 + Math.random() * 9000);
     }
     next();
 });

@@ -7,16 +7,15 @@ const volunteerSchema = new mongoose.Schema({
     occupation: { type: String, required: true },
     address: { type: String, required: true },
     skills: { type: String, required: true },
-    volunteerType: { type: String, enum: ['volunteer', 'career'], default: 'volunteer' },
+    volunteerType: { type: String, default: 'volunteer' },
     careerPosition: { type: String },
     resumeText: { type: String },
     availability: {
         type: String,
-        required: function () { return this.volunteerType === 'volunteer'; },
-        enum: ['weekdays', 'weekends', 'fulltime', 'parttime', 'flexible', 'remote']
+        required: function () { return this.volunteerType === 'volunteer'; }
     },
     reason: { type: String, required: true },
-    status: { type: String, default: 'pending', enum: ['pending', 'approved', 'rejected'] },
+    status: { type: String, default: 'pending' },
     createdAt: { type: Date, default: Date.now }
 });
 
