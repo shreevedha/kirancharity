@@ -31,7 +31,7 @@ const heroSlides = [
         tagline: 'DIRECT FIELD ACTION IN ANDHRA PRADESH',
         heading: 'Empowering Children Through Education',
         subtext: 'Every child deserves books, uniform, and a safe learning environment. We provide direct educational support to rural students in Vijayawada.',
-        bgPos: 'center center',
+        bgPos: 'center top',
     },
     {
         id: 2,
@@ -42,7 +42,7 @@ const heroSlides = [
         tagline: 'NO ONE SLEEPS HUNGRY',
         heading: 'Daily Fresh Meal & Ration Drives',
         subtext: 'Serving fresh cooked meals and dry food kits to daily-wage workers, homeless elders, and struggling families across Vijayawada.',
-        bgPos: 'center center',
+        bgPos: 'center top',
     },
     {
         id: 3,
@@ -53,7 +53,7 @@ const heroSlides = [
         tagline: 'HEALTHCARE AT THEIR DOORSTEP',
         heading: 'Free Community Health Camps',
         subtext: 'Providing free doctor consultations, diagnostic tests, and essential medicines to underserved rural villages and urban slums.',
-        bgPos: 'center center',
+        bgPos: 'center top',
     },
 ]
 
