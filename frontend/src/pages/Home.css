@@ -1299,3 +1299,149 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ─── TRUST & TRANSPARENCY STRIP ─── */
+.trust-strip {
+  background: #1E293B;
+  color: white;
+  padding: 18px 0;
+  border-bottom: 3px solid var(--primary);
+}
+
+.trust-strip-inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.trust-icon {
+  font-size: 28px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.trust-item strong {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: white;
+}
+
+.trust-item span {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ─── HUMANIZED DONATION IMPACT TIERS ─── */
+.impact-tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.impact-tier-card {
+  background: white;
+  padding: 32px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  transition: var(--transition);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.impact-tier-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 36px rgba(255, 107, 53, 0.15);
+  border-color: var(--primary);
+}
+
+.impact-tier-card.featured {
+  border: 2px solid var(--primary);
+  box-shadow: 0 10px 30px rgba(255, 107, 53, 0.18);
+}
+
+.tier-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 50px;
+}
+
+.tier-amount {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.impact-tier-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.impact-tier-card p {
+  font-size: 13.5px;
+  color: var(--text-gray);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.tier-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 50px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.tier-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .impact-tiers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .impact-tiers-grid {
+    grid-template-columns: 1fr;
+  }
+  .trust-strip-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 20px;
+  }
+}

@@ -1,7 +1,69 @@
+/* ═══ TOP BAR — HUMANIZED NGO TRUST HEADER ═══ */
+.top-bar {
+    background: #101828;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 12.5px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    z-index: 1001;
+}
+
+.top-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    gap: 16px;
+}
+
+.top-bar-left,
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.top-bar-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.top-bar-item svg {
+    color: var(--primary);
+}
+
+.top-bar-item:hover {
+    color: white;
+}
+
+.top-bar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 107, 53, 0.15);
+    color: #FF8C00;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+.tax-badge {
+    background: rgba(39, 174, 96, 0.15);
+    color: #2ECC71;
+    border-color: rgba(39, 174, 96, 0.3);
+}
+
 /* ═══ CLEAN HEADER CSS ═══ */
 .header {
     position: fixed;
-    top: 0;
+    top: 38px;
     left: 0;
     right: 0;
     z-index: 1000;
@@ -11,7 +73,8 @@
 }
 
 .header.scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    top: 0;
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -21,7 +84,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
+    padding: 16px 24px;
     gap: 20px;
     transition: var(--transition);
 }
@@ -49,14 +112,14 @@
     flex-shrink: 0;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     transition: var(--transition);
-    height: 90px;
-    width: 90px;
+    height: 72px;
+    width: 72px;
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .header.scrolled .logo-img-wrap {
-    height: 62px;
-    width: 62px;
+    height: 54px;
+    width: 54px;
     padding: 2px;
     border-radius: 8px;
 }
@@ -67,33 +130,6 @@
     object-fit: contain;
 }
 
-.logo-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.logo-name {
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--primary);
-    line-height: 1;
-    letter-spacing: -0.5px;
-    transition: var(--transition);
-}
-
-.header.scrolled .logo-name {
-    font-size: 22px;
-}
-
-.logo-sub {
-    font-size: 13px;
-    color: var(--text-gray);
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 2px;
-}
-
 /* Nav Desktop */
 .nav-desktop {
     display: flex;
@@ -102,9 +138,9 @@
 }
 
 .nav-link {
-    padding: 10px 18px;
+    padding: 9px 16px;
     border-radius: 50px;
-    font-size: 15px;
+    font-size: 14.5px;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     transition: var(--transition);
@@ -119,7 +155,7 @@
 .nav-link.active {
     color: white;
     background: var(--primary);
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .header.scrolled .nav-link {
@@ -128,7 +164,7 @@
 
 .header.scrolled .nav-link:hover {
     color: var(--primary);
-    background: rgba(5, 150, 105, 0.08);
+    background: rgba(255, 107, 53, 0.08);
 }
 
 .header.scrolled .nav-link.active {
@@ -138,8 +174,8 @@
 
 /* Donate Buttons */
 .donate-btn {
-    padding: 12px 26px;
-    font-size: 14.5px;
+    padding: 11px 24px;
+    font-size: 14px;
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -221,6 +257,19 @@
     }
 
     .donate-btn {
+        display: none;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .header {
+        top: 0;
+    }
+    .top-bar {
         display: none;
     }
 }
