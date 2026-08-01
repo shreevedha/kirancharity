@@ -541,3 +541,9 @@
         padding: 24px;
     }
 }
+
+@media (max-width: 480px) {
+    .amount-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
