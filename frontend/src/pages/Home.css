@@ -38,44 +38,51 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 960px;
-  padding: 100px 24px 40px;
+  max-width: 900px;
   margin: 0 auto;
+  padding: 80px 24px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   animation: fadeInUp 0.9s ease forwards;
 }
 
 .hero-icon-badge {
-  font-size: 38px;
+  font-size: 52px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: inline-block;
   animation: float 3s ease-in-out infinite;
   filter: drop-shadow(0 4px 16px rgba(255, 255, 255, 0.2));
 }
 
 .hero-tagline {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 800;
   letter-spacing: 5px;
   text-transform: uppercase;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .hero-heading {
-  font-size: clamp(38px, 6.5vw, 76px);
+  font-size: clamp(38px, 6vw, 70px);
   color: white;
   margin-bottom: 16px;
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
-  line-height: 1.05;
+  line-height: 1.08;
   font-weight: 900;
+  text-align: center;
 }
 
 .hero-subtext {
   font-size: clamp(15px, 2vw, 18px);
   color: rgba(255, 255, 255, 0.88);
-  max-width: 580px;
-  margin-bottom: 30px;
+  max-width: 640px;
+  margin: 0 auto 26px;
   line-height: 1.75;
+  text-align: center;
 }
 
 /* ─── Cause Navigation Buttons ─── */
@@ -83,7 +90,8 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  justify-content: center;
+  margin-bottom: 28px;
 }
 
 .cause-nav-btn {
@@ -141,6 +149,7 @@
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hero-btn-outline {
