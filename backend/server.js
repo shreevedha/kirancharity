@@ -1,4 +1,8 @@
-require('dotenv').config();
+try {
+    require('dotenv').config();
+} catch (e) {
+    // Environment variables are injected directly in serverless environment
+}
 const dns = require('dns');
 
 // DNS server fallback setup for environment network compatibility
