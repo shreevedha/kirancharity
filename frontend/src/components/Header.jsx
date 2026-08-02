@@ -31,21 +31,6 @@ export default function Header() {
 
     return (
         <>
-            {/* Top Bar for Trust & Contact info */}
-            <div className="top-bar">
-                <div className="container top-bar-inner">
-                    <div className="top-bar-left">
-                        <span className="top-bar-item"><FaMapMarkerAlt /> Vijayawada, Andhra Pradesh</span>
-                        <a href="tel:+917702468889" className="top-bar-item"><FaPhone /> +91 77024 68889</a>
-                        <a href="mailto:connectshreevedha@gmail.com" className="top-bar-item desktop-only"><FaEnvelope /> connectshreevedha@gmail.com</a>
-                    </div>
-                    <div className="top-bar-right">
-                        <span className="top-bar-badge"><FaShieldAlt /> 80G & 12A Certified NGO</span>
-                        <span className="top-bar-badge tax-badge"><FaCheckCircle /> 50% Tax Tax Exemption</span>
-                    </div>
-                </div>
-            </div>
-
             <header className={`header ${scrolled ? 'scrolled' : ''}`}>
                 <div className="container header-inner">
                     {/* Logo - only Klogo.jpeg */}
