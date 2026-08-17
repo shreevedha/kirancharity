@@ -10,8 +10,8 @@ const DEFAULT_SECRET_KEY = process.env.SABPAISA_SECRET_KEY || 'sec_lLao-1-yDLmV8
 const DEFAULT_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://staging-sb-merchant-api.sabpaisa.in';
 
 // Helper: Generate SabPaisa PG 3.0 Checksum (HMAC SHA-256)
-function generateSabpaisaChecksum(merchantId, merchantTxnId, amount, timestamp, secretKey) {
-    const rawString = `${merchantId}|${merchantTxnId}|${amount}|INR|${timestamp}`;
+function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, timestamp, secretKey) {
+    const rawString = `${merchantId}|${merchantTxnId}|${amountInPaise}|INR|${timestamp}`;
     return crypto.createHmac('sha256', secretKey).update(rawString).digest('hex');
 }
 
@@ -28,6 +28,9 @@ router.post('/initiate-sabpaisa', async (req, res) => {
         if (isNaN(numAmount) || numAmount < 1) {
             return res.status(400).json({ success: false, message: 'Donation amount must be at least ₹1.' });
         }
+
+        // SabPaisa PG 3.0 REST API expects amount in paise (1 INR = 100 paise)
+        const paiseAmount = Math.round(numAmount * 100);
 
         const baseUrl = (customBaseUrl || DEFAULT_BASE_URL).replace(/\/$/, '');
         const clientCode = customMerchantId || DEFAULT_CLIENT_CODE;
@@ -56,12 +59,12 @@ router.post('/initiate-sabpaisa', async (req, res) => {
         const cleanHost = host.replace(/\/$/, '');
         const callbackUrl = `${cleanHost}/api/donations/sabpaisa-callback`;
 
-        const checksum = generateSabpaisaChecksum(clientCode, clientTxnId, numAmount, timestamp, secretKey);
+        const checksum = generateSabpaisaChecksum(clientCode, clientTxnId, paiseAmount, timestamp, secretKey);
 
         const payload = {
             merchantId: clientCode,
             merchantTxnId: clientTxnId,
-            amount: numAmount,
+            amount: paiseAmount,
             currency: 'INR',
             returnUrl: callbackUrl,
             customerName: fullName,
@@ -71,7 +74,7 @@ router.post('/initiate-sabpaisa', async (req, res) => {
             checksum
         };
 
-        console.log(`Initiating SabPaisa Payment on ${baseUrl}/api/v2/payments for ${clientCode}...`);
+        console.log(`Initiating SabPaisa Payment on ${baseUrl}/api/v2/payments for ${clientCode} (${paiseAmount} paise / ₹${numAmount})...`);
 
         const response = await fetch(`${baseUrl}/api/v2/payments`, {
             method: 'POST',
