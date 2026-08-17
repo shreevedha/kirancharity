@@ -3,19 +3,19 @@ const router = express.Router();
 const crypto = require('crypto');
 const Donation = require('../models/Donation');
 
-// SabPaisa Canara Bank Merchant Credentials
+// SabPaisa Canara Bank Merchant Credentials (PG 3.0)
 const SABPAISA_CLIENT_CODE = process.env.SABPAISA_CLIENT_CODE || 'SQUA102';
 const SABPAISA_API_KEY = process.env.SABPAISA_API_KEY || 'sp_itOrld7Rm0SGjkqg_VSEXBtZXqi8T26-pMPfpUCxUQo';
 const SABPAISA_SECRET_KEY = process.env.SABPAISA_SECRET_KEY || 'sec_lLao-1-yDLmV81YjExxgR00a8o7FgJ8-HLSJj9Od4hY';
 const SABPAISA_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://staging-sb-merchant-api.sabpaisa.in';
 
-// Helper: Generate SabPaisa Checksum (HMAC SHA-256)
-function generateSabpaisaChecksum(clientCode, clientTxnId, amount) {
-    const rawString = `${clientCode}|${clientTxnId}|${amount}|INR`;
+// Helper: Generate SabPaisa PG 3.0 Checksum (HMAC SHA-256)
+function generateSabpaisaChecksum(merchantId, merchantTxnId, amount, timestamp) {
+    const rawString = `${merchantId}|${merchantTxnId}|${amount}|INR|${timestamp}`;
     return crypto.createHmac('sha256', SABPAISA_SECRET_KEY).update(rawString).digest('hex');
 }
 
-// POST /api/donations/initiate-sabpaisa — Initialize SabPaisa Payment Checkout
+// POST /api/donations/initiate-sabpaisa — Create payment session on SabPaisa PG 3.0
 router.post('/initiate-sabpaisa', async (req, res) => {
     try {
         const { fullName, mobile, email, address, amount, purpose } = req.body;
@@ -29,6 +29,7 @@ router.post('/initiate-sabpaisa', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Donation amount must be at least ₹1.' });
         }
 
+        const timestamp = Math.floor(Date.now() / 1000).toString();
         const clientTxnId = 'KCT-' + Date.now() + '-' + Math.floor(1000 + Math.random() * 9000);
 
         const donation = new Donation({
@@ -50,32 +51,46 @@ router.post('/initiate-sabpaisa', async (req, res) => {
         const cleanHost = host.endsWith('/') ? host.slice(0, -1) : host;
         const callbackUrl = `${cleanHost}/api/donations/sabpaisa-callback`;
 
-        const checksum = generateSabpaisaChecksum(SABPAISA_CLIENT_CODE, clientTxnId, numAmount);
+        const checksum = generateSabpaisaChecksum(SABPAISA_CLIENT_CODE, clientTxnId, numAmount, timestamp);
 
-        // SabPaisa Gateway Form Parameters
-        const sabpaisaPayload = {
-            actionUrl: `${SABPAISA_BASE_URL}/sabPaisa/sys/api/v1/initiate-payment`,
-            clientCode: SABPAISA_CLIENT_CODE,
-            clientTxnId,
+        const payload = {
+            merchantId: SABPAISA_CLIENT_CODE,
+            merchantTxnId: clientTxnId,
             amount: numAmount,
-            payerName: fullName,
-            payerEmail: email,
-            payerMobile: mobile,
-            payerAddress: address || 'Vijayawada, AP',
-            callbackUrl,
-            userCode: SABPAISA_CLIENT_CODE,
-            apiKey: SABPAISA_API_KEY,
-            checksum,
-            sabpaisaBaseUrl: SABPAISA_BASE_URL
+            currency: 'INR',
+            returnUrl: callbackUrl,
+            customerName: fullName,
+            customerEmail: email,
+            customerMobile: mobile,
+            timestamp,
+            checksum
         };
 
-        res.status(200).json({
-            success: true,
-            message: 'SabPaisa payment session initialized successfully.',
-            donationId: donation._id,
-            receiptNumber: donation.receiptNumber,
-            clientTxnId,
-            sabpaisaPayload
+        const response = await fetch(`${SABPAISA_BASE_URL}/api/v2/payments`, {
+            method: 'POST',
+            headers: {
+                'X-Api-Key': SABPAISA_API_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const sabpaisaData = await response.json();
+        console.log('SabPaisa API Response:', sabpaisaData);
+
+        if (sabpaisaData && sabpaisaData.success && sabpaisaData.checkoutUrl) {
+            return res.status(200).json({
+                success: true,
+                message: 'SabPaisa checkout URL generated successfully.',
+                checkoutUrl: sabpaisaData.checkoutUrl,
+                paymentId: sabpaisaData.paymentId,
+                clientTxnId
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: sabpaisaData?.error?.message || sabpaisaData?.message || 'Failed to generate SabPaisa payment checkout URL.'
         });
     } catch (error) {
         console.error('SabPaisa Init Error:', error.message || error);
@@ -89,12 +104,12 @@ const handleCallback = async (req, res) => {
         const data = { ...req.query, ...req.body };
         console.log('SabPaisa Callback Notification:', data);
 
-        const clientTxnId = data.clientTxnId || data.client_txn_id || data.txnId;
+        const clientTxnId = data.merchantTxnId || data.clientTxnId || data.client_txn_id || data.txnId;
         const statusCode = data.statusCode || data.status_code || data.code;
         const statusMsg = (data.status || data.statusMsg || '').toUpperCase();
-        const pgTxnNo = data.sabpaisaTxnId || data.pgTxnNo || data.bankTxnId || clientTxnId;
+        const pgTxnNo = data.paymentId || data.sabpaisaTxnId || data.pgTxnNo || clientTxnId;
 
-        const isSuccess = statusCode === '0000' || statusMsg === 'SUCCESS' || statusMsg === 'SUCCESSFUL';
+        const isSuccess = statusCode === '0000' || statusMsg === 'SUCCESS' || statusMsg === 'SUCCESSFUL' || statusMsg === 'COMPLETED';
 
         const donation = await Donation.findOne({ transactionId: clientTxnId });
         const clientRedirectUrl = process.env.CLIENT_URL || 'https://kiran-charitable-trust.vercel.app';

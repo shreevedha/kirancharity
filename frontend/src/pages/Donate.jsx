@@ -116,38 +116,9 @@ export default function Donate() {
                     purpose: data.purpose
                 });
 
-                if (response.data && response.data.success && response.data.sabpaisaPayload) {
-                    const payload = response.data.sabpaisaPayload;
-                    
-                    // Create dynamic hidden HTML form to post to SabPaisa Gateway
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = payload.actionUrl;
-
-                    const formFields = {
-                        clientCode: payload.clientCode,
-                        clientTxnId: payload.clientTxnId,
-                        amount: payload.amount,
-                        payerName: payload.payerName,
-                        payerEmail: payload.payerEmail,
-                        payerMobile: payload.payerMobile,
-                        payerAddress: payload.payerAddress,
-                        callbackUrl: payload.callbackUrl,
-                        userCode: payload.userCode,
-                        apiKey: payload.apiKey,
-                        checksum: payload.checksum
-                    };
-
-                    for (const key in formFields) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = formFields[key];
-                        form.appendChild(input);
-                    }
-
-                    document.body.appendChild(form);
-                    form.submit();
+                if (response.data && response.data.success && response.data.checkoutUrl) {
+                    toast.info('Redirecting to SabPaisa Secure Payment Gateway...');
+                    window.location.href = response.data.checkoutUrl;
                     return;
                 } else {
                     toast.error(response.data?.message || 'Failed to initialize SabPaisa payment.');
