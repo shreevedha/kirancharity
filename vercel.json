@@ -5,8 +5,20 @@
   "outputDirectory": "frontend/dist",
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "MONGO_URI": "mongodb+srv://Kirancharity:Kirancharity@cluster0.pijxbwq.mongodb.net/kiran-charitable-trust?retryWrites=true&w=majority&appName=Cluster0",
+    "SABPAISA_CLIENT_CODE": "SQUA102",
+    "SABPAISA_API_KEY": "sp_itOrld7Rm0SGjkqg_VSEXBtZXqi8T26-pMPfpUCxUQo",
+    "SABPAISA_SECRET_KEY": "sec_lLao-1-yDLmV81YjExxgR00a8o7FgJ8-HLSJj9Od4hY",
+    "SABPAISA_BASE_URL": "https://staging-sb-merchant-api.sabpaisa.in",
+    "CLIENT_URL": "https://kiran-charitable-trust.vercel.app"
+  }
 }

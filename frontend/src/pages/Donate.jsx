@@ -149,15 +149,14 @@ export default function Donate() {
                     document.body.appendChild(form);
                     form.submit();
                     return;
+                } else {
+                    toast.error(response.data?.message || 'Failed to initialize SabPaisa payment.');
+                    setIsSubmitting(false);
                 }
             } catch (error) {
-                console.warn('SabPaisa server initiate error, falling back to local receipt:', error);
-                // Fallback to local receipt display if server API is offline
-                const receipt = generateReceipt(data);
-                setReceiptData(receipt);
-                setShowThankYou(true);
-                reset();
-                toast.success('Donation recorded! Thank you for your generosity.');
+                console.error('SabPaisa payment initiation error:', error);
+                const errorMsg = error.response?.data?.message || 'Unable to connect to SabPaisa payment gateway. Please try again.';
+                toast.error(errorMsg);
                 setIsSubmitting(false);
                 return;
             }
