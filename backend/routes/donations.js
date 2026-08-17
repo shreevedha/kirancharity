@@ -78,11 +78,12 @@ router.post('/initiate-sabpaisa', async (req, res) => {
         const sabpaisaData = await response.json();
         console.log('SabPaisa API Response:', sabpaisaData);
 
-        if (sabpaisaData && sabpaisaData.success && sabpaisaData.checkoutUrl) {
+        if (sabpaisaData && sabpaisaData.success && sabpaisaData.checkoutUrl && sabpaisaData.clientSecret) {
+            const fullCheckoutUrl = `${sabpaisaData.checkoutUrl}?clientSecret=${sabpaisaData.clientSecret}`;
             return res.status(200).json({
                 success: true,
                 message: 'SabPaisa checkout URL generated successfully.',
-                checkoutUrl: sabpaisaData.checkoutUrl,
+                checkoutUrl: fullCheckoutUrl,
                 paymentId: sabpaisaData.paymentId,
                 clientTxnId
             });
