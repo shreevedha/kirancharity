@@ -158,15 +158,6 @@
             background-color: var(--primary-hover);
         }
 
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #15803d;
-        }
-
         .log-box {
             background: #0f172a;
             color: #38bdf8;
@@ -204,7 +195,7 @@
 
         .action-link {
             display: inline-block;
-            background: var(--success);
+            background: #16a34a;
             color: white;
             padding: 10px 20px;
             border-radius: 6px;
@@ -224,12 +215,19 @@
     <div class="header">
         <h1>SabPaisa PG Integration Test Suite</h1>
         <p>Canara Bank Trust Account Integration (CM Nagar Branch, Guntur)</p>
-        <span class="badge">ENVIRONMENT: STAGING (PG 3.0)</span>
+        <span class="badge" id="envBadge">ENVIRONMENT: STAGING (TEST MODE)</span>
     </div>
 
     <div class="content">
-        <div class="section-title">1. Merchant Credentials</div>
+        <div class="section-title">1. Environment & Merchant Credentials</div>
         <div class="grid">
+            <div class="form-group full">
+                <label for="envMode">Gateway Mode Select</label>
+                <select id="envMode" onchange="toggleEnvMode()">
+                    <option value="staging" selected>🧪 Staging / Sandbox Mode (Test Credentials)</option>
+                    <option value="production">💳 Production Mode (Real Live Money & Production Credentials)</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="merchantId">Merchant ID / Client Code</label>
                 <input type="text" id="merchantId" value="SQUA102">
@@ -293,6 +291,24 @@
         box.innerText = `[${timestamp}] ` + (typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg) + '\n\n' + box.innerText;
     }
 
+    function toggleEnvMode() {
+        const mode = document.getElementById('envMode').value;
+        const baseUrlInput = document.getElementById('baseUrl');
+        const badge = document.getElementById('envBadge');
+
+        if (mode === 'production') {
+            baseUrlInput.value = 'https://merchant-api.sabpaisa.in';
+            badge.innerText = 'ENVIRONMENT: PRODUCTION (REAL LIVE MONEY)';
+            badge.style.background = '#dc2626';
+            log('Switched mode to Production (Real Live Money). Ensure Production Merchant Keys are entered.');
+        } else {
+            baseUrlInput.value = 'https://staging-sb-merchant-api.sabpaisa.in';
+            badge.innerText = 'ENVIRONMENT: STAGING (TEST MODE)';
+            badge.style.background = 'rgba(255, 255, 255, 0.2)';
+            log('Switched mode to Staging (Test Mode).');
+        }
+    }
+
     async function initiatePaymentBackend() {
         document.getElementById('actionBox').classList.remove('active');
         log('Starting SabPaisa Payment Initiation test via Backend Server...');
@@ -301,6 +317,7 @@
         const customerMobile = document.getElementById('payerMobile').value.trim();
         const customerEmail = document.getElementById('payerEmail').value.trim();
         const amount = Number(document.getElementById('amount').value);
+        const envMode = document.getElementById('envMode').value;
 
         if (!customerName || !customerMobile || !customerEmail || amount < 100) {
             log('⚠️ Validation Alert: Please enter valid name, email, mobile, and amount (minimum ₹100).');
@@ -310,11 +327,12 @@
         try {
             log({
                 step: '1. Request Payload',
+                mode: envMode,
                 fullName: customerName,
                 mobile: customerMobile,
                 email: customerEmail,
                 amount: amount,
-                merchantId: 'SQUA102'
+                merchantId: document.getElementById('merchantId').value.trim()
             });
 
             const res = await fetch('/api/donations/initiate-sabpaisa', {
@@ -336,10 +354,9 @@
             if (data.success && data.checkoutUrl) {
                 log({ step: '3. Success! Opening SabPaisa Gateway Portal:', checkoutUrl: data.checkoutUrl });
 
-                const actionBox = document.getElementById('actionBox');
                 const checkoutBtn = document.getElementById('checkoutBtn');
                 checkoutBtn.href = data.checkoutUrl;
-                actionBox.classList.add('active');
+                document.getElementById('actionBox').classList.add('active');
 
                 setTimeout(() => {
                     window.location.href = data.checkoutUrl;
