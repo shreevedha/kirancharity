@@ -443,70 +443,31 @@ export default function Donate() {
                                             {errors.purpose && <span className="error-msg">{errors.purpose.message}</span>}
                                         </div>
 
-                                        {/* Payment Method */}
-                                        <div className="payment-methods">
-                                            <label className="amount-label">Payment Method</label>
-                                            <div className="pm-grid">
-                                                {paymentMethods.map(pm => (
-                                                    <button
-                                                        key={pm.id}
-                                                        type="button"
-                                                        className={`pm-btn ${paymentMethod === pm.id ? 'active' : ''}`}
-                                                        onClick={() => setPaymentMethod(pm.id)}
-                                                    >
-                                                        {pm.icon} {pm.label}
-                                                    </button>
-                                                ))}
+                                        {/* Unified SabPaisa Payment Gateway Notice */}
+                                        <div className="payment-methods" style={{ marginTop: '16px' }}>
+                                            <label className="amount-label" style={{ marginBottom: '8px', display: 'block' }}>Payment Gateway</label>
+                                            <div style={{
+                                                background: '#f8fafc',
+                                                border: '1.5px solid #0056b3',
+                                                borderRadius: '12px',
+                                                padding: '16px'
+                                            }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                                                    <FaLock style={{ color: '#0056b3', fontSize: '18px' }} />
+                                                    <strong style={{ color: '#0f172a', fontSize: '15px' }}>
+                                                        SabPaisa Payment Gateway (Canara Bank Account)
+                                                    </strong>
+                                                </div>
+                                                <p style={{ fontSize: '13px', color: '#475569', margin: '0 0 10px 0', lineHeight: 1.5 }}>
+                                                    Clicking <strong>Donate Now</strong> opens SabPaisa's secure payment screen where you can pay using any method:
+                                                </p>
+                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <span className="gateway-chip">⚡ UPI QR & Apps</span>
+                                                    <span className="gateway-chip">💳 Credit & Debit Cards</span>
+                                                    <span className="gateway-chip">🏛️ Net Banking (All Banks)</span>
+                                                    <span className="gateway-chip">💼 Wallets & NEFT/IMPS</span>
+                                                </div>
                                             </div>
-
-                                            {paymentMethod === 'upi' && (
-                                                <div className="payment-details-option" style={{ marginTop: '16px', background: '#f8f9fa', padding: '14px', borderRadius: '8px', border: '1px solid #e9ecef' }}>
-                                                    <label className="amount-label" style={{ fontSize: '13px', marginBottom: '8px', display: 'block' }}>Choose Direct UPI App</label>
-                                                    <div className="upi-provider-grid" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                                        {[
-                                                            { id: 'phonepe', label: 'PhonePe', color: '#5f259f' },
-                                                            { id: 'gpay', label: 'Google Pay', color: '#1a73e8' },
-                                                            { id: 'paytm', label: 'Paytm', color: '#00baf2' },
-                                                            { id: 'bhim', label: 'BHIM UPI', color: '#e47911' },
-                                                        ].map(prov => (
-                                                            <button
-                                                                key={prov.id}
-                                                                type="button"
-                                                                className={`pm-btn ${upiProvider === prov.id ? 'active' : ''}`}
-                                                                onClick={() => setUpiProvider(prov.id)}
-                                                                style={{ borderColor: upiProvider === prov.id ? prov.color : '#cbd5e1', color: upiProvider === prov.id ? 'white' : '#475569', background: upiProvider === prov.id ? prov.color : 'white' }}
-                                                            >
-                                                                {prov.label}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {paymentMethod === 'netbanking' && (
-                                                <div className="payment-details-option" style={{ marginTop: '16px', background: '#f8f9fa', padding: '14px', borderRadius: '8px', border: '1px solid #e9ecef' }}>
-                                                    <label className="amount-label" style={{ fontSize: '13px', marginBottom: '8px', display: 'block' }}>Connect Bank Account</label>
-                                                    <div className="banks-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-                                                        {[
-                                                            { id: 'sbi', name: 'SBI', label: 'State Bank of India' },
-                                                            { id: 'hdfc', name: 'HDFC', label: 'HDFC Bank' },
-                                                            { id: 'icici', name: 'ICICI', label: 'ICICI Bank' },
-                                                            { id: 'axis', name: 'Axis Bank', label: 'Axis Bank' },
-                                                        ].map(bank => (
-                                                            <button
-                                                                key={bank.id}
-                                                                type="button"
-                                                                className={`pm-btn ${selectedBank === bank.id ? 'active' : ''}`}
-                                                                onClick={() => setSelectedBank(bank.id)}
-                                                                style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '8px 12px', gap: '2px', height: 'auto', background: selectedBank === bank.id ? 'var(--gradient)' : 'white', color: selectedBank === bank.id ? 'white' : '#475569' }}
-                                                            >
-                                                                <span style={{ fontWeight: '700', fontSize: '13px' }}>{bank.name}</span>
-                                                                <span style={{ fontSize: '10px', opacity: 0.8 }}>{bank.label}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
                                         </div>
                                     </>
                                 ) : (
