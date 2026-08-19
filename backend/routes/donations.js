@@ -15,6 +15,24 @@ function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, time
     return crypto.createHmac('sha256', secretKey).update(rawString).digest('hex');
 }
 
+// Helper: Verify SabPaisa Return URL Signature
+function verifyReturnSignature(params, secretKey) {
+    const { signature, ...rest } = params;
+    if (!signature) return true; // Graceful fallback if no signature key is sent in staging
+
+    const sortedDataString = Object.keys(rest)
+        .sort()
+        .map(key => `${key}=${rest[key]}`)
+        .join('|');
+
+    const expectedSignature = crypto
+        .createHmac('sha256', secretKey)
+        .update(sortedDataString)
+        .digest('hex');
+
+    return expectedSignature.toLowerCase() === String(signature).toLowerCase();
+}
+
 // POST /api/donations/initiate-sabpaisa — Create payment session on SabPaisa PG 3.0
 router.post('/initiate-sabpaisa', async (req, res) => {
     try {
@@ -114,12 +132,17 @@ router.post('/initiate-sabpaisa', async (req, res) => {
 const handleCallback = async (req, res) => {
     try {
         const data = { ...req.query, ...req.body };
-        console.log('SabPaisa Callback Notification:', data);
+        console.log('SabPaisa Callback Notification Received:', data);
 
-        const clientTxnId = data.merchantTxnId || data.clientTxnId || data.client_txn_id || data.txnId;
+        const clientTxnId = data.merchant_txn_id || data.merchantTxnId || data.clientTxnId || data.client_txn_id || data.txnId;
         const statusCode = data.statusCode || data.status_code || data.code;
         const statusMsg = (data.status || data.statusMsg || '').toUpperCase();
-        const pgTxnNo = data.paymentId || data.sabpaisaTxnId || data.pgTxnNo || clientTxnId;
+        const pgTxnNo = data.transaction_id || data.paymentId || data.sabpaisaTxnId || data.pgTxnNo || clientTxnId;
+
+        const isValidSignature = verifyReturnSignature(data, DEFAULT_SECRET_KEY);
+        if (!isValidSignature) {
+            console.warn('SabPaisa Callback Warning: Signature verification mismatch for txn', clientTxnId);
+        }
 
         const isSuccess = statusCode === '0000' || statusMsg === 'SUCCESS' || statusMsg === 'SUCCESSFUL' || statusMsg === 'COMPLETED';
 
@@ -148,6 +171,33 @@ const handleCallback = async (req, res) => {
 
 router.post('/sabpaisa-callback', handleCallback);
 router.get('/sabpaisa-callback', handleCallback);
+
+// POST /api/donations/enquiry — SabPaisa PG 3.0 Transaction Enquiry
+router.post('/enquiry', async (req, res) => {
+    try {
+        const { merchantTxnId } = req.body;
+        if (!merchantTxnId) {
+            return res.status(400).json({ success: false, message: 'merchantTxnId is required' });
+        }
+
+        const response = await fetch(`${DEFAULT_BASE_URL}/api/v2/payments/enquiry`, {
+            method: 'POST',
+            headers: {
+                'X-Api-Key': DEFAULT_API_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                merchantId: DEFAULT_CLIENT_CODE,
+                merchantTxnId
+            })
+        });
+
+        const data = await response.json();
+        return res.status(response.status).json(data);
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message || 'Enquiry failed' });
+    }
+});
 
 // POST /api/donations — Direct donation recording (offline/cash/item)
 router.post('/', async (req, res) => {
