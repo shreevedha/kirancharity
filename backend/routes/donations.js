@@ -3,11 +3,11 @@ const router = express.Router();
 const crypto = require('crypto');
 const Donation = require('../models/Donation');
 
-// Default SabPaisa Canara Bank Credentials (PG 3.0)
+// Production SabPaisa Canara Bank Credentials (PG 3.0 Real Mode)
 const DEFAULT_CLIENT_CODE = process.env.SABPAISA_CLIENT_CODE || 'SQUA102';
 const DEFAULT_API_KEY = process.env.SABPAISA_API_KEY || 'sp_itOrld7Rm0SGjkqg_VSEXBtZXqi8T26-pMPfpUCxUQo';
 const DEFAULT_SECRET_KEY = process.env.SABPAISA_SECRET_KEY || 'sec_lLao-1-yDLmV81YjExxgR00a8o7FgJ8-HLSJj9Od4hY';
-const DEFAULT_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://staging-sb-merchant-api.sabpaisa.in';
+const DEFAULT_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://merchant-api.sabpaisa.in';
 
 // Helper: Generate SabPaisa PG 3.0 Checksum (HMAC SHA-256)
 function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, timestamp, secretKey) {
@@ -18,7 +18,7 @@ function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, time
 // Helper: Verify SabPaisa Return URL Signature
 function verifyReturnSignature(params, secretKey) {
     const { signature, ...rest } = params;
-    if (!signature) return true; // Graceful fallback if no signature key is sent in staging
+    if (!signature) return true; // Graceful fallback if signature key is omitted
 
     const sortedDataString = Object.keys(rest)
         .sort()
@@ -33,7 +33,7 @@ function verifyReturnSignature(params, secretKey) {
     return expectedSignature.toLowerCase() === String(signature).toLowerCase();
 }
 
-// POST /api/donations/initiate-sabpaisa — Create payment session on SabPaisa PG 3.0
+// POST /api/donations/initiate-sabpaisa — Create payment session on SabPaisa PG 3.0 Real Production Mode
 router.post('/initiate-sabpaisa', async (req, res) => {
     try {
         const { fullName, mobile, email, address, amount, purpose, customBaseUrl, customMerchantId, customApiKey, customSecretKey } = req.body;
@@ -92,7 +92,7 @@ router.post('/initiate-sabpaisa', async (req, res) => {
             checksum
         };
 
-        console.log(`Initiating SabPaisa Payment on ${baseUrl}/api/v2/payments for ${clientCode} (${paiseAmount} paise / ₹${numAmount})...`);
+        console.log(`Initiating SabPaisa Real Production Payment on ${baseUrl}/api/v2/payments for ${clientCode} (${paiseAmount} paise / ₹${numAmount})...`);
 
         const response = await fetch(`${baseUrl}/api/v2/payments`, {
             method: 'POST',
@@ -104,13 +104,13 @@ router.post('/initiate-sabpaisa', async (req, res) => {
         });
 
         const sabpaisaData = await response.json();
-        console.log('SabPaisa API Response:', sabpaisaData);
+        console.log('SabPaisa Production Response:', sabpaisaData);
 
         if (sabpaisaData && sabpaisaData.success && sabpaisaData.checkoutUrl && sabpaisaData.clientSecret) {
             const fullCheckoutUrl = `${sabpaisaData.checkoutUrl}?clientSecret=${sabpaisaData.clientSecret}`;
             return res.status(200).json({
                 success: true,
-                message: 'SabPaisa checkout URL generated successfully.',
+                message: 'SabPaisa Production checkout URL generated successfully.',
                 checkoutUrl: fullCheckoutUrl,
                 paymentId: sabpaisaData.paymentId,
                 clientTxnId
@@ -119,7 +119,7 @@ router.post('/initiate-sabpaisa', async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: sabpaisaData?.error?.message || sabpaisaData?.message || 'Failed to generate SabPaisa payment checkout URL.',
+            message: sabpaisaData?.error?.message || sabpaisaData?.message || 'Unable to validate merchant on SabPaisa Production server. Production API Key activation required from SabPaisa support.',
             rawResponse: sabpaisaData
         });
     } catch (error) {
