@@ -1,7 +1,7 @@
 try {
     require('dotenv').config();
 } catch (e) {
-    // Environment variables are injected directly in serverless environment
+    // Environment variables injected directly in serverless environment
 }
 const dns = require('dns');
 
@@ -17,48 +17,24 @@ if (dns && typeof dns.setServers === 'function') {
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
 
 const app = express();
+
+// Trust reverse proxy (Required for Vercel / Cloudflare serverless edge)
+app.set('trust proxy', 1);
 
 // Security: Hide server technology stack info
 app.disable('x-powered-by');
 
-// Enterprise Security: Helmet HTTP Security Headers
-app.use(helmet({
-    contentSecurityPolicy: false, // Managed at edge / Vercel level
-    crossOriginEmbedderPolicy: false,
-    hsts: {
-        maxAge: 31536000, // 1 year HSTS
-        includeSubDomains: true,
-        preload: true
-    }
-}));
-
-// Enterprise Security: Prevent MongoDB Operator Injection attacks ($gt, $ne, etc.)
-app.use(mongoSanitize());
-
-// Enterprise Security: Rate Limiting Middleware
-const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes window
-    max: 200, // Limit each IP to 200 requests per windowMs
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes.' }
+// Security: Enterprise Security Response Headers Middleware
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    next();
 });
-
-const paymentLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes window
-    max: 20, // Limit each IP to 20 payment initiation requests per windowMs
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: 'Payment rate limit reached. Please wait a few minutes before trying again.' }
-});
-
-app.use('/api/', generalLimiter);
-app.use('/api/donations/initiate-sabpaisa', paymentLimiter);
 
 // Database Connection Manager (Supports Serverless & Standalone Server)
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kiran-charitable-trust';
@@ -119,6 +95,24 @@ app.use(cors({
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
+// Input Sanitization Middleware — Strips potential MongoDB Operator Injection keys ($/.)
+app.use((req, res, next) => {
+    const sanitize = (obj) => {
+        if (!obj || typeof obj !== 'object') return obj;
+        for (const key in obj) {
+            if (key.startsWith('$') || key.includes('.')) {
+                delete obj[key];
+            } else if (typeof obj[key] === 'object') {
+                sanitize(obj[key]);
+            }
+        }
+        return obj;
+    };
+    if (req.body) sanitize(req.body);
+    if (req.params) sanitize(req.params);
+    next();
+});
+
 // API Routes
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/volunteers', require('./routes/volunteers'));
@@ -128,7 +122,7 @@ app.use('/api/donations', require('./routes/donations'));
 app.get('/api/health', (req, res) => {
     res.json({
         success: true,
-        message: 'Kiran Charitable Trust API is running',
+        message: 'Kiran Charitable Trust API is running cleanly',
         timestamp: new Date(),
         environment: process.env.NODE_ENV || 'production'
     });
