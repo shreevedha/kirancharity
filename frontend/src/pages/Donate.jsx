@@ -21,22 +21,11 @@ const purposes = [
     { value: 'blood', label: 'Blood Camp' },
     { value: 'other', label: 'Other' },
 ]
-const paymentMethods = [
-    { id: 'sabpaisa', icon: <FaCreditCard />, label: 'SabPaisa PG (Canara Bank)' },
-    { id: 'upi', icon: <FaMobileAlt />, label: 'UPI' },
-    { id: 'netbanking', icon: <FaUniversity />, label: 'Net Banking' },
-    { id: 'debit', icon: <FaCreditCard />, label: 'Debit Card' },
-    { id: 'credit', icon: <FaCreditCard />, label: 'Credit Card' },
-    { id: 'wallet', icon: <FaWallet />, label: 'Wallet' },
-]
 
 export default function Donate() {
     const [donationType, setDonationType] = useState('cash') // 'cash' or 'item'
     const [selectedAmount, setSelectedAmount] = useState(1000)
     const [customAmount, setCustomAmount] = useState('')
-    const [paymentMethod, setPaymentMethod] = useState('sabpaisa')
-    const [upiProvider, setUpiProvider] = useState('phonepe')
-    const [selectedBank, setSelectedBank] = useState('')
     const [agreed, setAgreed] = useState(false)
     const [showThankYou, setShowThankYou] = useState(false)
     const [receiptData, setReceiptData] = useState(null)
@@ -441,33 +430,6 @@ export default function Donate() {
                                                 ))}
                                             </select>
                                             {errors.purpose && <span className="error-msg">{errors.purpose.message}</span>}
-                                        </div>
-
-                                        {/* Unified SabPaisa Payment Gateway Notice */}
-                                        <div className="payment-methods" style={{ marginTop: '16px' }}>
-                                            <label className="amount-label" style={{ marginBottom: '8px', display: 'block' }}>Payment Gateway</label>
-                                            <div style={{
-                                                background: '#f8fafc',
-                                                border: '1.5px solid #0056b3',
-                                                borderRadius: '12px',
-                                                padding: '16px'
-                                            }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-                                                    <FaLock style={{ color: '#0056b3', fontSize: '18px' }} />
-                                                    <strong style={{ color: '#0f172a', fontSize: '15px' }}>
-                                                        SabPaisa Payment Gateway (Canara Bank Account)
-                                                    </strong>
-                                                </div>
-                                                <p style={{ fontSize: '13px', color: '#475569', margin: '0 0 10px 0', lineHeight: 1.5 }}>
-                                                    Clicking <strong>Donate Now</strong> opens SabPaisa's secure payment screen where you can pay using any method:
-                                                </p>
-                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                                    <span className="gateway-chip">⚡ UPI QR & Apps</span>
-                                                    <span className="gateway-chip">💳 Credit & Debit Cards</span>
-                                                    <span className="gateway-chip">🏛️ Net Banking (All Banks)</span>
-                                                    <span className="gateway-chip">💼 Wallets & NEFT/IMPS</span>
-                                                </div>
-                                            </div>
                                         </div>
                                     </>
                                 ) : (
