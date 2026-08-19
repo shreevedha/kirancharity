@@ -17,20 +17,48 @@ if (dns && typeof dns.setServers === 'function') {
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const app = express();
 
 // Security: Hide server technology stack info
 app.disable('x-powered-by');
 
-// Security: HTTP Response Security Headers
-app.use((req, res, next) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    next();
+// Enterprise Security: Helmet HTTP Security Headers
+app.use(helmet({
+    contentSecurityPolicy: false, // Managed at edge / Vercel level
+    crossOriginEmbedderPolicy: false,
+    hsts: {
+        maxAge: 31536000, // 1 year HSTS
+        includeSubDomains: true,
+        preload: true
+    }
+}));
+
+// Enterprise Security: Prevent MongoDB Operator Injection attacks ($gt, $ne, etc.)
+app.use(mongoSanitize());
+
+// Enterprise Security: Rate Limiting Middleware
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes window
+    max: 200, // Limit each IP to 200 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes.' }
 });
+
+const paymentLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes window
+    max: 20, // Limit each IP to 20 payment initiation requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, message: 'Payment rate limit reached. Please wait a few minutes before trying again.' }
+});
+
+app.use('/api/', generalLimiter);
+app.use('/api/donations/initiate-sabpaisa', paymentLimiter);
 
 // Database Connection Manager (Supports Serverless & Standalone Server)
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kiran-charitable-trust';
@@ -64,7 +92,7 @@ app.use(async (req, res, next) => {
 
 // CORS Security Configuration
 const configuredOrigins = [
-    process.env.CLIENT_URL,
+    process.env.CLIENT_URL || 'https://kiran-charitable-trust.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
     'http://localhost:4173'
@@ -74,14 +102,9 @@ app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (mobile apps, server-to-server, curl)
         if (!origin) return callback(null, true);
-        
-        // Allow Vercel preview & production deployments and specified client origins
+
+        // Allow official domain, Vercel previews, and configured origins
         if (origin.endsWith('.vercel.app') || configuredOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-        
-        // Fallback for custom configured CLIENT_URL
-        if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) {
             return callback(null, true);
         }
 
@@ -89,7 +112,7 @@ app.use(cors({
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Api-Key']
 }));
 
 // Payload limits to prevent DoS vector attacks
@@ -107,14 +130,14 @@ app.get('/api/health', (req, res) => {
         success: true,
         message: 'Kiran Charitable Trust API is running',
         timestamp: new Date(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'production'
     });
 });
 
 app.get('/api', (req, res) => {
     res.json({
         success: true,
-        message: 'Welcome to Kiran Charitable Trust Secure API'
+        message: 'Welcome to Kiran Charitable Trust High-Security API'
     });
 });
 
@@ -139,7 +162,7 @@ if (require.main === module) {
     const PORT = process.env.PORT || 5000;
     connectDB().finally(() => {
         app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
+            console.log(`🚀 High-Security Server running on http://localhost:${PORT}`);
         });
     });
 }
