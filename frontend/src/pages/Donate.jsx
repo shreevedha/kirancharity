@@ -314,10 +314,10 @@ export default function Donate() {
                                 <div className="bank-details">
                                     <h5>Direct Bank Transfer Details</h5>
                                     <p>Account Holder: Kiran Charitable Trust</p>
-                                    <p>Bank: Canara Bank</p>
-                                    <p>A/C No: 110319653482</p>
-                                    <p>IFSC: CNRB0002492</p>
-                                    <p>Branch: Chandramouli Nagar Branch, Guntur (2492)</p>
+                                    <p>Bank: State Bank of India (SBI)</p>
+                                    <p>A/C No: 12345678901234</p>
+                                    <p>IFSC: SBIN0001234</p>
+                                    <p>Branch: Vijayawada Main Branch</p>
                                 </div>
                             </div>
 
