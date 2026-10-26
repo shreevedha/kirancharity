@@ -30,11 +30,18 @@ export default function Donate() {
     const [showThankYou, setShowThankYou] = useState(false)
     const [receiptData, setReceiptData] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [checkoutSession, setCheckoutSession] = useState(null)
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
     const finalAmount = customAmount || selectedAmount
 
     useEffect(() => {
+        // Break out of iframe if loaded inside SabPaisa checkout iframe
+        if (window.self !== window.top) {
+            window.top.location.href = window.location.href;
+            return;
+        }
+
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status');
         const txnId = params.get('txnId');
@@ -106,8 +113,13 @@ export default function Donate() {
                 });
 
                 if (response.data && response.data.success && response.data.checkoutUrl) {
-                    toast.info('Redirecting to SabPaisa Secure Payment Gateway...');
-                    window.location.href = response.data.checkoutUrl;
+                    setIsSubmitting(false);
+                    setCheckoutSession({
+                        url: response.data.checkoutUrl,
+                        amount: finalAmount,
+                        donorName: data.fullName
+                    });
+                    toast.success('SabPaisa Secure Gateway ready! Scan the dynamic QR or choose your payment app.');
                     return;
                 } else {
                     toast.error(response.data?.message || 'Failed to initialize SabPaisa payment.');
@@ -312,12 +324,15 @@ export default function Donate() {
                                     <li><FaCheckCircle /> FCRA Approved Account</li>
                                 </ul>
                                 <div className="bank-details">
-                                    <h5>Direct Bank Transfer Details</h5>
-                                    <p>Account Holder: Kiran Charitable Trust</p>
-                                    <p>Bank: State Bank of India (SBI)</p>
-                                    <p>A/C No: 12345678901234</p>
-                                    <p>IFSC: SBIN0001234</p>
-                                    <p>Branch: Vijayawada Main Branch</p>
+                                    <h5>Official Trust Bank Transfer (NEFT / RTGS / IMPS)</h5>
+                                    <p><strong>Account Name:</strong> Kiran Charitable Trust</p>
+                                    <p><strong>Bank:</strong> Canara Bank</p>
+                                    <p><strong>Account Number:</strong> 110319653482</p>
+                                    <p><strong>IFSC Code:</strong> CNRB0002492</p>
+                                    <p><strong>Branch:</strong> CM Nagar Branch (2492), Guntur</p>
+                                    <p style={{ marginTop: '8px', fontSize: '11px', color: '#047857', fontWeight: '600' }}>
+                                        <FaCheckCircle style={{ marginRight: '5px' }} /> Verified Current Account • SabPaisa Merchant ID: KIRA99
+                                    </p>
                                 </div>
                             </div>
 
@@ -575,6 +590,50 @@ export default function Donate() {
                     </div>
                 </div>
             </section>
+
+            {/* SabPaisa Embedded Checkout Modal */}
+            {checkoutSession && (
+                <div className="sabpaisa-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setCheckoutSession(null); }}>
+                    <div className="sabpaisa-modal-container">
+                        <div className="sabpaisa-modal-header">
+                            <div>
+                                <h4>SabPaisa Secure Gateway</h4>
+                                <p>Kiran Charitable Trust • ₹{Number(checkoutSession.amount).toLocaleString('en-IN')}</p>
+                            </div>
+                            <div className="sabpaisa-modal-actions">
+                                <a
+                                    href={checkoutSession.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn-open-external"
+                                    title="Open SabPaisa gateway in full window"
+                                >
+                                    Full Window ↗
+                                </a>
+                                <button
+                                    type="button"
+                                    className="sabpaisa-modal-close"
+                                    onClick={() => setCheckoutSession(null)}
+                                    title="Close checkout"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                        <div className="sabpaisa-iframe-wrapper">
+                            <iframe
+                                src={checkoutSession.url}
+                                title="SabPaisa Secure Payment Gateway"
+                                allow="payment"
+                                className="sabpaisa-checkout-iframe"
+                            />
+                        </div>
+                        <div className="sabpaisa-modal-footer">
+                            <FaLock /> 256-bit Encrypted • Direct SabPaisa PG 3.0 & Canara Bank
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

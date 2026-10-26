@@ -547,3 +547,132 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+
+/* SabPaisa Embedded Modal */
+.sabpaisa-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.sabpaisa-modal-container {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 520px;
+    height: 88vh;
+    max-height: 720px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.sabpaisa-modal-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: #ffffff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sabpaisa-modal-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.sabpaisa-modal-header p {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+.sabpaisa-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-open-external {
+    font-size: 11px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    padding: 5px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-open-external:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.sabpaisa-modal-close {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0.85;
+}
+
+.sabpaisa-modal-close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sabpaisa-iframe-wrapper {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    background: #f8fafc;
+}
+
+.sabpaisa-checkout-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+.sabpaisa-modal-footer {
+    padding: 10px 16px;
+    background: #f1f5f9;
+    font-size: 12px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-top: 1px solid #e2e8f0;
+    font-weight: 500;
+}
