@@ -321,19 +321,25 @@ export default function Donate() {
                                 </div>
                             </div>
 
-                            {/* QR Code Placeholder */}
-                            <div className="qr-section">
-                                <div className="qr-placeholder"><FaQrcode /></div>
+                            {/* SabPaisa Live Gateway Integration Info */}
+                            <div className="qr-section" style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)', border: '1.5px solid #bfdbfe', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                <div className="qr-placeholder" style={{ background: '#1d4ed8', color: 'white', minWidth: '48px', height: '48px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
+                                    <FaQrcode />
+                                </div>
                                 <div>
-                                    <p className="qr-label">Scan to Donate via UPI Apps</p>
-                                    <p className="qr-upi">kirancharitabletrust@sbi</p>
+                                    <p className="qr-label" style={{ fontWeight: '700', fontSize: '15px', color: '#1e3a8a', marginBottom: '3px' }}>
+                                        Instant Online UPI & Dynamic QR Code
+                                    </p>
+                                    <p style={{ fontSize: '12px', color: '#475569', margin: 0, lineHeight: 1.4 }}>
+                                        Powered directly by <strong>SabPaisa PG 3.0 (Canara Bank)</strong>. Generates an instant customized QR code for your exact donation amount, and supports Google Pay, PhonePe, Paytm, BHIM, Cards & Net Banking.
+                                    </p>
                                 </div>
                             </div>
 
                             <div className="gateways-info">
-                                <p>All payments are securely processed via standard 256-bit encrypted gateways:</p>
+                                <p>All donations are securely processed via 256-bit encrypted SabPaisa Gateway:</p>
                                 <div className="gateway-list">
-                                    {['PhonePe', 'Google Pay', 'Razorpay', 'Net Banking', 'Credit/Debit Card'].map((g, i) => (
+                                    {['Google Pay', 'PhonePe', 'Paytm', 'BHIM UPI', 'Dynamic QR', 'Credit/Debit Card', 'Net Banking'].map((g, i) => (
                                         <span key={i} className="gateway-chip">{g}</span>
                                     ))}
                                 </div>
