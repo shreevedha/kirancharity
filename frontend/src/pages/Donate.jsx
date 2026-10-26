@@ -99,8 +99,11 @@ export default function Donate() {
             setShowThankYou(true);
             toast.success('Payment Successful! Donation receipt generated.');
         } else if (status === 'failed') {
-            const reason = params.get('reason') || 'Transaction failed or was cancelled.';
-            toast.error(`Payment Status: ${reason}`);
+            const reason = params.get('reason') || 'Transaction cancelled or failed.';
+            toast.info('Payment cancelled.');
+            setIsCaptchaVerified(false);
+            setVerifiedToken('');
+            setIsVerifyingCaptcha(false);
         }
     }, []);
 
@@ -775,7 +778,10 @@ export default function Donate() {
                                                 e.stopPropagation();
                                                 setShowCancelConfirm(false);
                                                 setCheckoutSession(null);
-                                                toast.info('Payment session cancelled.');
+                                                setIsCaptchaVerified(false);
+                                                setVerifiedToken('');
+                                                setIsVerifyingCaptcha(false);
+                                                toast.info('Payment cancelled.');
                                             }}
                                         >
                                             Yes, Cancel Transaction
