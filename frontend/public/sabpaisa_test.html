@@ -215,7 +215,7 @@
     <div class="header">
         <h1>SabPaisa PG Integration Test Suite</h1>
         <p>Canara Bank Trust Account Integration (CM Nagar Branch, Guntur)</p>
-        <span class="badge" id="envBadge">ENVIRONMENT: STAGING (TEST MODE)</span>
+        <span class="badge" id="envBadge" style="background: #dc2626;">ENVIRONMENT: PRODUCTION (REAL LIVE MONEY)</span>
     </div>
 
     <div class="content">
@@ -224,25 +224,25 @@
             <div class="form-group full">
                 <label for="envMode">Gateway Mode Select</label>
                 <select id="envMode" onchange="toggleEnvMode()">
-                    <option value="staging" selected>🧪 Staging / Sandbox Mode (Test Credentials)</option>
-                    <option value="production">💳 Production Mode (Real Live Money & Production Credentials)</option>
+                    <option value="production" selected>💳 Production Mode (Real Live Money — KIRA99)</option>
+                    <option value="staging">🧪 Staging / Sandbox Mode (Test Credentials — SQUA102)</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="merchantId">Merchant ID / Client Code</label>
-                <input type="text" id="merchantId" value="SQUA102">
+                <input type="text" id="merchantId" value="KIRA99">
             </div>
             <div class="form-group">
                 <label for="apiKey">API Key (X-Api-Key)</label>
-                <input type="text" id="apiKey" value="sp_itOrld7Rm0SGjkqg_VSEXBtZXqi8T26-pMPfpUCxUQo">
+                <input type="text" id="apiKey" value="sp_pT78w4hwe1hgNvUe-8yeK6DA1mYckbGXEiSsuzthxzk">
             </div>
             <div class="form-group full">
                 <label for="secretKey">Secret Key / Checksum Key</label>
-                <input type="text" id="secretKey" value="sec_lLao-1-yDLmV81YjExxgR00a8o7FgJ8-HLSJj9Od4hY">
+                <input type="text" id="secretKey" value="sec_TiRVAAILsA2XJwN3V5TOHgCaKfi7NWAz5E72i3XxM1Q">
             </div>
             <div class="form-group full">
                 <label for="baseUrl">SabPaisa API Base URL</label>
-                <input type="text" id="baseUrl" value="https://staging-sb-merchant-api.sabpaisa.in">
+                <input type="text" id="baseUrl" value="https://merchant-api.sabpaisa.in">
             </div>
         </div>
 
@@ -266,7 +266,7 @@
             </div>
             <div class="form-group full">
                 <label for="returnUrl">Return / Callback URL</label>
-                <input type="text" id="returnUrl" value="https://kiran-charitable-trust.vercel.app/api/donations/sabpaisa-callback">
+                <input type="text" id="returnUrl" value="https://www.kirancharitabletrust.org/api/donations/sabpaisa-callback">
             </div>
         </div>
 
@@ -294,18 +294,27 @@
     function toggleEnvMode() {
         const mode = document.getElementById('envMode').value;
         const baseUrlInput = document.getElementById('baseUrl');
+        const merchantIdInput = document.getElementById('merchantId');
+        const apiKeyInput = document.getElementById('apiKey');
+        const secretKeyInput = document.getElementById('secretKey');
         const badge = document.getElementById('envBadge');
 
         if (mode === 'production') {
             baseUrlInput.value = 'https://merchant-api.sabpaisa.in';
+            merchantIdInput.value = 'KIRA99';
+            apiKeyInput.value = 'sp_pT78w4hwe1hgNvUe-8yeK6DA1mYckbGXEiSsuzthxzk';
+            secretKeyInput.value = 'sec_TiRVAAILsA2XJwN3V5TOHgCaKfi7NWAz5E72i3XxM1Q';
             badge.innerText = 'ENVIRONMENT: PRODUCTION (REAL LIVE MONEY)';
             badge.style.background = '#dc2626';
-            log('Switched mode to Production (Real Live Money). Ensure Production Merchant Keys are entered.');
+            log('Switched mode to Production (Real Live Money — KIRA99).');
         } else {
             baseUrlInput.value = 'https://staging-sb-merchant-api.sabpaisa.in';
+            merchantIdInput.value = 'SQUA102';
+            apiKeyInput.value = 'sp_itOrld7Rm0SGjkqg_VSEXBtZXqi8T26-pMPfpUCxUQo';
+            secretKeyInput.value = 'sec_lLao-1-yDLmV81YjExxgR00a8o7FgJ8-HLSJj9Od4hY';
             badge.innerText = 'ENVIRONMENT: STAGING (TEST MODE)';
             badge.style.background = 'rgba(255, 255, 255, 0.2)';
-            log('Switched mode to Staging (Test Mode).');
+            log('Switched mode to Staging (Test Mode — SQUA102).');
         }
     }
 

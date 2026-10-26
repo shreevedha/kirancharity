@@ -68,7 +68,10 @@ app.use(async (req, res, next) => {
 
 // CORS Security Configuration
 const configuredOrigins = [
-    process.env.CLIENT_URL || 'https://kiran-charitable-trust.vercel.app',
+    process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org',
+    'https://www.kirancharitabletrust.org',
+    'https://kirancharitabletrust.org',
+    'https://kiran-charitable-trust.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
     'http://localhost:4173'
@@ -80,7 +83,11 @@ app.use(cors({
         if (!origin) return callback(null, true);
 
         // Allow official domain, Vercel previews, and configured origins
-        if (origin.endsWith('.vercel.app') || configuredOrigins.includes(origin)) {
+        if (
+            origin.endsWith('.vercel.app') ||
+            origin.includes('kirancharitabletrust.org') ||
+            configuredOrigins.includes(origin)
+        ) {
             return callback(null, true);
         }
 

@@ -3,11 +3,11 @@ const router = express.Router();
 const crypto = require('crypto');
 const Donation = require('../models/Donation');
 
-// Staging Sandbox SabPaisa Canara Bank Credentials (PG 3.0 Test Mode)
-const DEFAULT_CLIENT_CODE = process.env.SABPAISA_CLIENT_CODE || 'SQUA102';
-const DEFAULT_API_KEY = process.env.SABPAISA_API_KEY || 'sp_itOrld7Rm0SGjkqg_VSEXBtZXqi8T26-pMPfpUCxUQo';
-const DEFAULT_SECRET_KEY = process.env.SABPAISA_SECRET_KEY || 'sec_lLao-1-yDLmV81YjExxgR00a8o7FgJ8-HLSJj9Od4hY';
-const DEFAULT_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://staging-sb-merchant-api.sabpaisa.in';
+// Official Production SabPaisa Canara Bank Credentials (PG 3.0 Live Mode)
+const DEFAULT_CLIENT_CODE = process.env.SABPAISA_CLIENT_CODE || 'KIRA99';
+const DEFAULT_API_KEY = process.env.SABPAISA_API_KEY || 'sp_pT78w4hwe1hgNvUe-8yeK6DA1mYckbGXEiSsuzthxzk';
+const DEFAULT_SECRET_KEY = process.env.SABPAISA_SECRET_KEY || 'sec_TiRVAAILsA2XJwN3V5TOHgCaKfi7NWAz5E72i3XxM1Q';
+const DEFAULT_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://merchant-api.sabpaisa.in';
 
 // Helper: Generate SabPaisa PG 3.0 Checksum (HMAC SHA-256)
 function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, timestamp, secretKey) {
@@ -73,7 +73,7 @@ router.post('/initiate-sabpaisa', async (req, res) => {
 
         await donation.save();
 
-        const host = req.headers.origin || req.headers.referer || process.env.CLIENT_URL || 'https://kiran-charitable-trust.vercel.app';
+        const host = req.headers.origin || req.headers.referer || process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
         const cleanHost = host.replace(/\/$/, '');
         const callbackUrl = `${cleanHost}/api/donations/sabpaisa-callback`;
 
@@ -87,8 +87,9 @@ router.post('/initiate-sabpaisa', async (req, res) => {
             returnUrl: callbackUrl,
             customerName: fullName,
             customerEmail: email,
+            customerPhone: mobile,
             customerMobile: mobile,
-            timestamp,
+            timestamp: parseInt(timestamp, 10),
             checksum
         };
 
@@ -147,7 +148,7 @@ const handleCallback = async (req, res) => {
         const isSuccess = statusCode === '0000' || statusMsg === 'SUCCESS' || statusMsg === 'SUCCESSFUL' || statusMsg === 'COMPLETED';
 
         const donation = await Donation.findOne({ transactionId: clientTxnId });
-        const clientRedirectUrl = process.env.CLIENT_URL || 'https://kiran-charitable-trust.vercel.app';
+        const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
 
         if (donation) {
             donation.status = isSuccess ? 'completed' : 'failed';
@@ -164,7 +165,7 @@ const handleCallback = async (req, res) => {
         return res.redirect(`${clientRedirectUrl}/donate?status=failed&reason=Donation+record+not+found`);
     } catch (error) {
         console.error('SabPaisa Callback Error:', error);
-        const clientRedirectUrl = process.env.CLIENT_URL || 'https://kiran-charitable-trust.vercel.app';
+        const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
         return res.redirect(`${clientRedirectUrl}/donate?status=failed&reason=Processing+error`);
     }
 };
