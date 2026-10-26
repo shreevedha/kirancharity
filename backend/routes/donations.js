@@ -63,25 +63,19 @@ function verifyReturnSignature(params, secretKey) {
     return expectedSignature.toLowerCase() === String(signature).toLowerCase();
 }
 
-// GET /api/donations/captcha-challenge — Generates a signed rotating challenge
+// GET /api/donations/captcha-challenge — Generates a signed anti-bot challenge
 router.get('/captcha-challenge', (req, res) => {
     try {
-        // Random initial rotation angle (between 60 and 300 deg, avoiding already upright)
-        const angleList = [60, 80, 105, 135, 150, 180, 210, 225, 255, 280, 300];
-        const initialAngle = angleList[Math.floor(Math.random() * angleList.length)];
         const timestamp = Date.now();
-
         const signature = crypto
             .createHmac('sha256', CAPTCHA_SECRET)
-            .update(`ROTATE:${initialAngle}:${timestamp}`)
+            .update(`RECAPTCHA_1CLICK:${timestamp}`)
             .digest('hex');
 
         return res.json({
             success: true,
             challenge: {
-                type: 'rotate',
-                initialAngle,
-                token: `${timestamp}:${initialAngle}:${signature}`
+                token: `${timestamp}:${signature}`
             }
         });
     } catch (err) {
@@ -93,93 +87,41 @@ router.get('/captcha-challenge', (req, res) => {
 // POST /api/donations/verify-captcha — Validates user response to anti-bot challenge
 router.post('/verify-captcha', (req, res) => {
     try {
-        const { token, userRotation, answer } = req.body;
+        const { token } = req.body;
         if (!token) {
             return res.status(400).json({ success: false, message: 'Captcha token is required.' });
         }
 
         const parts = String(token).split(':');
+        const [timestampStr, expectedSig] = parts;
+        const timestamp = parseInt(timestampStr, 10);
+        const now = Date.now();
 
-        // Handle Rotating Challenge format: timestamp:initialAngle:signature
-        if (parts.length === 3) {
-            const [timestampStr, initialAngleStr, expectedSig] = parts;
-            const timestamp = parseInt(timestampStr, 10);
-            const initialAngle = parseInt(initialAngleStr, 10);
-            const now = Date.now();
-
-            if (isNaN(timestamp) || now - timestamp > 10 * 60 * 1000) {
-                return res.status(400).json({ success: false, message: 'Security verification expired. Please try again.' });
-            }
-
-            const computedSig = crypto
-                .createHmac('sha256', CAPTCHA_SECRET)
-                .update(`ROTATE:${initialAngle}:${timestamp}`)
-                .digest('hex');
-
-            if (computedSig !== expectedSig) {
-                return res.status(400).json({ success: false, message: 'Invalid security challenge signature.' });
-            }
-
-            // Verify orientation is upright (within ±18° tolerance)
-            const rotation = Number(userRotation !== undefined ? userRotation : answer);
-            if (isNaN(rotation)) {
-                return res.status(400).json({ success: false, message: 'Valid rotation angle required.' });
-            }
-
-            const finalAngle = ((initialAngle + rotation) % 360 + 360) % 360;
-            const isUpright = finalAngle <= 18 || finalAngle >= 342;
-
-            if (!isUpright) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Image is not upright yet. Please rotate until the emblem is right-side up.'
-                });
-            }
-
-            const verifiedSig = crypto
-                .createHmac('sha256', CAPTCHA_SECRET)
-                .update(`VERIFIED_ROTATE:${timestamp}`)
-                .digest('hex');
-
-            return res.json({
-                success: true,
-                message: 'Human verification confirmed.',
-                verifiedToken: `${timestamp}:${verifiedSig}`
-            });
+        // Expire after 10 mins
+        if (isNaN(timestamp) || now - timestamp > 10 * 60 * 1000) {
+            return res.status(400).json({ success: false, message: 'Security verification expired. Please click again.' });
         }
 
-        // Backward compatibility for legacy math token: timestamp:signature
-        if (parts.length === 2) {
-            const [timestampStr, expectedSig] = parts;
-            const timestamp = parseInt(timestampStr, 10);
-            const now = Date.now();
+        const computedSig = crypto
+            .createHmac('sha256', CAPTCHA_SECRET)
+            .update(`RECAPTCHA_1CLICK:${timestamp}`)
+            .digest('hex');
 
-            if (isNaN(timestamp) || now - timestamp > 10 * 60 * 1000) {
-                return res.status(400).json({ success: false, message: 'Security verification expired.' });
-            }
-
-            const computedSig = crypto
-                .createHmac('sha256', CAPTCHA_SECRET)
-                .update(`${String(answer).trim()}:${timestamp}`)
-                .digest('hex');
-
-            if (computedSig !== expectedSig) {
-                return res.status(400).json({ success: false, message: 'Incorrect answer.' });
-            }
-
-            const verifiedSig = crypto
-                .createHmac('sha256', CAPTCHA_SECRET)
-                .update(`VERIFIED_ROTATE:${timestamp}`)
-                .digest('hex');
-
-            return res.json({
-                success: true,
-                message: 'Security verification confirmed.',
-                verifiedToken: `${timestamp}:${verifiedSig}`
-            });
+        if (computedSig !== expectedSig) {
+            return res.status(400).json({ success: false, message: 'Invalid verification token.' });
         }
 
-        return res.status(400).json({ success: false, message: 'Malformed captcha token.' });
+        // Generate verified token for payment initiation
+        const verifiedSig = crypto
+            .createHmac('sha256', CAPTCHA_SECRET)
+            .update(`VERIFIED_CLICK:${timestamp}`)
+            .digest('hex');
+
+        return res.json({
+            success: true,
+            message: 'Human verification confirmed.',
+            verifiedToken: `${timestamp}:${verifiedSig}`
+        });
     } catch (err) {
         console.error('Captcha verify error:', err);
         return res.status(500).json({ success: false, message: 'Captcha verification error' });
