@@ -160,13 +160,9 @@ export default function Donate() {
                 });
 
                 if (response.data && response.data.success && response.data.checkoutUrl) {
-                    setIsSubmitting(false);
-                    setCheckoutSession({
-                        url: response.data.checkoutUrl,
-                        amount: finalAmount,
-                        donorName: data.fullName
-                    });
-                    toast.success('Secure Payment Gateway ready. Please choose your payment method.');
+                    toast.info('Opening SabPaisa Secure Payment Gateway...');
+                    // Redirect directly to SabPaisa hosted checkout to enable 100% full support for Credit/Debit Cards (3D Secure OTP), NetBanking (39+ banks), and UPI
+                    window.location.href = response.data.checkoutUrl;
                     return;
                 } else {
                     toast.error(response.data?.message || 'Failed to initialize payment.');
