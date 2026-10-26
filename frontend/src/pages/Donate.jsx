@@ -65,7 +65,7 @@ export default function Donate() {
             });
             if (res.data && res.data.success) {
                 setIsCaptchaVerified(true);
-                toast.success('Security Verification Confirmed! 256-bit safe donation enabled.');
+                toast.success('Security Verification Confirmed!');
             } else {
                 toast.error(res.data?.message || 'Incorrect security answer. New challenge generated.');
                 fetchChallenge();
@@ -104,10 +104,10 @@ export default function Donate() {
                 name: name || 'Valued Donor',
                 amount: amount || '1000',
                 date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }),
-                purpose: 'SabPaisa Canara Bank Online Payment',
+                purpose: 'Online Trust Donation',
             });
             setShowThankYou(true);
-            toast.success('SabPaisa Payment Successful! Receipt generated.');
+            toast.success('Payment Successful! Donation receipt generated.');
         } else if (status === 'failed') {
             const reason = params.get('reason') || 'Transaction failed or was cancelled.';
             toast.error(`Payment Status: ${reason}`);
@@ -153,7 +153,7 @@ export default function Donate() {
         setIsSubmitting(true);
 
         if (donationType === 'cash') {
-            toast.info('Connecting to SabPaisa Secure Payment Gateway (Canara Bank)...');
+            toast.info('Connecting to Secure Payment Gateway...');
             try {
                 const response = await axios.post(`${API_BASE_URL}/donations/initiate-sabpaisa`, {
                     fullName: data.fullName,
@@ -174,15 +174,15 @@ export default function Donate() {
                         amount: finalAmount,
                         donorName: data.fullName
                     });
-                    toast.success('SabPaisa Secure Gateway ready! Scan the dynamic QR or choose your payment app.');
+                    toast.success('Secure Payment Gateway ready. Please choose your payment method.');
                     return;
                 } else {
-                    toast.error(response.data?.message || 'Failed to initialize SabPaisa payment.');
+                    toast.error(response.data?.message || 'Failed to initialize payment.');
                     setIsSubmitting(false);
                 }
             } catch (error) {
-                console.error('SabPaisa payment initiation error:', error);
-                const errorMsg = error.response?.data?.message || 'Unable to connect to SabPaisa payment gateway. Please try again.';
+                console.error('Payment initiation error:', error);
+                const errorMsg = error.response?.data?.message || 'Unable to connect to payment gateway. Please try again.';
                 toast.error(errorMsg);
                 setIsSubmitting(false);
                 return;
@@ -386,7 +386,7 @@ export default function Donate() {
                                     <p><strong>IFSC Code:</strong> CNRB0002492</p>
                                     <p><strong>Branch:</strong> CM Nagar Branch (2492), Guntur</p>
                                     <p style={{ marginTop: '8px', fontSize: '11px', color: '#047857', fontWeight: '600' }}>
-                                        <FaCheckCircle style={{ marginRight: '5px' }} /> Verified Current Account • SabPaisa Merchant ID: KIRA99
+                                        <FaCheckCircle style={{ marginRight: '5px' }} /> Verified Trust Current Account
                                     </p>
                                 </div>
                             </div>
@@ -397,7 +397,7 @@ export default function Donate() {
                             <div className="donate-form-header">
                                 <FaHeart className="donate-form-icon" />
                                 <h3>Kiran Trust Contribution Form</h3>
-                                <div className="secure-badge"><FaLock /> 256-bit SSL Secure Gateway</div>
+                                <div className="secure-badge"><FaLock /> 100% Secure & Encrypted</div>
                             </div>
 
                             <div className="donation-type-tabs" style={{ display: 'flex', borderBottom: '1px solid var(--border)' }}>
@@ -698,13 +698,13 @@ export default function Donate() {
                 </div>
             </section>
 
-            {/* SabPaisa Embedded Checkout Modal */}
+            {/* Embedded Checkout Modal */}
             {checkoutSession && (
                 <div className="sabpaisa-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setCheckoutSession(null); }}>
                     <div className="sabpaisa-modal-container">
                         <div className="sabpaisa-modal-header">
                             <div>
-                                <h4>SabPaisa Secure Gateway</h4>
+                                <h4>Secure Payment Gateway</h4>
                                 <p>Kiran Charitable Trust • ₹{Number(checkoutSession.amount).toLocaleString('en-IN')}</p>
                             </div>
                             <div className="sabpaisa-modal-actions">
@@ -713,7 +713,7 @@ export default function Donate() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn-open-external"
-                                    title="Open SabPaisa gateway in full window"
+                                    title="Open in full window"
                                 >
                                     Full Window ↗
                                 </a>
@@ -730,13 +730,13 @@ export default function Donate() {
                         <div className="sabpaisa-iframe-wrapper">
                             <iframe
                                 src={checkoutSession.url}
-                                title="SabPaisa Secure Payment Gateway"
+                                title="Secure Payment Gateway"
                                 allow="payment"
                                 className="sabpaisa-checkout-iframe"
                             />
                         </div>
                         <div className="sabpaisa-modal-footer">
-                            <FaLock /> 256-bit Encrypted • Direct SabPaisa PG 3.0 & Canara Bank
+                            <FaLock /> 100% Secure &bull; PCI-DSS Certified 256-bit Encrypted Gateway
                         </div>
                     </div>
                 </div>
