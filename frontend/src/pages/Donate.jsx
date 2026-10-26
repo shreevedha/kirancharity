@@ -445,11 +445,38 @@ export default function Donate() {
                                                 ))}
                                             </div>
                                             <input
-                                                type="number"
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="[0-9]*"
                                                 placeholder="Or enter custom amount (₹)"
                                                 className="custom-amount-input"
                                                 value={customAmount}
-                                                onChange={e => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
+                                                onChange={e => {
+                                                    const clean = e.target.value.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
+                                                    setCustomAmount(clean);
+                                                    if (clean) {
+                                                        setSelectedAmount(null);
+                                                    } else {
+                                                        setSelectedAmount(1000);
+                                                    }
+                                                }}
+                                                onKeyDown={e => {
+                                                    if (['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter'].includes(e.key)) {
+                                                        return;
+                                                    }
+                                                    if (!/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                                                        e.preventDefault();
+                                                    }
+                                                }}
+                                                onPaste={e => {
+                                                    e.preventDefault();
+                                                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                                                    const clean = paste.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
+                                                    if (clean) {
+                                                        setCustomAmount(clean);
+                                                        setSelectedAmount(null);
+                                                    }
+                                                }}
                                             />
                                             <div className="selected-amount-display">
                                                 Donation Amount: <strong className="gradient-text">₹{Number(finalAmount).toLocaleString('en-IN')}</strong>
@@ -648,7 +675,16 @@ export default function Donate() {
                                     className="btn btn-primary donate-submit-btn"
                                     disabled={!agreed || (donationType === 'cash' && !isCaptchaVerified) || isSubmitting}
                                 >
-                                    <FaHeart /> {donationType === 'cash' ? `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} Now` : `Submit Item Donation Support`}
+                                    {isSubmitting ? (
+                                        <>
+                                            <span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid white', borderRightColor: 'transparent', borderRadius: '50%', animation: 'recaptchaRotation 0.6s linear infinite', marginRight: 8, verticalAlign: 'middle' }}></span>
+                                            Connecting to Gateway...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaHeart /> {donationType === 'cash' ? `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} Now` : `Submit Item Donation Support`}
+                                        </>
+                                    )}
                                 </button>
 
                                 <div className="form-footer-note">
@@ -665,9 +701,9 @@ export default function Donate() {
                 <div className="sabpaisa-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setCheckoutSession(null); }}>
                     <div className="sabpaisa-modal-container">
                         <div className="sabpaisa-modal-header">
-                            <div>
-                                <h4>Secure Payment Gateway</h4>
-                                <p>Kiran Charitable Trust • ₹{Number(checkoutSession.amount).toLocaleString('en-IN')}</p>
+                            <div className="sabpaisa-modal-title">
+                                <span className="sabpaisa-dot-live"></span>
+                                <span>SabPaisa Secure Checkout &bull; ₹{Number(checkoutSession.amount).toLocaleString('en-IN')}</span>
                             </div>
                             <div className="sabpaisa-modal-actions">
                                 <a
@@ -692,13 +728,10 @@ export default function Donate() {
                         <div className="sabpaisa-iframe-wrapper">
                             <iframe
                                 src={checkoutSession.url}
-                                title="Secure Payment Gateway"
+                                title="SabPaisa Secure Checkout"
                                 allow="payment"
                                 className="sabpaisa-checkout-iframe"
                             />
-                        </div>
-                        <div className="sabpaisa-modal-footer">
-                            <FaLock /> 100% Secure &bull; PCI-DSS Certified 256-bit Encrypted Gateway
                         </div>
                     </div>
                 </div>

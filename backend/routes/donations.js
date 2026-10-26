@@ -221,11 +221,9 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
             status: 'pending'
         });
 
-        try {
-            await donation.save();
-        } catch (dbErr) {
-            console.warn('⚠️ DB save skipped (proceeding to SabPaisa):', dbErr.message);
-        }
+        donation.save().catch(dbErr => {
+            console.warn('⚠️ DB save async notice:', dbErr.message);
+        });
 
         const host = req.headers.origin || req.headers.referer || process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
         const cleanHost = host.replace(/\/$/, '');
@@ -412,11 +410,9 @@ router.post('/', async (req, res) => {
             status: isCash ? 'completed' : 'pending'
         });
 
-        try {
-            await donation.save();
-        } catch (dbErr) {
-            console.warn('⚠️ DB save skipped (proceeding to SabPaisa):', dbErr.message);
-        }
+        donation.save().catch(dbErr => {
+            console.warn('⚠️ DB save async notice:', dbErr.message);
+        });
 
         res.status(201).json({
             success: true,
