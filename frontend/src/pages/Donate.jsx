@@ -6,7 +6,8 @@ import {
     FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaHeart,
     FaMobileAlt, FaUniversity, FaCreditCard, FaWallet,
     FaQrcode, FaShieldAlt, FaCheckCircle, FaFileAlt,
-    FaReceipt, FaLock, FaCheck, FaSyncAlt, FaRedo, FaUndo
+    FaReceipt, FaLock, FaCheck, FaSyncAlt, FaRedo, FaUndo,
+    FaExclamationTriangle
 } from 'react-icons/fa'
 import axios from 'axios'
 import { API_BASE_URL } from '../config'
@@ -32,6 +33,7 @@ export default function Donate() {
     const [receiptData, setReceiptData] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [checkoutSession, setCheckoutSession] = useState(null)
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false)
     const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
     const [isVerifyingCaptcha, setIsVerifyingCaptcha] = useState(false)
     const [verifiedToken, setVerifiedToken] = useState('')
@@ -698,7 +700,14 @@ export default function Donate() {
 
             {/* Embedded Checkout Modal */}
             {checkoutSession && (
-                <div className="sabpaisa-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setCheckoutSession(null); }}>
+                <div
+                    className="sabpaisa-modal-overlay"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowCancelConfirm(true);
+                        }
+                    }}
+                >
                     <div className="sabpaisa-modal-container">
                         <div className="sabpaisa-modal-header">
                             <div className="sabpaisa-modal-title">
@@ -718,7 +727,7 @@ export default function Donate() {
                                 <button
                                     type="button"
                                     className="sabpaisa-modal-close"
-                                    onClick={() => setCheckoutSession(null)}
+                                    onClick={() => setShowCancelConfirm(true)}
                                     title="Close checkout"
                                 >
                                     ✕
@@ -733,6 +742,41 @@ export default function Donate() {
                                 className="sabpaisa-checkout-iframe"
                             />
                         </div>
+
+                        {/* Cancel Transaction Confirmation Prompt */}
+                        {showCancelConfirm && (
+                            <div className="cancel-confirm-backdrop" onClick={(e) => e.stopPropagation()}>
+                                <div className="cancel-confirm-box">
+                                    <div className="cancel-confirm-icon-wrap">
+                                        <FaExclamationTriangle />
+                                    </div>
+                                    <h3>Cancel Payment Transaction?</h3>
+                                    <p>
+                                        Your secure donation of <strong>₹{Number(checkoutSession.amount).toLocaleString('en-IN')}</strong> is in progress. Are you sure you want to cancel this transaction?
+                                    </p>
+                                    <div className="cancel-confirm-btn-group">
+                                        <button
+                                            type="button"
+                                            className="cancel-resume-btn"
+                                            onClick={() => setShowCancelConfirm(false)}
+                                        >
+                                            Continue Payment
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="cancel-abort-btn"
+                                            onClick={() => {
+                                                setShowCancelConfirm(false);
+                                                setCheckoutSession(null);
+                                                toast.info('Payment session cancelled.');
+                                            }}
+                                        >
+                                            Yes, Cancel Transaction
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

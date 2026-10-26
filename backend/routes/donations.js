@@ -281,6 +281,91 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
     }
 });
 
+// Helper: Send HTML breakout response so parent window navigates to receipt
+function sendBreakoutHtml(res, targetUrl, isSuccess) {
+    res.removeHeader('X-Frame-Options');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.status(200).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${isSuccess ? 'Payment Successful' : 'Payment Status'}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f172a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .box {
+            background: #1e293b;
+            padding: 36px 28px;
+            border-radius: 18px;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            border-top-color: ${isSuccess ? '#10b981' : '#f59e0b'};
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h3 { margin: 0 0 10px; font-size: 20px; font-weight: 700; color: #f8fafc; }
+        p { margin: 0 0 18px; font-size: 13.5px; color: #94a3b8; line-height: 1.5; }
+        .btn-link {
+            display: inline-block;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="spinner"></div>
+        <h3>${isSuccess ? 'Payment Confirmed!' : 'Updating Status...'}</h3>
+        <p>${isSuccess ? 'Redirecting to your official donation receipt...' : 'Please wait while we update your donation status...'}</p>
+        <a id="btnRedirect" href="${targetUrl}" class="btn-link" style="display:none;">View Receipt Now</a>
+    </div>
+    <script>
+        const target = ${JSON.stringify(targetUrl)};
+        try {
+            if (window.top && window.top !== window.self) {
+                window.top.location.href = target;
+            } else if (window.parent && window.parent !== window.self) {
+                window.parent.location.href = target;
+            } else {
+                window.location.href = target;
+            }
+        } catch (e) {
+            window.location.href = target;
+        }
+        setTimeout(function() {
+            var btn = document.getElementById('btnRedirect');
+            if (btn) btn.style.display = 'inline-block';
+        }, 1200);
+    </script>
+</body>
+</html>`);
+}
+
 // Callback Handler (POST & GET) — Receives payment outcome from SabPaisa
 const handleCallback = async (req, res) => {
     try {
@@ -317,21 +402,21 @@ const handleCallback = async (req, res) => {
             }
 
             if (isSuccess) {
-                return res.redirect(`${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(donation.receiptNumber)}&name=${encodeURIComponent(donation.fullName)}&amount=${donation.amount}`);
+                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(donation.receiptNumber)}&name=${encodeURIComponent(donation.fullName)}&amount=${donation.amount}`, true);
             } else {
-                return res.redirect(`${clientRedirectUrl}/donate?status=failed&reason=${encodeURIComponent(data.statusMsg || 'Transaction cancelled or failed')}`);
+                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=${encodeURIComponent(data.statusMsg || 'Transaction cancelled or failed')}`, false);
             }
         } else if (isSuccess) {
             const fallbackReceipt = 'KCT-' + Date.now().toString().slice(-6);
             const amount = data.paid_amount || data.amount || '0';
-            return res.redirect(`${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(fallbackReceipt)}&name=Donor&amount=${amount}`);
+            return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(fallbackReceipt)}&name=Donor&amount=${amount}`, true);
         }
 
-        return res.redirect(`${clientRedirectUrl}/donate?status=failed&reason=Donation+record+not+found`);
+        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=Donation+record+not+found`, false);
     } catch (error) {
         console.error('SabPaisa Callback Error:', error);
         const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
-        return res.redirect(`${clientRedirectUrl}/donate?status=failed&reason=Processing+error`);
+        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=Processing+error`, false);
     }
 };
 

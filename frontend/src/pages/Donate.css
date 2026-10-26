@@ -827,3 +827,113 @@
     color: #94A3B8;
     margin-top: 1px;
 }
+
+/* ==========================================================================
+   Payment Cancel Confirmation Dialog
+   ========================================================================== */
+.cancel-confirm-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(5px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: confirmFadeIn 0.2s ease-out;
+}
+
+@keyframes confirmFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.cancel-confirm-box {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: confirmScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes confirmScaleIn {
+    from { transform: scale(0.92) translateY(12px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.cancel-confirm-icon-wrap {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 16px;
+    background: #fef3c7;
+    border: 2px solid #fde68a;
+    color: #d97706;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.cancel-confirm-box h3 {
+    margin: 0 0 10px;
+    font-size: 19px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.cancel-confirm-box p {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.55;
+}
+
+.cancel-confirm-box p strong {
+    color: #0f172a;
+}
+
+.cancel-confirm-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cancel-resume-btn {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.cancel-resume-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.cancel-abort-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-abort-btn:hover {
+    background: #fecaca;
+    color: #991b1b;
+}
