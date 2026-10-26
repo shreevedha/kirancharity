@@ -575,9 +575,9 @@
 .sabpaisa-modal-container {
     background: #ffffff;
     border-radius: 16px;
-    width: 100%;
-    max-width: 940px;
-    height: 90vh;
+    width: 96%;
+    max-width: 1060px;
+    height: 88vh;
     max-height: 720px;
     display: flex;
     flex-direction: column;
