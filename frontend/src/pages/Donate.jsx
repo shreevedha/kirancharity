@@ -31,9 +31,56 @@ export default function Donate() {
     const [receiptData, setReceiptData] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [checkoutSession, setCheckoutSession] = useState(null)
+    const [challengeData, setChallengeData] = useState(null)
+    const [captchaInput, setCaptchaInput] = useState('')
+    const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
+    const [isVerifyingCaptcha, setIsVerifyingCaptcha] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
     const finalAmount = customAmount || selectedAmount
+
+    const fetchChallenge = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/donations/captcha-challenge`);
+            if (res.data && res.data.success) {
+                setChallengeData(res.data.challenge);
+                setCaptchaInput('');
+                setIsCaptchaVerified(false);
+            }
+        } catch (err) {
+            console.error('Failed to load captcha challenge:', err);
+        }
+    };
+
+    const handleVerifyCaptcha = async () => {
+        if (!captchaInput.toString().trim()) {
+            toast.warn('Please enter the security verification answer.');
+            return;
+        }
+        setIsVerifyingCaptcha(true);
+        try {
+            const res = await axios.post(`${API_BASE_URL}/donations/verify-captcha`, {
+                token: challengeData?.token,
+                answer: captchaInput.toString().trim()
+            });
+            if (res.data && res.data.success) {
+                setIsCaptchaVerified(true);
+                toast.success('Security Verification Confirmed! 256-bit safe donation enabled.');
+            } else {
+                toast.error(res.data?.message || 'Incorrect security answer. New challenge generated.');
+                fetchChallenge();
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Verification failed. New challenge generated.');
+            fetchChallenge();
+        } finally {
+            setIsVerifyingCaptcha(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchChallenge();
+    }, []);
 
     useEffect(() => {
         // Break out of iframe if loaded inside SabPaisa checkout iframe
@@ -98,6 +145,11 @@ export default function Donate() {
             return
         }
 
+        if (donationType === 'cash' && !isCaptchaVerified) {
+            toast.warn('Please complete the Security Verification (reCAPTCHA) below.');
+            return;
+        }
+
         setIsSubmitting(true);
 
         if (donationType === 'cash') {
@@ -109,7 +161,10 @@ export default function Donate() {
                     email: data.email,
                     address: data.address || 'Vijayawada, AP',
                     amount: finalAmount,
-                    purpose: data.purpose
+                    purpose: data.purpose,
+                    captchaToken: challengeData?.token,
+                    captchaAnswer: captchaInput.toString().trim(),
+                    website_trap: data.website_trap
                 });
 
                 if (response.data && response.data.success && response.data.checkoutUrl) {
@@ -537,6 +592,82 @@ export default function Donate() {
                                     />
                                 </div>
 
+                                {/* Security Honeypot Anti-Bot Field (Hidden from humans) */}
+                                <input
+                                    type="text"
+                                    style={{ display: 'none', position: 'absolute', left: '-9999px' }}
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                    {...register('website_trap')}
+                                />
+
+                                {/* reCAPTCHA Security Verification & DDoS Protection */}
+                                {donationType === 'cash' && (
+                                    <div className="recaptcha-card">
+                                        <div className="recaptcha-card-header">
+                                            <div className="recaptcha-title">
+                                                <FaShieldAlt className="recaptcha-shield-icon" />
+                                                <div>
+                                                    <span className="recaptcha-heading">Security Verification (reCAPTCHA)</span>
+                                                    <p className="recaptcha-sub">Protects against continuous load, bots & malicious attackers</p>
+                                                </div>
+                                            </div>
+                                            <span className="recaptcha-badge">
+                                                <FaLock style={{ marginRight: '4px' }} /> 256-bit Safe
+                                            </span>
+                                        </div>
+
+                                        {!isCaptchaVerified ? (
+                                            <div className="recaptcha-card-body">
+                                                <div className="challenge-question-box">
+                                                    <span className="challenge-prompt">
+                                                        Security Question: <strong>{challengeData ? challengeData.question : 'Loading...'}</strong> = ?
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={fetchChallenge}
+                                                        className="btn-refresh-challenge"
+                                                        title="Refresh Challenge"
+                                                    >
+                                                        🔄 New
+                                                    </button>
+                                                </div>
+                                                <div className="challenge-action-row">
+                                                    <input
+                                                        type="number"
+                                                        placeholder="Your answer"
+                                                        value={captchaInput}
+                                                        onChange={(e) => setCaptchaInput(e.target.value)}
+                                                        className="challenge-answer-input"
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                e.preventDefault();
+                                                                handleVerifyCaptcha();
+                                                            }
+                                                        }}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleVerifyCaptcha}
+                                                        className="btn-verify-challenge"
+                                                        disabled={isVerifyingCaptcha || !captchaInput}
+                                                    >
+                                                        {isVerifyingCaptcha ? 'Verifying...' : 'Verify Human'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="recaptcha-verified-banner">
+                                                <FaCheckCircle className="verified-icon" />
+                                                <div>
+                                                    <strong>Human Verification Successful</strong>
+                                                    <p>Cryptographic token validated &bull; Continuous load protection active</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* Terms */}
                                 <div className="terms-check">
                                     <input
@@ -553,7 +684,7 @@ export default function Donate() {
                                 <button
                                     type="submit"
                                     className="btn btn-primary donate-submit-btn"
-                                    disabled={!agreed}
+                                    disabled={!agreed || (donationType === 'cash' && !isCaptchaVerified) || isSubmitting}
                                 >
                                     <FaHeart /> {donationType === 'cash' ? `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} Now` : `Submit Item Donation Support`}
                                 </button>

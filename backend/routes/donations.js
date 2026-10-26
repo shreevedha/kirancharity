@@ -1,13 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const rateLimit = require('express-rate-limit');
 const Donation = require('../models/Donation');
+
+// Rate Limiter for payment session generation (Protects against continuous DDoS / automated bot floods)
+const paymentLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 8, // Max 8 payment sessions per minute per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        success: false,
+        message: 'Security Notice: High transaction rate detected from this network. Please wait 1 minute before trying again.'
+    }
+});
 
 // Official Production SabPaisa Canara Bank Credentials (PG 3.0 Live Mode)
 const DEFAULT_CLIENT_CODE = process.env.SABPAISA_CLIENT_CODE || 'KIRA99';
 const DEFAULT_API_KEY = process.env.SABPAISA_API_KEY || 'sp_pT78w4hwe1hgNvUe-8yeK6DA1mYckbGXEiSsuzthxzk';
 const DEFAULT_SECRET_KEY = process.env.SABPAISA_SECRET_KEY || 'sec_TiRVAAILsA2XJwN3V5TOHgCaKfi7NWAz5E72i3XxM1Q';
 const DEFAULT_BASE_URL = process.env.SABPAISA_BASE_URL || 'https://merchant-api.sabpaisa.in';
+const CAPTCHA_SECRET = process.env.JWT_SECRET || DEFAULT_SECRET_KEY || 'kiran_captcha_security_shield';
 
 // Helper: Generate SabPaisa PG 3.0 Checksum (HMAC SHA-256)
 function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, timestamp, secretKey) {
@@ -33,10 +47,99 @@ function verifyReturnSignature(params, secretKey) {
     return expectedSignature.toLowerCase() === String(signature).toLowerCase();
 }
 
-// POST /api/donations/initiate-sabpaisa — Create payment session on SabPaisa PG 3.0
-router.post('/initiate-sabpaisa', async (req, res) => {
+// GET /api/donations/captcha-challenge — Generates a signed anti-bot challenge
+router.get('/captcha-challenge', (req, res) => {
     try {
-        const { fullName, mobile, email, address, amount, purpose, customBaseUrl, customMerchantId, customApiKey, customSecretKey } = req.body;
+        const num1 = Math.floor(Math.random() * 8) + 2;
+        const num2 = Math.floor(Math.random() * 8) + 1;
+        const answer = num1 + num2;
+        const timestamp = Date.now();
+
+        const signature = crypto
+            .createHmac('sha256', CAPTCHA_SECRET)
+            .update(`${answer}:${timestamp}`)
+            .digest('hex');
+
+        return res.json({
+            success: true,
+            challenge: {
+                question: `${num1} + ${num2}`,
+                token: `${timestamp}:${signature}`
+            }
+        });
+    } catch (err) {
+        console.error('Challenge generation error:', err);
+        return res.status(500).json({ success: false, message: 'Failed to generate security challenge' });
+    }
+});
+
+// POST /api/donations/verify-captcha — Validates user response to anti-bot challenge
+router.post('/verify-captcha', (req, res) => {
+    try {
+        const { token, answer } = req.body;
+        if (!token || answer === undefined) {
+            return res.status(400).json({ success: false, message: 'Captcha token and answer are required.' });
+        }
+
+        const [timestampStr, expectedSig] = String(token).split(':');
+        const timestamp = parseInt(timestampStr, 10);
+        const now = Date.now();
+
+        // 10-minute validity
+        if (isNaN(timestamp) || now - timestamp > 10 * 60 * 1000) {
+            return res.status(400).json({ success: false, message: 'Security verification expired. Please refresh the captcha.' });
+        }
+
+        const computedSig = crypto
+            .createHmac('sha256', CAPTCHA_SECRET)
+            .update(`${String(answer).trim()}:${timestamp}`)
+            .digest('hex');
+
+        if (computedSig !== expectedSig) {
+            return res.status(400).json({ success: false, message: 'Incorrect answer. Please try again.' });
+        }
+
+        return res.json({ success: true, message: 'Security verification confirmed.' });
+    } catch (err) {
+        console.error('Captcha verify error:', err);
+        return res.status(500).json({ success: false, message: 'Captcha verification error' });
+    }
+});
+
+// POST /api/donations/initiate-sabpaisa — Create payment session on SabPaisa PG 3.0
+router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
+    try {
+        const {
+            fullName, mobile, email, address, amount, purpose,
+            captchaToken, captchaAnswer, website_trap,
+            customBaseUrl, customMerchantId, customApiKey, customSecretKey
+        } = req.body;
+
+        // Security: Honeypot trap check (Bots will fill hidden input)
+        if (website_trap) {
+            console.warn('⚠️ Automated bot blocked by honeypot field');
+            return res.status(403).json({ success: false, message: 'Bot request detected and rejected.' });
+        }
+
+        // Security: Cryptographic reCAPTCHA / Human Verification check
+        if (!captchaToken || captchaAnswer === undefined) {
+            return res.status(403).json({ success: false, message: 'Security verification required before initiating payment.' });
+        }
+
+        const [timestampStr, expectedSig] = String(captchaToken).split(':');
+        const captchaTime = parseInt(timestampStr, 10);
+        if (isNaN(captchaTime) || Date.now() - captchaTime > 10 * 60 * 1000) {
+            return res.status(403).json({ success: false, message: 'Security verification expired. Please solve the captcha again.' });
+        }
+
+        const computedSig = crypto
+            .createHmac('sha256', CAPTCHA_SECRET)
+            .update(`${String(captchaAnswer).trim()}:${captchaTime}`)
+            .digest('hex');
+
+        if (computedSig !== expectedSig) {
+            return res.status(403).json({ success: false, message: 'Security verification failed. Please verify again.' });
+        }
 
         if (!fullName || !mobile || !email || !address || !amount) {
             return res.status(400).json({ success: false, message: 'Donor Name, Mobile, Email, Address, and Amount are required.' });
