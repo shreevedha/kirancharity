@@ -6,10 +6,11 @@ import {
     FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaHeart,
     FaMobileAlt, FaUniversity, FaCreditCard, FaWallet,
     FaQrcode, FaShieldAlt, FaCheckCircle, FaFileAlt,
-    FaReceipt, FaLock
+    FaReceipt, FaLock, FaCheck, FaSyncAlt, FaRedo, FaUndo
 } from 'react-icons/fa'
 import axios from 'axios'
 import { API_BASE_URL } from '../config'
+import trustLogo from '../assets/Klogo.jpeg'
 import './Donate.css'
 
 const amounts = [500, 1000, 2000, 5000, 10000, 25000]
@@ -32,9 +33,11 @@ export default function Donate() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [checkoutSession, setCheckoutSession] = useState(null)
     const [challengeData, setChallengeData] = useState(null)
-    const [captchaInput, setCaptchaInput] = useState('')
+    const [userRotation, setUserRotation] = useState(0)
     const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
     const [isVerifyingCaptcha, setIsVerifyingCaptcha] = useState(false)
+    const [isRotatingModalOpen, setIsRotatingModalOpen] = useState(false)
+    const [verifiedToken, setVerifiedToken] = useState('')
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
     const finalAmount = customAmount || selectedAmount
@@ -44,35 +47,51 @@ export default function Donate() {
             const res = await axios.get(`${API_BASE_URL}/donations/captcha-challenge`);
             if (res.data && res.data.success) {
                 setChallengeData(res.data.challenge);
-                setCaptchaInput('');
+                setUserRotation(0);
                 setIsCaptchaVerified(false);
+                setVerifiedToken('');
             }
         } catch (err) {
-            console.error('Failed to load captcha challenge:', err);
+            console.error('Failed to load rotating captcha challenge:', err);
         }
     };
 
-    const handleVerifyCaptcha = async () => {
-        if (!captchaInput.toString().trim()) {
-            toast.warn('Please enter the security verification answer.');
+    const handleCheckboxClick = () => {
+        if (isCaptchaVerified) return;
+        setIsVerifyingCaptcha(true);
+        if (!challengeData) {
+            fetchChallenge();
+        }
+        setTimeout(() => {
+            setIsVerifyingCaptcha(false);
+            setIsRotatingModalOpen(true);
+        }, 350);
+    };
+
+    const handleVerifyRotation = async () => {
+        if (!challengeData?.token) {
+            toast.warn('Challenge not ready. Generating new challenge...');
+            fetchChallenge();
             return;
         }
+
         setIsVerifyingCaptcha(true);
         try {
             const res = await axios.post(`${API_BASE_URL}/donations/verify-captcha`, {
-                token: challengeData?.token,
-                answer: captchaInput.toString().trim()
+                token: challengeData.token,
+                userRotation: userRotation
             });
+
             if (res.data && res.data.success) {
                 setIsCaptchaVerified(true);
-                toast.success('Security Verification Confirmed!');
+                setVerifiedToken(res.data.verifiedToken || challengeData.token);
+                setIsRotatingModalOpen(false);
+                toast.success('Security Verification Successful!');
             } else {
-                toast.error(res.data?.message || 'Incorrect security answer. New challenge generated.');
-                fetchChallenge();
+                toast.error(res.data?.message || 'Emblem is not upright. Please adjust and verify.');
             }
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Verification failed. New challenge generated.');
-            fetchChallenge();
+            toast.error(err.response?.data?.message || 'Verification failed. Please try again.');
         } finally {
             setIsVerifyingCaptcha(false);
         }
@@ -162,8 +181,9 @@ export default function Donate() {
                     address: data.address || 'Vijayawada, AP',
                     amount: finalAmount,
                     purpose: data.purpose,
+                    verifiedToken: verifiedToken || challengeData?.token,
                     captchaToken: challengeData?.token,
-                    captchaAnswer: captchaInput.toString().trim(),
+                    captchaAnswer: userRotation,
                     website_trap: data.website_trap
                 });
 
@@ -601,67 +621,122 @@ export default function Donate() {
                                     {...register('website_trap')}
                                 />
 
-                                {/* reCAPTCHA Security Verification & DDoS Protection */}
+                                {/* Rotating reCAPTCHA Security Verification & DDoS Protection */}
                                 {donationType === 'cash' && (
-                                    <div className="recaptcha-card">
-                                        <div className="recaptcha-card-header">
-                                            <div className="recaptcha-title">
-                                                <FaShieldAlt className="recaptcha-shield-icon" />
-                                                <div>
-                                                    <span className="recaptcha-heading">Security Verification (reCAPTCHA)</span>
-                                                    <p className="recaptcha-sub">Protects against continuous load, bots & malicious attackers</p>
+                                    <div className="recaptcha-widget-container">
+                                        <div
+                                            className={`recaptcha-anchor-box ${isCaptchaVerified ? 'verified' : ''}`}
+                                            onClick={handleCheckboxClick}
+                                            role="button"
+                                            tabIndex={0}
+                                        >
+                                            <div className="recaptcha-checkbox-col">
+                                                <div className={`recaptcha-checkbox-square ${isVerifyingCaptcha ? 'spinning' : ''} ${isCaptchaVerified ? 'checked' : ''}`}>
+                                                    {isVerifyingCaptcha ? (
+                                                        <div className="recaptcha-spin-ring" />
+                                                    ) : isCaptchaVerified ? (
+                                                        <FaCheck className="recaptcha-checkmark-icon" />
+                                                    ) : null}
                                                 </div>
+                                                <span className="recaptcha-text-label">
+                                                    {isCaptchaVerified ? "I'm not a robot" : "I'm not a robot"}
+                                                </span>
                                             </div>
-                                            <span className="recaptcha-badge">
-                                                <FaLock style={{ marginRight: '4px' }} /> 256-bit Safe
-                                            </span>
+
+                                            <div className="recaptcha-badge-col">
+                                                <div className="recaptcha-rotating-emblem">
+                                                    <svg viewBox="0 0 48 48" width="30" height="30" className={isVerifyingCaptcha ? 'icon-rotate' : ''}>
+                                                        <path fill="#1a73e8" d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.84 0-16-7.16-16-16 0-3.32 1.02-6.4 2.76-8.98l7.08 7.08c-.54.6-.84 1.28-.84 1.9 0 3.86 3.14 7 7 7 1.86 0 3.54-.73 4.79-1.92l4.95 4.95C29.6 38.64 26.96 40 24 40zm13.24-11.02l-7.08-7.08c.54-.6.84-1.28.84-1.9 0-3.86-3.14-7-7-7-1.86 0-3.54.73-4.79 1.92l-4.95-4.95C18.4 9.36 21.04 8 24 8c8.84 0 16 7.16 16 16 0 3.32-1.02 6.4-2.76 8.98z"/>
+                                                    </svg>
+                                                </div>
+                                                <span className="recaptcha-name">reCAPTCHA</span>
+                                                <span className="recaptcha-subtext">Privacy - Terms</span>
+                                            </div>
                                         </div>
 
-                                        {!isCaptchaVerified ? (
-                                            <div className="recaptcha-card-body">
-                                                <div className="challenge-question-box">
-                                                    <span className="challenge-prompt">
-                                                        Security Question: <strong>{challengeData ? challengeData.question : 'Loading...'}</strong> = ?
-                                                    </span>
-                                                    <button
-                                                        type="button"
-                                                        onClick={fetchChallenge}
-                                                        className="btn-refresh-challenge"
-                                                        title="Refresh Challenge"
-                                                    >
-                                                        🔄 New
-                                                    </button>
-                                                </div>
-                                                <div className="challenge-action-row">
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Your answer"
-                                                        value={captchaInput}
-                                                        onChange={(e) => setCaptchaInput(e.target.value)}
-                                                        className="challenge-answer-input"
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter') {
-                                                                e.preventDefault();
-                                                                handleVerifyCaptcha();
-                                                            }
-                                                        }}
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={handleVerifyCaptcha}
-                                                        className="btn-verify-challenge"
-                                                        disabled={isVerifyingCaptcha || !captchaInput}
-                                                    >
-                                                        {isVerifyingCaptcha ? 'Verifying...' : 'Verify Human'}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="recaptcha-verified-banner">
-                                                <FaCheckCircle className="verified-icon" />
-                                                <div>
-                                                    <strong>Human Verification Successful</strong>
-                                                    <p>Cryptographic token validated &bull; Continuous load protection active</p>
+                                        {/* Interactive Rotating Image Orientation Challenge Modal */}
+                                        {isRotatingModalOpen && (
+                                            <div className="rotate-challenge-backdrop" onClick={() => setIsRotatingModalOpen(false)}>
+                                                <div className="rotate-challenge-popup" onClick={e => e.stopPropagation()}>
+                                                    <div className="rotate-popup-header">
+                                                        <div className="rotate-header-left">
+                                                            <FaShieldAlt className="rotate-shield-ico" />
+                                                            <div>
+                                                                <span className="rotate-header-title">Security Verification</span>
+                                                                <span className="rotate-header-desc">Rotate the image until it is upright</span>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-rotate-close"
+                                                            onClick={() => setIsRotatingModalOpen(false)}
+                                                        >
+                                                            &times;
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="rotate-display-area">
+                                                        <div className="rotate-guide-notch">▲ UP</div>
+                                                        <div className="rotate-image-viewport">
+                                                            <img
+                                                                src={trustLogo}
+                                                                alt="Kiran Trust Emblem"
+                                                                className="rotate-target-graphic"
+                                                                style={{
+                                                                    transform: `rotate(${((challengeData?.initialAngle || 0) + userRotation) % 360}deg)`
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="rotate-angle-readout">
+                                                            Position: {Math.round(((challengeData?.initialAngle || 0) + userRotation) % 360)}°
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="rotate-slider-bar">
+                                                        <button
+                                                            type="button"
+                                                            className="btn-rotate-step"
+                                                            onClick={() => setUserRotation(prev => (prev - 15 + 360) % 360)}
+                                                            title="Rotate left"
+                                                        >
+                                                            ↺
+                                                        </button>
+                                                        <input
+                                                            type="range"
+                                                            min="0"
+                                                            max="360"
+                                                            step="2"
+                                                            value={userRotation}
+                                                            onChange={(e) => setUserRotation(Number(e.target.value))}
+                                                            className="rotate-range-input"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            className="btn-rotate-step"
+                                                            onClick={() => setUserRotation(prev => (prev + 15) % 360)}
+                                                            title="Rotate right"
+                                                        >
+                                                            ↻
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="rotate-popup-actions">
+                                                        <button
+                                                            type="button"
+                                                            className="btn-rotate-reset"
+                                                            onClick={fetchChallenge}
+                                                        >
+                                                            <FaSyncAlt style={{ marginRight: '6px' }} /> Refresh
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn-rotate-submit"
+                                                            onClick={handleVerifyRotation}
+                                                            disabled={isVerifyingCaptcha}
+                                                        >
+                                                            {isVerifyingCaptcha ? 'Verifying...' : 'Verify Human'}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
