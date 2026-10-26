@@ -708,7 +708,7 @@ export default function Donate() {
                         }
                     }}
                 >
-                    <div className="sabpaisa-modal-container">
+                    <div className="sabpaisa-modal-container" onClick={(e) => e.stopPropagation()}>
                         <div className="sabpaisa-modal-header">
                             <div className="sabpaisa-modal-title">
                                 <span className="sabpaisa-dot-live"></span>
@@ -727,7 +727,10 @@ export default function Donate() {
                                 <button
                                     type="button"
                                     className="sabpaisa-modal-close"
-                                    onClick={() => setShowCancelConfirm(true)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowCancelConfirm(true);
+                                    }}
                                     title="Close checkout"
                                 >
                                     ✕
@@ -746,7 +749,7 @@ export default function Donate() {
                         {/* Cancel Transaction Confirmation Prompt */}
                         {showCancelConfirm && (
                             <div className="cancel-confirm-backdrop" onClick={(e) => e.stopPropagation()}>
-                                <div className="cancel-confirm-box">
+                                <div className="cancel-confirm-box" onClick={(e) => e.stopPropagation()}>
                                     <div className="cancel-confirm-icon-wrap">
                                         <FaExclamationTriangle />
                                     </div>
@@ -758,14 +761,18 @@ export default function Donate() {
                                         <button
                                             type="button"
                                             className="cancel-resume-btn"
-                                            onClick={() => setShowCancelConfirm(false)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowCancelConfirm(false);
+                                            }}
                                         >
                                             Continue Payment
                                         </button>
                                         <button
                                             type="button"
                                             className="cancel-abort-btn"
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 setShowCancelConfirm(false);
                                                 setCheckoutSession(null);
                                                 toast.info('Payment session cancelled.');
