@@ -569,9 +569,9 @@
     background: #ffffff;
     border-radius: 16px;
     width: 100%;
-    max-width: 520px;
-    height: 88vh;
-    max-height: 720px;
+    max-width: 500px;
+    height: 94vh;
+    max-height: 800px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
