@@ -146,7 +146,7 @@ export default function Donate() {
         setIsSubmitting(true);
 
         if (donationType === 'cash') {
-            toast.info('Connecting to Secure Payment Gateway...');
+            toast.info('Processing for payment gateway opening...', { autoClose: 1800 });
             try {
                 const response = await axios.post(`${API_BASE_URL}/donations/initiate-sabpaisa`, {
                     fullName: data.fullName,
@@ -160,18 +160,17 @@ export default function Donate() {
                 });
 
                 if (response.data && response.data.success && response.data.checkoutUrl) {
-                    toast.info('Opening SabPaisa Secure Payment Gateway...');
                     // Redirect directly to SabPaisa hosted checkout to enable 100% full support for Credit/Debit Cards (3D Secure OTP), NetBanking (39+ banks), and UPI
                     window.location.href = response.data.checkoutUrl;
                     return;
                 } else {
-                    toast.error(response.data?.message || 'Failed to initialize payment.');
+                    toast.error(response.data?.message || 'Failed to initialize payment.', { autoClose: 2500 });
                     setIsSubmitting(false);
                 }
             } catch (error) {
                 console.error('Payment initiation error:', error);
                 const errorMsg = error.response?.data?.message || 'Unable to connect to payment gateway. Please try again.';
-                toast.error(errorMsg);
+                toast.error(errorMsg, { autoClose: 2500 });
                 setIsSubmitting(false);
                 return;
             }
@@ -314,7 +313,7 @@ export default function Donate() {
 
     return (
         <div className="donate-page">
-            <ToastContainer />
+            <ToastContainer autoClose={1800} hideProgressBar={false} />
             <div className="page-banner">
                 <div className="container">
                     <h1>Support Our Mission</h1>
@@ -679,7 +678,7 @@ export default function Donate() {
                                     {isSubmitting ? (
                                         <>
                                             <span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid white', borderRightColor: 'transparent', borderRadius: '50%', animation: 'recaptchaRotation 0.6s linear infinite', marginRight: 8, verticalAlign: 'middle' }}></span>
-                                            Connecting to Gateway...
+                                            Processing for payment gateway opening...
                                         </>
                                     ) : (
                                         <>
