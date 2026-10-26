@@ -39,13 +39,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "MONGO_URI": "mongodb+srv://Kirancharity:Kirancharity@cluster0.pijxbwq.mongodb.net/kiran-charitable-trust?retryWrites=true&w=majority&appName=Cluster0",
-    "SABPAISA_CLIENT_CODE": "KIRA99",
-    "SABPAISA_API_KEY": "sp_pT78w4hwe1hgNvUe-8yeK6DA1mYckbGXEiSsuzthxzk",
-    "SABPAISA_SECRET_KEY": "sec_TiRVAAILsA2XJwN3V5TOHgCaKfi7NWAz5E72i3XxM1Q",
-    "SABPAISA_BASE_URL": "https://merchant-api.sabpaisa.in",
-    "CLIENT_URL": "https://www.kirancharitabletrust.org"
-  }
+  ]
 }
