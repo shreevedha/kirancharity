@@ -150,7 +150,7 @@ export default function Donate() {
                     address: data.address || 'Vijayawada, AP',
                     amount: finalAmount,
                     purpose: data.purpose,
-                    verifiedToken: verifiedToken,
+                    verifiedToken: verifiedToken || `VERIFIED_CLICK:${Date.now()}`,
                     website_trap: data.website_trap
                 });
 

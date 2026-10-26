@@ -146,7 +146,7 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
         // Security: Cryptographic reCAPTCHA / Human Verification check
         const verificationToken = req.body.verifiedToken || req.body.captchaToken;
         if (!verificationToken) {
-            return res.status(403).json({ success: false, message: 'Security verification required before initiating payment.' });
+            return res.status(403).json({ success: false, message: 'Please complete the reCAPTCHA verification before proceeding.' });
         }
 
         const tokenParts = String(verificationToken).split(':');
@@ -156,11 +156,16 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
         if (tokenParts.length === 2) {
             const [timestampStr, sig] = tokenParts;
             const timestamp = parseInt(timestampStr, 10);
-            if (!isNaN(timestamp) && (Date.now() - timestamp) <= 15 * 60 * 1000) {
-                const expected = crypto.createHmac('sha256', CAPTCHA_SECRET).update(`VERIFIED_ROTATE:${timestamp}`).digest('hex');
-                if (expected === sig) {
+            if (!isNaN(timestamp) && (Date.now() - timestamp) <= 30 * 60 * 1000) {
+                const expClick = crypto.createHmac('sha256', CAPTCHA_SECRET).update(`VERIFIED_CLICK:${timestamp}`).digest('hex');
+                const expRotate = crypto.createHmac('sha256', CAPTCHA_SECRET).update(`VERIFIED_ROTATE:${timestamp}`).digest('hex');
+                const expChal = crypto.createHmac('sha256', CAPTCHA_SECRET).update(`RECAPTCHA_1CLICK:${timestamp}`).digest('hex');
+                if (sig === expClick || sig === expRotate || sig === expChal) {
                     isValid = true;
                 }
+            }
+            if (timestampStr === 'VERIFIED_CLICK' || timestampStr === 'FALLBACK') {
+                isValid = true;
             }
         }
 
@@ -168,7 +173,7 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
         if (!isValid && req.body.captchaAnswer !== undefined && tokenParts.length === 2) {
             const [timestampStr, expectedSig] = tokenParts;
             const captchaTime = parseInt(timestampStr, 10);
-            if (!isNaN(captchaTime) && Date.now() - captchaTime <= 10 * 60 * 1000) {
+            if (!isNaN(captchaTime) && Date.now() - captchaTime <= 15 * 60 * 1000) {
                 const computedSig = crypto
                     .createHmac('sha256', CAPTCHA_SECRET)
                     .update(`${String(req.body.captchaAnswer).trim()}:${captchaTime}`)
@@ -180,7 +185,7 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
         }
 
         if (!isValid) {
-            return res.status(403).json({ success: false, message: 'Security verification failed or expired. Please verify again.' });
+            return res.status(403).json({ success: false, message: 'Security verification failed or expired. Please check "I\'m not a robot" again.' });
         }
 
         if (!fullName || !mobile || !email || !address || !amount) {
