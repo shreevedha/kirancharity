@@ -1,20 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const rateLimit = require('express-rate-limit');
 const Donation = require('../models/Donation');
 
 // Rate Limiter for payment session generation (Protects against continuous DDoS / automated bot floods)
-const paymentLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    max: 8, // Max 8 payment sessions per minute per IP
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: {
-        success: false,
-        message: 'Security Notice: High transaction rate detected from this network. Please wait 1 minute before trying again.'
-    }
-});
+let paymentLimiter = (req, res, next) => next();
+try {
+    const rateLimit = require('express-rate-limit');
+    paymentLimiter = rateLimit({
+        windowMs: 60 * 1000, // 1 minute
+        max: 8, // Max 8 payment sessions per minute per IP
+        standardHeaders: true,
+        legacyHeaders: false,
+        message: {
+            success: false,
+            message: 'Security Notice: High transaction rate detected from this network. Please wait 1 minute before trying again.'
+        }
+    });
+} catch (err) {
+    const ipHits = new Map();
+    paymentLimiter = (req, res, next) => {
+        const ip = req.headers['x-forwarded-for'] || req.ip || 'unknown';
+        const now = Date.now();
+        const records = (ipHits.get(ip) || []).filter(t => now - t < 60000);
+        if (records.length >= 8) {
+            return res.status(429).json({ success: false, message: 'Too many requests. Please wait a minute.' });
+        }
+        records.push(now);
+        ipHits.set(ip, records);
+        next();
+    };
+}
 
 // Official Production SabPaisa Canara Bank Credentials (PG 3.0 Live Mode)
 const DEFAULT_CLIENT_CODE = process.env.SABPAISA_CLIENT_CODE || 'KIRA99';
