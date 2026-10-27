@@ -7,7 +7,7 @@ import {
     FaMobileAlt, FaUniversity, FaCreditCard, FaWallet,
     FaQrcode, FaShieldAlt, FaCheckCircle, FaFileAlt,
     FaReceipt, FaLock, FaCheck, FaSyncAlt, FaRedo, FaUndo,
-    FaExclamationTriangle
+    FaExclamationTriangle, FaTimesCircle, FaPrint, FaInfoCircle
 } from 'react-icons/fa'
 import axios from 'axios'
 import { API_BASE_URL } from '../config'
@@ -31,6 +31,7 @@ export default function Donate() {
     const [agreed, setAgreed] = useState(false)
     const [showThankYou, setShowThankYou] = useState(false)
     const [receiptData, setReceiptData] = useState(null)
+    const [failedPaymentData, setFailedPaymentData] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [checkoutSession, setCheckoutSession] = useState(null)
     const [showCancelConfirm, setShowCancelConfirm] = useState(false)
@@ -97,10 +98,23 @@ export default function Donate() {
                 purpose: 'Online Trust Donation',
             });
             setShowThankYou(true);
+            setFailedPaymentData(null);
             toast.success('Payment Successful! Donation receipt generated.');
         } else if (status === 'failed') {
-            const reason = params.get('reason') || 'Transaction cancelled or failed.';
-            toast.info('Payment cancelled.');
+            const reason = params.get('reason') || 'Payment not completed or declined by card issuer.';
+            const failedTxn = params.get('txnId') || '';
+            const failedAmount = params.get('amount') || '';
+            const donorName = params.get('name') || '';
+
+            setFailedPaymentData({
+                txnId: failedTxn,
+                amount: failedAmount,
+                name: donorName,
+                reason: reason,
+                date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            });
+            setShowThankYou(false);
+            setReceiptData(null);
             setIsCaptchaVerified(false);
             setVerifiedToken('');
             setIsVerifyingCaptcha(false);
@@ -301,9 +315,138 @@ export default function Donate() {
                                     <FaShieldAlt /> 80G Certificate will be sent to your email • PAN: AAATK1234X • Reg. No: TR-2026-001
                                 </div>
                             </div>
-                            <button className="btn btn-primary" onClick={() => { setShowThankYou(false); setReceiptData(null); }} style={{ marginTop: 28 }}>
-                                Make Another Donation
-                            </button>
+                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={() => window.print()}
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                                >
+                                    <FaPrint /> Print / Save 80G Receipt
+                                </button>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        setShowThankYou(false);
+                                        setReceiptData(null);
+                                        window.history.replaceState({}, document.title, window.location.pathname);
+                                    }}
+                                >
+                                    Make Another Donation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        )
+    }
+
+    if (failedPaymentData) {
+        return (
+            <div className="donate-page">
+                <div className="page-banner">
+                    <div className="container">
+                        <h1>Transaction Status</h1>
+                        <p className="breadcrumb"><span>Home / </span>Donate</p>
+                    </div>
+                </div>
+                <section className="section-padding">
+                    <div className="container">
+                        <div className="thank-you-card failed-card">
+                            <div className="ty-header failed-header">
+                                <div className="ty-icon failed-icon"><FaTimesCircle /></div>
+                                <h2>Payment Not Completed</h2>
+                                <p>We could not complete your transaction. No worries, your funds are safe!</p>
+                            </div>
+                            <div className="receipt-box">
+                                <h3 style={{ color: '#dc2626' }}>
+                                    <FaReceipt /> Transaction Attempt Summary
+                                </h3>
+                                <div className="receipt-grid">
+                                    <div className="receipt-row">
+                                        <span>Status</span>
+                                        <strong style={{ color: '#dc2626', fontWeight: '700' }}>Declined / Incomplete</strong>
+                                    </div>
+                                    {failedPaymentData.txnId && (
+                                        <div className="receipt-row">
+                                            <span>Transaction Reference</span>
+                                            <strong>{failedPaymentData.txnId}</strong>
+                                        </div>
+                                    )}
+                                    {failedPaymentData.name && (
+                                        <div className="receipt-row">
+                                            <span>Donor Name</span>
+                                            <strong>{failedPaymentData.name}</strong>
+                                        </div>
+                                    )}
+                                    {failedPaymentData.amount && (
+                                        <div className="receipt-row amount-row">
+                                            <span>Attempted Amount</span>
+                                            <strong className="gradient-text">₹{Number(failedPaymentData.amount).toLocaleString('en-IN')}</strong>
+                                        </div>
+                                    )}
+                                    <div className="receipt-row">
+                                        <span>Date & Time</span>
+                                        <strong>{failedPaymentData.date}</strong>
+                                    </div>
+                                    <div className="receipt-row">
+                                        <span>Bank / Gateway Note</span>
+                                        <strong style={{ maxWidth: '60%', textAlign: 'right', color: '#475569' }}>
+                                            {failedPaymentData.reason || 'Payment could not be processed by card network'}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                {/* Reassurance & Card Guidance Boxes */}
+                                <div className="payment-help-box bank-safety-notice">
+                                    <div className="help-box-icon"><FaShieldAlt /></div>
+                                    <div>
+                                        <strong>Did your bank deduct money?</strong>
+                                        <p>If any amount was debited from your card or bank account, it is completely safe. The payment gateway and your bank will automatically reverse and refund it to your original account within 5 to 7 business days.</p>
+                                    </div>
+                                </div>
+
+                                <div className="payment-help-box card-threshold-notice">
+                                    <div className="help-box-icon"><FaCreditCard /></div>
+                                    <div>
+                                        <strong>Notice for Card Payments:</strong>
+                                        <p>Indian payment gateway aggregators (Atom / SabPaisa) require a minimum transaction of <strong>₹10</strong> for Credit & Debit Cards due to interchange rules. For micro-donations of <strong>₹1 to ₹9</strong>, please choose <strong>UPI (GPay, PhonePe, Paytm, BHIM)</strong> which supports amounts starting at ₹1.</p>
+                                    </div>
+                                </div>
+
+                                {/* Direct Trust Bank Account fallback */}
+                                <div className="trust-direct-bank-box">
+                                    <h4><FaUniversity /> Direct Bank Transfer Alternative</h4>
+                                    <p>You can also transfer directly to the Trust's verified current account:</p>
+                                    <div className="bank-details-mini">
+                                        <div><strong>Bank:</strong> Canara Bank (CM Nagar, Guntur)</div>
+                                        <div><strong>Account Name:</strong> Kiran Charitable Trust</div>
+                                        <div><strong>Account No:</strong> 110319653482</div>
+                                        <div><strong>IFSC Code:</strong> CNRB0002492</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="failed-actions-row">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        setFailedPaymentData(null);
+                                        window.history.replaceState({}, document.title, window.location.pathname);
+                                    }}
+                                >
+                                    <FaRedo /> Try Again / Choose UPI
+                                </button>
+                                <a
+                                    href="https://wa.me/919440224939?text=Hello%20Kiran%20Charitable%20Trust,%20I%20need%20help%20with%20my%20donation%20transaction"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-secondary"
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                                >
+                                    <FaPhone /> Contact Trust Support
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -478,6 +621,9 @@ export default function Donate() {
                                                     }
                                                 }}
                                             />
+                                            <div className="amount-helper-note">
+                                                <FaInfoCircle /> Minimum ₹1 for UPI &bull; ₹10+ recommended for Credit/Debit Cards
+                                            </div>
                                             <div className="selected-amount-display">
                                                 Donation Amount: <strong className="gradient-text">₹{Number(finalAmount).toLocaleString('en-IN')}</strong>
                                             </div>

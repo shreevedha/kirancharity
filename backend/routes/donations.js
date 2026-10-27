@@ -340,9 +340,9 @@ function sendBreakoutHtml(res, targetUrl, isSuccess) {
 <body>
     <div class="box">
         <div class="spinner"></div>
-        <h3>${isSuccess ? 'Payment Confirmed!' : 'Updating Status...'}</h3>
-        <p>${isSuccess ? 'Redirecting to your official donation receipt...' : 'Please wait while we update your donation status...'}</p>
-        <a id="btnRedirect" href="${targetUrl}" class="btn-link" style="display:none;">View Receipt Now</a>
+        <h3>${isSuccess ? 'Payment Confirmed!' : 'Retrieving Status...'}</h3>
+        <p>${isSuccess ? 'Redirecting to your official donation receipt...' : 'Connecting back to view transaction summary...'}</p>
+        <a id="btnRedirect" href="${targetUrl}" class="btn-link" style="display:none;">${isSuccess ? 'View Receipt Now' : 'View Status Now'}</a>
     </div>
     <script>
         const target = ${JSON.stringify(targetUrl)};
@@ -392,6 +392,20 @@ const handleCallback = async (req, res) => {
         }
         const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
 
+        let resolvedAmount = donation?.amount || data.paid_amount || data.amount || '';
+        // If amount was sent in paise (e.g. > 100 with zero decimals), check if we need to convert
+        if (resolvedAmount && Number(resolvedAmount) >= 100 && !donation) {
+            // Check if amount is in paise
+            if (data.paid_amount && Number(data.paid_amount) % 100 === 0) {
+                resolvedAmount = String(Number(data.paid_amount) / 100);
+            }
+        }
+        const donorName = donation?.fullName || data.customerName || data.payerName || data.name || 'Valued Donor';
+        let failureReason = data.statusMsg || data.status || data.error?.message || data.responseMessage || '';
+        if (!failureReason || failureReason.toUpperCase() === 'FAILED' || failureReason.toUpperCase() === 'FAILURE') {
+            failureReason = 'Payment could not be processed by card network or bank.';
+        }
+
         if (donation) {
             donation.status = isSuccess ? 'completed' : 'failed';
             if (pgTxnNo) donation.transactionId = pgTxnNo;
@@ -404,15 +418,15 @@ const handleCallback = async (req, res) => {
             if (isSuccess) {
                 return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(donation.receiptNumber)}&name=${encodeURIComponent(donation.fullName)}&amount=${donation.amount}`, true);
             } else {
-                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=${encodeURIComponent(data.statusMsg || 'Transaction cancelled or failed')}`, false);
+                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&amount=${encodeURIComponent(donation.amount || resolvedAmount)}&name=${encodeURIComponent(donation.fullName || donorName)}&reason=${encodeURIComponent(failureReason)}`, false);
             }
         } else if (isSuccess) {
             const fallbackReceipt = 'KCT-' + Date.now().toString().slice(-6);
-            const amount = data.paid_amount || data.amount || '0';
-            return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(fallbackReceipt)}&name=Donor&amount=${amount}`, true);
+            const amount = resolvedAmount || '0';
+            return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(fallbackReceipt)}&name=${encodeURIComponent(donorName)}&amount=${amount}`, true);
         }
 
-        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=Donation+record+not+found`, false);
+        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&amount=${encodeURIComponent(resolvedAmount)}&name=${encodeURIComponent(donorName)}&reason=${encodeURIComponent(failureReason || 'Donation record not found')}`, false);
     } catch (error) {
         console.error('SabPaisa Callback Error:', error);
         const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
