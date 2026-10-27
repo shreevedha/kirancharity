@@ -32,6 +32,7 @@ export default function Donate() {
     const [showThankYou, setShowThankYou] = useState(false)
     const [receiptData, setReceiptData] = useState(null)
     const [failedPaymentData, setFailedPaymentData] = useState(null)
+    const [pendingPaymentData, setPendingPaymentData] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [checkoutSession, setCheckoutSession] = useState(null)
     const [showCancelConfirm, setShowCancelConfirm] = useState(false)
@@ -99,7 +100,23 @@ export default function Donate() {
             });
             setShowThankYou(true);
             setFailedPaymentData(null);
+            setPendingPaymentData(null);
             toast.success('Payment Successful! Donation receipt generated.');
+        } else if (status === 'pending') {
+            const clientTxnId = params.get('clientTxnId') || txnId || '';
+            setPendingPaymentData({
+                txnId: txnId || '',
+                clientTxnId: clientTxnId,
+                name: name || 'Valued Donor',
+                amount: amount || '10',
+                date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            });
+            setShowThankYou(false);
+            setFailedPaymentData(null);
+            setReceiptData(null);
+            setIsCaptchaVerified(false);
+            setVerifiedToken('');
+            setIsVerifyingCaptcha(false);
         } else if (status === 'failed') {
             const reason = params.get('reason') || 'Payment not completed or declined by card issuer.';
             const failedTxn = params.get('txnId') || '';
@@ -114,12 +131,78 @@ export default function Donate() {
                 date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
             });
             setShowThankYou(false);
+            setPendingPaymentData(null);
             setReceiptData(null);
             setIsCaptchaVerified(false);
             setVerifiedToken('');
             setIsVerifyingCaptcha(false);
         }
     }, []);
+
+    // Automatic Real-Time Payment Status Polling for Pending / UPI Transactions
+    useEffect(() => {
+        if (!pendingPaymentData || !pendingPaymentData.clientTxnId) return;
+
+        let attempts = 0;
+        const maxAttempts = 10;
+        let isCancelled = false;
+
+        const checkStatus = async () => {
+            attempts++;
+            try {
+                const res = await axios.post(`${API_BASE_URL}/donations/enquiry`, {
+                    merchantTxnId: pendingPaymentData.clientTxnId
+                });
+                const data = res.data;
+                const curStatus = (data?.status || data?.statusCode || '').toUpperCase();
+
+                if (curStatus === 'SUCCESS' || curStatus === '0000' || curStatus === 'COMPLETED') {
+                    setReceiptData({
+                        type: 'cash',
+                        receiptNo: 'KCT-' + Date.now().toString().slice(-8),
+                        txnId: data.txnId || pendingPaymentData.txnId || pendingPaymentData.clientTxnId,
+                        name: data.customerName || pendingPaymentData.name,
+                        amount: data.paidAmount || data.requestAmount || pendingPaymentData.amount,
+                        date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }),
+                        purpose: 'Online Trust Donation',
+                    });
+                    setPendingPaymentData(null);
+                    setShowThankYou(true);
+                    toast.success('Payment Confirmed by Bank! Official receipt generated.');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    return true;
+                } else if (curStatus === 'FAILED' || curStatus === '0300' || curStatus === 'CANCELLED') {
+                    setFailedPaymentData({
+                        txnId: data.txnId || pendingPaymentData.txnId,
+                        amount: data.requestAmount || pendingPaymentData.amount,
+                        name: data.customerName || pendingPaymentData.name,
+                        reason: data.failureReasonMessage || data.statusMsg || 'Transaction cancelled or declined by bank.',
+                        date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                    });
+                    setPendingPaymentData(null);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    return true;
+                }
+            } catch (err) {
+                console.warn('Status poll attempt failed:', err.message);
+            }
+            return false;
+        };
+
+        const intervalId = setInterval(async () => {
+            if (isCancelled || attempts >= maxAttempts) {
+                clearInterval(intervalId);
+                return;
+            }
+            const done = await checkStatus();
+            if (done) clearInterval(intervalId);
+        }, 3000);
+
+        return () => {
+            isCancelled = true;
+            clearInterval(intervalId);
+        };
+    }, [pendingPaymentData]);
 
     const generateReceipt = (data) => {
         if (donationType === 'cash') {
@@ -150,6 +233,14 @@ export default function Donate() {
         if (!agreed) {
             toast.error('Please agree to Terms & Conditions.')
             return
+        }
+
+        if (donationType === 'cash') {
+            const num = Number(finalAmount);
+            if (isNaN(num) || num < 10) {
+                toast.error('Minimum donation amount is ₹10 (required by SabPaisa Payment Gateway).');
+                return;
+            }
         }
 
         if (donationType === 'cash' && !isCaptchaVerified) {
@@ -332,6 +423,77 @@ export default function Donate() {
                                     }}
                                 >
                                     Make Another Donation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        )
+    }
+
+    if (pendingPaymentData) {
+        return (
+            <div className="donate-page">
+                <div className="page-banner">
+                    <div className="container">
+                        <h1>Verifying Payment</h1>
+                        <p className="breadcrumb"><span>Home / </span>Donate</p>
+                    </div>
+                </div>
+                <section className="section-padding">
+                    <div className="container">
+                        <div className="thank-you-card" style={{ border: '1px solid #bfdbfe' }}>
+                            <div className="ty-header" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #0284c7 100%)' }}>
+                                <div className="ty-icon" style={{ animation: 'spin 1.5s linear infinite' }}>
+                                    <FaSyncAlt />
+                                </div>
+                                <h2>Awaiting Bank Confirmation</h2>
+                                <p>We are checking transaction status with NPCI & your bank. Please keep this page open...</p>
+                            </div>
+                            <div className="receipt-box">
+                                <h3 style={{ color: '#1d4ed8' }}>
+                                    <FaReceipt /> Transaction Details
+                                </h3>
+                                <div className="receipt-grid">
+                                    <div className="receipt-row">
+                                        <span>Status</span>
+                                        <strong style={{ color: '#0284c7', fontWeight: '700' }}>Processing with Bank</strong>
+                                    </div>
+                                    <div className="receipt-row">
+                                        <span>Transaction Reference</span>
+                                        <strong>{pendingPaymentData.txnId || pendingPaymentData.clientTxnId}</strong>
+                                    </div>
+                                    <div className="receipt-row">
+                                        <span>Donor Name</span>
+                                        <strong>{pendingPaymentData.name}</strong>
+                                    </div>
+                                    <div className="receipt-row amount-row">
+                                        <span>Amount</span>
+                                        <strong className="gradient-text">₹{Number(pendingPaymentData.amount).toLocaleString('en-IN')}</strong>
+                                    </div>
+                                    <div className="receipt-row">
+                                        <span>Initiated On</span>
+                                        <strong>{pendingPaymentData.date}</strong>
+                                    </div>
+                                </div>
+                                <div className="payment-help-box bank-safety-notice" style={{ marginTop: '20px' }}>
+                                    <div className="help-box-icon"><FaShieldAlt /></div>
+                                    <div>
+                                        <strong>Did you approve in PhonePe / GPay?</strong>
+                                        <p>If you have already approved the amount and entered your UPI PIN on your phone, your bank will confirm it within a few moments, and your official 80G Tax Exemption Receipt will load automatically.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="failed-actions-row">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        setPendingPaymentData(null);
+                                        window.history.replaceState({}, document.title, window.location.pathname);
+                                    }}
+                                >
+                                    Return to Donation Form
                                 </button>
                             </div>
                         </div>
@@ -622,7 +784,7 @@ export default function Donate() {
                                                 }}
                                             />
                                             <div className="amount-helper-note">
-                                                <FaInfoCircle /> Minimum ₹1 for UPI &bull; ₹10+ recommended for Credit/Debit Cards
+                                                <FaInfoCircle /> Minimum online donation is ₹10 (required for UPI QR & Cards)
                                             </div>
                                             <div className="selected-amount-display">
                                                 Donation Amount: <strong className="gradient-text">₹{Number(finalAmount).toLocaleString('en-IN')}</strong>

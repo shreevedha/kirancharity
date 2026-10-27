@@ -193,8 +193,8 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
         }
 
         const numAmount = Number(amount);
-        if (isNaN(numAmount) || numAmount < 1) {
-            return res.status(400).json({ success: false, message: 'Donation amount must be at least ₹1.' });
+        if (isNaN(numAmount) || numAmount < 10) {
+            return res.status(400).json({ success: false, message: 'Minimum online donation amount is ₹10 (required by SabPaisa Payment Gateway).' });
         }
 
         // SabPaisa PG 3.0 REST API expects amount in paise (1 INR = 100 paise)
@@ -282,15 +282,27 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
 });
 
 // Helper: Send HTML breakout response so parent window navigates to receipt
-function sendBreakoutHtml(res, targetUrl, isSuccess) {
+function sendBreakoutHtml(res, targetUrl, statusType) {
     res.removeHeader('X-Frame-Options');
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    const isSuccess = statusType === true || statusType === 'success';
+    const isPending = statusType === 'pending';
+
+    const heading = isSuccess ? 'Payment Confirmed!' : isPending ? 'Verifying with Bank...' : 'Retrieving Status...';
+    const message = isSuccess 
+        ? 'Redirecting to your official donation receipt...' 
+        : isPending 
+            ? 'Awaiting bank confirmation. Connecting to donation status...' 
+            : 'Connecting back to view transaction summary...';
+    const btnText = isSuccess ? 'View Receipt Now' : 'View Status Now';
+    const spinnerColor = isSuccess ? '#10b981' : isPending ? '#3b82f6' : '#f59e0b';
+
     return res.status(200).send(`<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${isSuccess ? 'Payment Successful' : 'Payment Status'}</title>
+    <title>${heading}</title>
     <style>
         body {
             margin: 0;
@@ -317,7 +329,7 @@ function sendBreakoutHtml(res, targetUrl, isSuccess) {
             width: 48px;
             height: 48px;
             border: 4px solid rgba(255, 255, 255, 0.15);
-            border-top-color: ${isSuccess ? '#10b981' : '#f59e0b'};
+            border-top-color: ${spinnerColor};
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin: 0 auto 20px;
@@ -340,9 +352,9 @@ function sendBreakoutHtml(res, targetUrl, isSuccess) {
 <body>
     <div class="box">
         <div class="spinner"></div>
-        <h3>${isSuccess ? 'Payment Confirmed!' : 'Retrieving Status...'}</h3>
-        <p>${isSuccess ? 'Redirecting to your official donation receipt...' : 'Connecting back to view transaction summary...'}</p>
-        <a id="btnRedirect" href="${targetUrl}" class="btn-link" style="display:none;">${isSuccess ? 'View Receipt Now' : 'View Status Now'}</a>
+        <h3>${heading}</h3>
+        <p>${message}</p>
+        <a id="btnRedirect" href="${targetUrl}" class="btn-link" style="display:none;">${btnText}</a>
     </div>
     <script>
         const target = ${JSON.stringify(targetUrl)};
@@ -383,6 +395,7 @@ const handleCallback = async (req, res) => {
         }
 
         const isSuccess = statusCode === '0000' || statusMsg === 'SUCCESS' || statusMsg === 'SUCCESSFUL' || statusMsg === 'COMPLETED';
+        const isPending = statusCode === '0100' || statusCode === '0002' || statusMsg === 'PROCESSING' || statusMsg === 'PENDING' || statusMsg === 'IN_PROGRESS';
 
         let donation = null;
         try {
@@ -407,7 +420,7 @@ const handleCallback = async (req, res) => {
         }
 
         if (donation) {
-            donation.status = isSuccess ? 'completed' : 'failed';
+            donation.status = isSuccess ? 'completed' : isPending ? 'pending' : 'failed';
             if (pgTxnNo) donation.transactionId = pgTxnNo;
             try {
                 await donation.save();
@@ -416,21 +429,25 @@ const handleCallback = async (req, res) => {
             }
 
             if (isSuccess) {
-                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(donation.receiptNumber)}&name=${encodeURIComponent(donation.fullName)}&amount=${donation.amount}`, true);
+                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(donation.receiptNumber)}&name=${encodeURIComponent(donation.fullName)}&amount=${donation.amount}`, 'success');
+            } else if (isPending) {
+                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=pending&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&clientTxnId=${encodeURIComponent(clientTxnId || '')}&amount=${encodeURIComponent(donation.amount || resolvedAmount)}&name=${encodeURIComponent(donation.fullName || donorName)}`, 'pending');
             } else {
-                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&amount=${encodeURIComponent(donation.amount || resolvedAmount)}&name=${encodeURIComponent(donation.fullName || donorName)}&reason=${encodeURIComponent(failureReason)}`, false);
+                return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&amount=${encodeURIComponent(donation.amount || resolvedAmount)}&name=${encodeURIComponent(donation.fullName || donorName)}&reason=${encodeURIComponent(failureReason)}`, 'failed');
             }
         } else if (isSuccess) {
             const fallbackReceipt = 'KCT-' + Date.now().toString().slice(-6);
             const amount = resolvedAmount || '0';
-            return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(fallbackReceipt)}&name=${encodeURIComponent(donorName)}&amount=${amount}`, true);
+            return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=success&txnId=${encodeURIComponent(pgTxnNo)}&receiptNo=${encodeURIComponent(fallbackReceipt)}&name=${encodeURIComponent(donorName)}&amount=${amount}`, 'success');
+        } else if (isPending) {
+            return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=pending&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&clientTxnId=${encodeURIComponent(clientTxnId || '')}&amount=${encodeURIComponent(resolvedAmount)}&name=${encodeURIComponent(donorName)}`, 'pending');
         }
 
-        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&amount=${encodeURIComponent(resolvedAmount)}&name=${encodeURIComponent(donorName)}&reason=${encodeURIComponent(failureReason || 'Donation record not found')}`, false);
+        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&txnId=${encodeURIComponent(pgTxnNo || clientTxnId || '')}&amount=${encodeURIComponent(resolvedAmount)}&name=${encodeURIComponent(donorName)}&reason=${encodeURIComponent(failureReason || 'Donation record not found')}`, 'failed');
     } catch (error) {
         console.error('SabPaisa Callback Error:', error);
         const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
-        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=Processing+error`, false);
+        return sendBreakoutHtml(res, `${clientRedirectUrl}/donate?status=failed&reason=Processing+error`, 'failed');
     }
 };
 
@@ -449,9 +466,11 @@ router.post('/enquiry', async (req, res) => {
             method: 'POST',
             headers: {
                 'X-Api-Key': DEFAULT_API_KEY,
+                'X-Merchant-Id': DEFAULT_CLIENT_CODE,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                clientCode: DEFAULT_CLIENT_CODE,
                 merchantId: DEFAULT_CLIENT_CODE,
                 merchantTxnId
             })
