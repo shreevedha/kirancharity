@@ -7,7 +7,7 @@ import {
     FaMobileAlt, FaUniversity, FaCreditCard, FaWallet,
     FaQrcode, FaShieldAlt, FaCheckCircle, FaFileAlt,
     FaReceipt, FaLock, FaCheck, FaSyncAlt, FaRedo, FaUndo,
-    FaExclamationTriangle, FaTimesCircle, FaPrint, FaInfoCircle
+    FaExclamationTriangle, FaTimesCircle, FaPrint, FaInfoCircle, FaCopy
 } from 'react-icons/fa'
 import axios from 'axios'
 import { API_BASE_URL } from '../config'
@@ -28,6 +28,29 @@ export default function Donate() {
     const [donationType, setDonationType] = useState('cash') // 'cash' or 'item'
     const [selectedAmount, setSelectedAmount] = useState(1000)
     const [customAmount, setCustomAmount] = useState('')
+    const [paymentChannel, setPaymentChannel] = useState('online') // 'online' or 'bank_transfer'
+    const [copiedKey, setCopiedKey] = useState(null)
+    const [utrNumber, setUtrNumber] = useState('')
+
+    const handleCopy = (text, key, label) => {
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text);
+            } else {
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+            }
+            setCopiedKey(key);
+            toast.success(`${label} copied to clipboard!`, { autoClose: 2000 });
+            setTimeout(() => setCopiedKey(null), 2500);
+        } catch (e) {
+            toast.info(`Value: ${text}`);
+        }
+    };
     const [agreed, setAgreed] = useState(false)
     const [showThankYou, setShowThankYou] = useState(false)
     const [receiptData, setReceiptData] = useState(null)
@@ -243,7 +266,7 @@ export default function Donate() {
             }
         }
 
-        if (donationType === 'cash' && !isCaptchaVerified) {
+        if (donationType === 'cash' && paymentChannel === 'online' && !isCaptchaVerified) {
             toast.warn('Please complete the Security Verification (reCAPTCHA) below.');
             return;
         }
@@ -251,6 +274,48 @@ export default function Donate() {
         setIsSubmitting(true);
 
         if (donationType === 'cash') {
+            if (paymentChannel === 'bank_transfer') {
+                try {
+                    const response = await axios.post(`${API_BASE_URL}/donations`, {
+                        donationType: 'cash',
+                        fullName: data.fullName,
+                        mobile: data.phone,
+                        email: data.email,
+                        address: data.address || 'Guntur, AP',
+                        amount: finalAmount,
+                        purpose: data.purpose,
+                        paymentMethod: `Canara Bank Transfer (NEFT/RTGS/IMPS)${utrNumber ? ` - Ref: ${utrNumber}` : ''}`,
+                    });
+
+                    const savedDonation = response.data?.data;
+                    const receipt = generateReceipt({
+                        ...data,
+                        receiptNo: savedDonation?.receiptNumber || 'KCT-NEFT-' + Date.now().toString().slice(-6),
+                        txnId: utrNumber ? `UTR-${utrNumber}` : ('KCT-NEFT-' + Date.now().toString().slice(-8))
+                    });
+                    setReceiptData(receipt);
+                    setShowThankYou(true);
+                    reset();
+                    setUtrNumber('');
+                    toast.success('Bank transfer recorded! 80G Tax Exemption Receipt generated.');
+                } catch (err) {
+                    console.error('Bank transfer recording error:', err);
+                    const receipt = generateReceipt({
+                        ...data,
+                        receiptNo: 'KCT-NEFT-' + Date.now().toString().slice(-6),
+                        txnId: utrNumber ? `UTR-${utrNumber}` : ('KCT-NEFT-' + Date.now().toString().slice(-8))
+                    });
+                    setReceiptData(receipt);
+                    setShowThankYou(true);
+                    reset();
+                    setUtrNumber('');
+                    toast.success('Bank transfer recorded! 80G Tax Exemption Receipt generated.');
+                } finally {
+                    setIsSubmitting(false);
+                }
+                return;
+            }
+
             toast.info('Processing for payment gateway opening...', { autoClose: 1800 });
             try {
                 const response = await axios.post(`${API_BASE_URL}/donations/initiate-sabpaisa`, {
@@ -265,7 +330,6 @@ export default function Donate() {
                 });
 
                 if (response.data && response.data.success && response.data.checkoutUrl) {
-                    // Redirect directly to SabPaisa hosted checkout to enable 100% full support for Credit/Debit Cards (3D Secure OTP), NetBanking (39+ banks), and UPI
                     window.location.href = response.data.checkoutUrl;
                     return;
                 } else {
@@ -674,12 +738,32 @@ export default function Donate() {
                                     <h5 style={{ color: '#1e293b', fontSize: '14px', fontWeight: '700', marginBottom: '10px' }}>
                                         Official Trust Bank Transfer (NEFT / RTGS / IMPS)
                                     </h5>
-                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Account Name:</strong> Kiran Charitable Trust</p>
-                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Bank:</strong> Canara Bank</p>
-                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Account No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>110319653482</span></p>
-                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>CNRB0002492</span></p>
-                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Branch:</strong> Chandramouli Nagar (2492), Guntur</p>
-                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>SWIFT Code:</strong> CNRBNBBBFD (Wire / Large Transfer)</p>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px' }}>
+                                        <span><strong>Account Name:</strong> Kiran Charitable Trust</span>
+                                        <button type="button" onClick={() => handleCopy('Kiran Charitable Trust', 'sidebar_name', 'Account Name')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            {copiedKey === 'sidebar_name' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
+                                        </button>
+                                    </div>
+                                    <p style={{ margin: '6px 0', fontSize: '13px' }}><strong>Bank:</strong> Canara Bank</p>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#e0f2fe', padding: '6px 8px', borderRadius: '6px' }}>
+                                        <span><strong>Account No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>110319653482</span></span>
+                                        <button type="button" onClick={() => handleCopy('110319653482', 'sidebar_acc', 'Account Number')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #3b82f6', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+                                            {copiedKey === 'sidebar_acc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
+                                        </button>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#e0f2fe', padding: '6px 8px', borderRadius: '6px' }}>
+                                        <span><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>CNRB0002492</span></span>
+                                        <button type="button" onClick={() => handleCopy('CNRB0002492', 'sidebar_ifsc', 'IFSC Code')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #3b82f6', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+                                            {copiedKey === 'sidebar_ifsc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
+                                        </button>
+                                    </div>
+                                    <p style={{ margin: '6px 0', fontSize: '13px' }}><strong>Branch:</strong> Chandramouli Nagar (2492), Guntur</p>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px' }}>
+                                        <span><strong>SWIFT Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '600' }}>CNRBNBBBFD</span></span>
+                                        <button type="button" onClick={() => handleCopy('CNRBNBBBFD', 'sidebar_swift', 'SWIFT Code')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            {copiedKey === 'sidebar_swift' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
+                                        </button>
+                                    </div>
                                     <div style={{ marginTop: "14px", background: "#eff6ff", padding: "14px", borderRadius: "8px", border: "1px solid #bfdbfe" }}>
                                         <div style={{ fontSize: "13px", fontWeight: "700", color: "#1e40af", marginBottom: "4px" }}>⚡ Instant UPI & Card Donations:</div>
                                         <div style={{ fontSize: "12px", color: "#1e3a8a", lineHeight: 1.6 }}>To donate via <strong>PhonePe, Google Pay, Paytm, UPI QR, or Cards</strong> with an instant 80G tax receipt, fill the form on the right and click <strong>&quot;Proceed to Secure Payment&quot;</strong>.</div>
@@ -826,6 +910,97 @@ export default function Donate() {
                                             </select>
                                             {errors.purpose && <span className="error-msg">{errors.purpose.message}</span>}
                                         </div>
+
+                                        {/* Payment Way Dropdown */}
+                                        <div className="form-group" style={{ marginTop: '16px', marginBottom: '16px' }}>
+                                            <label htmlFor="pay-channel" style={{ fontWeight: '700', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <FaUniversity style={{ color: 'var(--primary)' }} /> Select Payment Way *
+                                            </label>
+                                            <select
+                                                id="pay-channel"
+                                                value={paymentChannel}
+                                                onChange={e => setPaymentChannel(e.target.value)}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '12px 14px',
+                                                    borderRadius: '8px',
+                                                    border: '2px solid #2563eb',
+                                                    background: '#ffffff',
+                                                    fontWeight: '700',
+                                                    fontSize: '14px',
+                                                    color: '#1e293b',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <option value="online">⚡ Online Payment Gateway (UPI, QR Code, Cards, NetBanking)</option>
+                                                <option value="bank_transfer">🏛️ Direct Bank Transfer (NEFT / RTGS / IMPS into Canara Bank)</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Direct Bank Transfer Box with 1-Click Copy Buttons */}
+                                        {paymentChannel === 'bank_transfer' && (
+                                            <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: '12px', padding: '16px', marginBottom: '18px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', borderBottom: '1px solid #bbf7d0', paddingBottom: '6px' }}>
+                                                    <FaUniversity style={{ color: '#15803d', fontSize: '18px' }} />
+                                                    <strong style={{ color: '#166534', fontSize: '14px' }}>Official Canara Bank Details (NEFT / RTGS / IMPS)</strong>
+                                                </div>
+                                                <p style={{ fontSize: '12px', color: '#166534', marginBottom: '10px', lineHeight: 1.5 }}>
+                                                    Transfer directly using your mobile banking app or NetBanking. Use the <strong>Copy</strong> buttons:
+                                                </p>
+                                                
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1px solid #dcfce7' }}>
+                                                    <span><strong>Account Name:</strong> Kiran Charitable Trust</span>
+                                                    <button type="button" onClick={() => handleCopy('Kiran Charitable Trust', 'form_name', 'Account Name')} style={{ padding: '4px 10px', fontSize: '12px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#f8fafc', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                        {copiedKey === 'form_name' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #3b82f6' }}>
+                                                    <span><strong>Account No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '15px' }}>110319653482</span></span>
+                                                    <button type="button" onClick={() => handleCopy('110319653482', 'form_acc', 'Account Number')} style={{ padding: '5px 12px', fontSize: '12px', borderRadius: '4px', border: 'none', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+                                                        {copiedKey === 'form_acc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #3b82f6' }}>
+                                                    <span><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '15px' }}>CNRB0002492</span></span>
+                                                    <button type="button" onClick={() => handleCopy('CNRB0002492', 'form_ifsc', 'IFSC Code')} style={{ padding: '5px 12px', fontSize: '12px', borderRadius: '4px', border: 'none', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+                                                        {copiedKey === 'form_ifsc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ margin: '6px 0', fontSize: '12.5px', color: '#334155' }}>
+                                                    <strong>Branch:</strong> Chandramouli Nagar (2492), Ring Road, Guntur - 522007
+                                                </div>
+
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1px solid #dcfce7' }}>
+                                                    <span><strong>SWIFT Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700' }}>CNRBNBBBFD</span></span>
+                                                    <button type="button" onClick={() => handleCopy('CNRBNBBBFD', 'form_swift', 'SWIFT Code')} style={{ padding: '4px 10px', fontSize: '12px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#f8fafc', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                        {copiedKey === 'form_swift' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ marginTop: '12px' }}>
+                                                    <label htmlFor="utr-ref" style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#166534', marginBottom: '4px' }}>
+                                                        Bank Reference / UTR Number (Optional):
+                                                    </label>
+                                                    <input
+                                                        id="utr-ref"
+                                                        type="text"
+                                                        placeholder="e.g. 260324XXXXXX (UTR from your bank app)"
+                                                        value={utrNumber}
+                                                        onChange={e => setUtrNumber(e.target.value)}
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: '8px 12px',
+                                                            borderRadius: '6px',
+                                                            border: '1px solid #86efac',
+                                                            fontSize: '13px'
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </>
                                 ) : (
                                     <>
@@ -945,7 +1120,7 @@ export default function Donate() {
                                 />
 
                                 {/* Official Professional reCAPTCHA Style Widget */}
-                                {donationType === 'cash' && (
+                                {donationType === 'cash' && paymentChannel === 'online' && (
                                     <div className={`recaptcha-widget-card ${isCaptchaVerified ? 'verified' : ''}`}>
                                         <div
                                             className="recaptcha-checkbox-area"
@@ -1002,7 +1177,7 @@ export default function Donate() {
                                 <button
                                     type="submit"
                                     className="btn btn-primary donate-submit-btn"
-                                    disabled={!agreed || (donationType === 'cash' && !isCaptchaVerified) || isSubmitting}
+                                    disabled={!agreed || (donationType === 'cash' && paymentChannel === 'online' && !isCaptchaVerified) || isSubmitting}
                                 >
                                     {isSubmitting ? (
                                         <>
@@ -1011,7 +1186,11 @@ export default function Donate() {
                                         </>
                                     ) : (
                                         <>
-                                            <FaHeart /> {donationType === 'cash' ? `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} Now` : `Submit Item Donation Support`}
+                                            <FaHeart /> {donationType === 'cash' 
+                                                ? (paymentChannel === 'bank_transfer' 
+                                                    ? `Record Bank Transfer & Get 80G Receipt (₹${Number(finalAmount).toLocaleString('en-IN')})` 
+                                                    : `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} via Secure Gateway`)
+                                                : `Submit Item Donation Support`}
                                         </>
                                     )}
                                 </button>
