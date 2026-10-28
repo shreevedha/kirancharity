@@ -65,9 +65,9 @@ export default function Footer() {
                         <h4 style={{ marginTop: '24px' }}>Legal Info</h4>
                         <ul className="footer-legal-list">
                             <li>PAN: AAGTK5575Q</li>
-                            <li>80G URN: AAGTK5575QF20261</li>
                             <li>12A URN: AAGTK5575QE20261</li>
-                            <li>Trust Reg. No: TR-2026-001</li>
+                            <li>80G URN: AAGTK5575QF20261</li>
+                            <li>Validity: AY 2026-27 to 2028-29</li>
                         </ul>
                     </div>
 

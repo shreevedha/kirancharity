@@ -403,7 +403,7 @@ export default function Donate() {
                                     )}
                                 </div>
                                 <div className="receipt-legal">
-                                    <FaShieldAlt /> 80G Certificate will be sent to your email • PAN: AAGTK5575Q • Reg. No: TR-2026-001
+                                    <FaShieldAlt /> 80G Tax Exemption Receipt • PAN: AAGTK5575Q • 80G URN: AAGTK5575QF20261
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
@@ -629,7 +629,7 @@ export default function Donate() {
             {/* Trust Badges */}
             <div className="trust-badges-bar">
                 <div className="container trust-badges-inner">
-                    {['80G Tax Exemption Certified', '12A Registered', 'FCRA Compliant', 'PAN: AAGTK5575Q', '100% Transparency Guarantee'].map((b, i) => (
+                    {['80G Tax Exemption (80G URN: AAGTK5575QF20261)', '12A Registered (12A URN: AAGTK5575QE20261)', 'PAN: AAGTK5575Q', '100% Direct Allocation Guarantee'].map((b, i) => (
                         <div key={i} className="trust-badge-item">
                             <FaShieldAlt /> {b}
                         </div>
@@ -649,7 +649,7 @@ export default function Donate() {
                                 {[
                                     { amount: '₹500', impact: 'Distributes notebooks & pens for 2 rural kids for the academic year' },
                                     { amount: '₹1,000', impact: 'Provides free blood screening & basic medications for 10 elderly citizens' },
-                                    { amount: '₹2,000', impact: 'Distributes grocery kits (Rice & Dal) to 20 daily-wage family members' },
+                                    { amount: '₹2,500', impact: 'Distributes grocery kits (Rice & Dal) to 25 daily-wage family members' },
                                     { amount: '₹5,000', impact: 'Funds professional tailoring machine course for 1 underprivileged woman' },
                                 ].map((item, i) => (
                                     <div key={i} className="impact-card">
@@ -663,12 +663,12 @@ export default function Donate() {
                             <div className="legal-info-box">
                                 <h4><FaFileAlt /> Legal & Tax Certificate Info</h4>
                                 <ul>
-                                    <li><FaCheckCircle /> PAN: AAGTK5575Q</li>
-                                    <li><FaCheckCircle /> 80G Tax Exemption Receipt</li>
-                                    <li><FaCheckCircle /> 12A Registration Active</li>
-                                    <li><FaCheckCircle /> Reg. No: TR-2026-001</li>
-                                    <li><FaCheckCircle /> CSR Funding CSR-1 Eligible</li>
-                                    <li><FaCheckCircle /> FCRA Approved Account</li>
+                                    <li><FaCheckCircle /> <strong>Trust PAN:</strong> AAGTK5575Q</li>
+                                    <li><FaCheckCircle /> <strong>12A URN:</strong> AAGTK5575QE20261 (Order u/s 332)</li>
+                                    <li><FaCheckCircle /> <strong>80G URN:</strong> AAGTK5575QF20261 (Approval u/s 354)</li>
+                                    <li><FaCheckCircle /> <strong>Application No:</strong> 715954770021026</li>
+                                    <li><FaCheckCircle /> <strong>Tax Validity:</strong> AY 2026-27 to AY 2028-29</li>
+                                    <li><FaCheckCircle /> <strong>Bank Current A/C:</strong> Canara Bank (110319653482)</li>
                                 </ul>
                                 <div className="bank-details" style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginTop: '16px' }}>
                                     <h5 style={{ color: '#1e293b', fontSize: '14px', fontWeight: '700', marginBottom: '10px' }}>
