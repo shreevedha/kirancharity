@@ -680,10 +680,9 @@ export default function Donate() {
                                     <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>CNRB0002492</span></p>
                                     <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Branch:</strong> Chandramouli Nagar (2492), Guntur</p>
                                     <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>SWIFT Code:</strong> CNRBNBBBFD (Wire / Large Transfer)</p>
-                                    <div style={{ marginTop: '12px', textAlign: 'center', background: '#ffffff', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-                                        <div style={{ fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Scan & Donate via Any UPI App</div>
-                                        <img src="/kiran_trust_upi_qr.png" alt="Kiran Trust Canara Bank UPI QR" style={{ width: '130px', height: '130px', display: 'block', margin: '0 auto', borderRadius: '6px' }} />
-                                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Supports PhonePe, GPay, Paytm, BHIM</div>
+                                    <div style={{ marginTop: "14px", background: "#eff6ff", padding: "14px", borderRadius: "8px", border: "1px solid #bfdbfe" }}>
+                                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#1e40af", marginBottom: "4px" }}>⚡ Instant UPI & Card Donations:</div>
+                                        <div style={{ fontSize: "12px", color: "#1e3a8a", lineHeight: 1.6 }}>To donate via <strong>PhonePe, Google Pay, Paytm, UPI QR, or Cards</strong> with an instant 80G tax receipt, fill the form on the right and click <strong>&quot;Proceed to Secure Payment&quot;</strong>.</div>
                                     </div>
                                     <div style={{ marginTop: '14px', borderTop: '1px dashed #cbd5e1', paddingTop: '10px' }}>
                                         <div style={{ fontSize: '12px', fontWeight: '700', color: '#1e293b', marginBottom: '8px' }}>Official Trust Documents</div>
