@@ -45,14 +45,23 @@ function generateSabpaisaChecksum(merchantId, merchantTxnId, amountInPaise, time
     return crypto.createHmac('sha256', secretKey).update(rawString).digest('hex');
 }
 
-// Helper: Verify SabPaisa Return URL Signature
+// Helper: Verify SabPaisa Return URL Signature per official PG 3.0 docs
 function verifyReturnSignature(params, secretKey) {
-    const { signature, ...rest } = params;
+    const signature = params.signature || params.checksum;
     if (!signature) return true; // Graceful fallback if signature key is omitted
 
-    const sortedDataString = Object.keys(rest)
+    // The 7 official return parameters from SabPaisa PG 3.0 docs:
+    // amount, merchant_txn_id, paid_amount, payment_mode, status, timestamp, transaction_id
+    const knownKeys = ['amount', 'merchant_txn_id', 'paid_amount', 'payment_mode', 'status', 'timestamp', 'transaction_id'];
+    const presentKnownKeys = knownKeys.filter(k => params[k] !== undefined);
+
+    const keysToUse = presentKnownKeys.length >= 3
+        ? presentKnownKeys
+        : Object.keys(params).filter(k => k !== 'signature' && k !== 'checksum');
+
+    const sortedDataString = keysToUse
         .sort()
-        .map(key => `${key}=${rest[key]}`)
+        .map(key => `${key}=${params[key]}`)
         .join('|');
 
     const expectedSignature = crypto
@@ -193,8 +202,8 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
         }
 
         const numAmount = Number(amount);
-        if (isNaN(numAmount) || numAmount < 10) {
-            return res.status(400).json({ success: false, message: 'Minimum online donation amount is ₹10 (required by SabPaisa Payment Gateway).' });
+        if (isNaN(numAmount) || numAmount < 1) {
+            return res.status(400).json({ success: false, message: 'Minimum online donation amount is ₹1.' });
         }
 
         // SabPaisa PG 3.0 REST API expects amount in paise (1 INR = 100 paise)
@@ -231,16 +240,27 @@ router.post('/initiate-sabpaisa', paymentLimiter, async (req, res) => {
 
         const checksum = generateSabpaisaChecksum(clientCode, clientTxnId, paiseAmount, timestamp, secretKey);
 
+        // SabPaisa PG 3.0: Name must be 2-100 characters with letters & spaces only
+        const sanitizedCustomerName = String(fullName || '')
+            .replace(/[^a-zA-Z\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 100) || 'Donor';
+
+        // SabPaisa PG 3.0: 10-digit Indian mobile starting with 6-9
+        const rawDigits = String(mobile || '').replace(/\D/g, '');
+        const sanitizedCustomerPhone = rawDigits.length > 10 ? rawDigits.slice(-10) : rawDigits;
+
         const payload = {
             merchantId: clientCode,
             merchantTxnId: clientTxnId,
             amount: paiseAmount,
             currency: 'INR',
             returnUrl: callbackUrl,
-            customerName: fullName,
+            customerName: sanitizedCustomerName,
             customerEmail: email,
-            customerPhone: mobile,
-            customerMobile: mobile,
+            customerPhone: sanitizedCustomerPhone,
+            customerMobile: sanitizedCustomerPhone,
             timestamp: parseInt(timestamp, 10),
             checksum
         };
@@ -405,14 +425,8 @@ const handleCallback = async (req, res) => {
         }
         const clientRedirectUrl = process.env.CLIENT_URL || 'https://www.kirancharitabletrust.org';
 
+        // Return URL parameters amount and paid_amount are already in rupees per official SabPaisa doc
         let resolvedAmount = donation?.amount || data.paid_amount || data.amount || '';
-        // If amount was sent in paise (e.g. > 100 with zero decimals), check if we need to convert
-        if (resolvedAmount && Number(resolvedAmount) >= 100 && !donation) {
-            // Check if amount is in paise
-            if (data.paid_amount && Number(data.paid_amount) % 100 === 0) {
-                resolvedAmount = String(Number(data.paid_amount) / 100);
-            }
-        }
         const donorName = donation?.fullName || data.customerName || data.payerName || data.name || 'Valued Donor';
         let failureReason = data.statusMsg || data.status || data.error?.message || data.responseMessage || '';
         if (!failureReason || failureReason.toUpperCase() === 'FAILED' || failureReason.toUpperCase() === 'FAILURE') {

@@ -108,7 +108,7 @@ export default function Donate() {
                 txnId: txnId || '',
                 clientTxnId: clientTxnId,
                 name: name || 'Valued Donor',
-                amount: amount || '10',
+                amount: amount || '1',
                 date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
             });
             setShowThankYou(false);
@@ -237,8 +237,8 @@ export default function Donate() {
 
         if (donationType === 'cash') {
             const num = Number(finalAmount);
-            if (isNaN(num) || num < 10) {
-                toast.error('Minimum donation amount is ₹10 (required by SabPaisa Payment Gateway).');
+            if (isNaN(num) || num < 1) {
+                toast.error('Minimum donation amount is ₹1.');
                 return;
             }
         }
@@ -784,7 +784,7 @@ export default function Donate() {
                                                 }}
                                             />
                                             <div className="amount-helper-note">
-                                                <FaInfoCircle /> Minimum online donation is ₹10 (required for UPI QR & Cards)
+                                                <FaInfoCircle /> Minimum online donation is ₹1
                                             </div>
                                             <div className="selected-amount-display">
                                                 Donation Amount: <strong className="gradient-text">₹{Number(finalAmount).toLocaleString('en-IN')}</strong>
