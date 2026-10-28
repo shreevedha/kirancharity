@@ -15,6 +15,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsConditions from './pages/TermsConditions'
 import NotFound from './pages/NotFound'
 import ScrollToTop from './components/ScrollToTop'
+import SEOManager from './components/SEOManager'
 import CauseEducation from './pages/CauseEducation'
 import CauseHealthcare from './pages/CauseHealthcare'
 import CauseFoodDistribution from './pages/CauseFoodDistribution'
@@ -28,6 +29,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <SEOManager />
       <Header />
       <main>
         <Routes>
