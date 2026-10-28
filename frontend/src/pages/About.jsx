@@ -7,7 +7,7 @@ import ViceChairmanImg from '../assets/Konda Ravi Teja Vice Chairman.png'
 import ExecutiveImg from '../assets/Konda Ravi Bharath Executive.png'
 
 const timeline = [
-    { year: 'Jan 2026', title: 'Foundation', desc: 'Kiran Charitable Trust was established in Vijayawada, Andhra Pradesh, with a mission to serve humanity.' },
+    { year: 'Jan 2026', title: 'Foundation', desc: 'Kiran Charitable Trust was established in Guntur & Palnadu districts, Andhra Pradesh, with a mission to serve humanity.' },
     { year: 'Mar 2026', title: 'First Medical Camp', desc: 'Successfully organized our first free medical diagnostics camp serving 200+ patients in rural areas.' },
     { year: 'May 2026', title: 'Education Launch', desc: 'Initiated our scholarship program supporting underprivileged kids with school stationery and tuition fees.' },
     { year: 'Jun 2026', title: '80G & 12A Status', desc: 'Achieved legal tax exemption registrations, ensuring trust, transparency and donor confidence.' },
@@ -200,6 +200,52 @@ export default function About() {
                                 <p>{v.desc}</p>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Legal Documents & Registrations */}
+            <section className="section-padding" style={{ background: '#ffffff', borderTop: '1px solid #e2e8f0' }}>
+                <div className="container">
+                    <div className="section-title">
+                        <p className="tagline">Compliance & Governance</p>
+                        <h2>Trust Legal Documents & Approvals</h2>
+                        <p>Complete regulatory transparency. View or download our verified registration and tax exemption certificates.</p>
+                        <div className="title-underline"><span /><span /><span /></div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', marginTop: '30px' }}>
+                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
+                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>📜</div>
+                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>12A Registration</h4>
+                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Provisional Registration Order u/s 332 (URN: AAGTK5575QE20261)</p>
+                            <a href="/documents/12A-332(8).pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                                View 12A PDF
+                            </a>
+                        </div>
+                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
+                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🛡️</div>
+                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>80G Tax Exemption</h4>
+                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Income Tax Exemption Approval u/s 354 (URN: AAGTK5575QF20261)</p>
+                            <a href="/documents/80G-354(4).pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                                View 80G PDF
+                            </a>
+                        </div>
+                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
+                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>💳</div>
+                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Trust PAN Card</h4>
+                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Permanent Account Number: <strong>AAGTK5575Q</strong></p>
+                            <a href="/documents/Trust_Pan_Card.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                                View PAN Card
+                            </a>
+                        </div>
+                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
+                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🏛️</div>
+                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Bank Verification</h4>
+                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Canara Bank Current A/C (A/C: 110319653482, IFSC: CNRB0002492)</p>
+                            <a href="/documents/kiran_charitable_trust_account_statement.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                                View Statement
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>

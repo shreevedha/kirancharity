@@ -61,7 +61,7 @@ export default function Contact() {
                             {
                                 icon: <FaEnvelope />, color: '#3498DB',
                                 title: 'Email',
-                                lines: ['kirancharitabletrust01@gmail.com'],
+                                lines: ['contact@kirancharitabletrust.org'],
                             },
                             {
                                 icon: <FaMapMarkerAlt />, color: '#9B59B6',

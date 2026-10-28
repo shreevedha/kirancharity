@@ -63,7 +63,7 @@ export default function TermsConditions() {
                                     10-15 working days.
                                 </p>
                                 <div className="legal-highlight" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <FaEnvelope /> For refund requests, email us at kirancharitabletrust01@gmail.com with your Transaction ID.
+                                    <FaEnvelope /> For refund requests, email us at contact@kirancharitabletrust.org with your Transaction ID.
                                 </div>
                             </div>
 
@@ -113,7 +113,7 @@ export default function TermsConditions() {
                                 <p>
                                     These Terms shall be governed by and construed in accordance with the laws of India,
                                     specifically the laws of Andhra Pradesh. Any disputes shall be subject to the exclusive
-                                    jurisdiction of courts in Vijayawada, Andhra Pradesh.
+                                    jurisdiction of courts in Guntur, Andhra Pradesh.
                                 </p>
                             </div>
 
@@ -131,7 +131,7 @@ export default function TermsConditions() {
                                 <div className="legal-contact-info">
                                     <p><strong>Kiran Charitable Trust</strong></p>
                                     <p>Mandepudi, Nemalikallu, Amaravathi, Palnaadu, Guntur - 522018</p>
-                                    <p><FaEnvelope /> kirancharitabletrust01@gmail.com</p>
+                                    <p><FaEnvelope /> contact@kirancharitabletrust.org</p>
                                 </div>
                             </div>
                         </div>

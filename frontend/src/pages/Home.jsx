@@ -30,7 +30,7 @@ const heroSlides = [
         accentColor: '#F59E0B',
         tagline: 'DIRECT FIELD ACTION IN ANDHRA PRADESH',
         heading: 'Empowering Children Through Education',
-        subtext: 'Every child deserves books, uniform, and a safe learning environment. We provide direct educational support to rural students in Vijayawada.',
+        subtext: 'Every child deserves books, uniform, and a safe learning environment. We provide direct educational support to rural students in Guntur & Palnadu districts.',
         bgPos: 'center top',
     },
     {
@@ -41,7 +41,7 @@ const heroSlides = [
         accentColor: '#4ADE80',
         tagline: 'NO ONE SLEEPS HUNGRY',
         heading: 'Daily Fresh Meal & Ration Drives',
-        subtext: 'Serving fresh cooked meals and dry food kits to daily-wage workers, homeless elders, and struggling families across Vijayawada.',
+        subtext: 'Serving fresh cooked meals and dry food kits to daily-wage workers, homeless elders, and struggling families across Guntur & Palnadu districts.',
         bgPos: 'center top',
     },
     {
@@ -89,7 +89,7 @@ const latestActivities = [
     {
         title: 'Blood Donation Camp 2026',
         date: 'June 15, 2026',
-        desc: 'Organized a major blood donation camp with 60+ voluntary donors in Vijayawada, supplying local blood banks.',
+        desc: 'Organized a major blood donation camp with 60+ voluntary donors in Guntur & Palnadu districts, supplying local blood banks.',
         icon: <FaTint />, color: '#C0392B',
     },
     {
@@ -114,7 +114,7 @@ const testimonials = [
         rating: 5
     },
     {
-        quote: "Volunteering with Kiran Trust in Vijayawada medical camps has been a deeply fulfilling experience. You see the direct smile on elderly patients' faces.",
+        quote: "Volunteering with Kiran Trust in Guntur & Palnadu medical camps has been a deeply fulfilling experience. You see the direct smile on elderly patients' faces.",
         name: "Dr. Suresh Kumar",
         role: "Volunteer Physician",
         rating: 5
@@ -127,7 +127,7 @@ const testimonials = [
     }
 ]
 
-const sponsors = ["80G Certified", "12A Approved", "Regd. NGO AP", "100% Transparent", "Vijayawada Based"]
+const sponsors = ["80G Certified", "12A Approved", "Regd. NGO AP", "100% Transparent", "Guntur & Palnadu Based"]
 
 function SafeCountUp({ end, duration = 2.5 }) {
     const [count, setCount] = useState(0);
@@ -274,7 +274,7 @@ export default function Home() {
                     <div className="trust-item">
                         <FaHandHoldingHeart className="trust-icon" />
                         <div>
-                            <strong>Vijayawada Registered NGO</strong>
+                            <strong>Guntur & Palnadu Registered NGO</strong>
                             <span>Serving local AP communities since 2026</span>
                         </div>
                     </div>
@@ -291,7 +291,7 @@ export default function Home() {
                             <p className="tagline-label">Our Story & Philosophy</p>
                             <h2>Driven by Compassion,<br /><span className="gradient-text">Grounded in Action</span></h2>
                             <p className="welcome-para">
-                                Founded by Chairman <strong>Pallepogu Kiranbabu</strong> in Vijayawada, Kiran Charitable Trust was born from a personal vision: to ensure that no child goes without schooling, no family goes to bed hungry, and no elderly person suffers without medical care.
+                                Founded by Chairman <strong>Pallepogu Kiranbabu</strong> in Guntur & Palnadu districts, Kiran Charitable Trust was born from a personal vision: to ensure that no child goes without schooling, no family goes to bed hungry, and no elderly person suffers without medical care.
                             </p>
                             <p className="welcome-para">
                                 Working side-by-side with local volunteers, medical professionals, and community leaders across Andhra Pradesh, our mission is to deliver direct, tangible assistance with complete financial transparency.
@@ -373,7 +373,7 @@ export default function Home() {
                     <div className="section-title">
                         <p className="tagline">Ground Initiatives</p>
                         <h2>Our Core Programs</h2>
-                        <p>Dedicated humanitarian work reaching marginalized communities across Vijayawada</p>
+                        <p>Dedicated humanitarian work reaching marginalized communities across Guntur & Palnadu districts</p>
                         <div className="title-underline"><span /><span /><span /></div>
                     </div>
                     <div className="activities-grid-home">

@@ -14,7 +14,7 @@ import { API_BASE_URL } from '../config'
 import trustLogo from '../assets/Klogo.jpeg'
 import './Donate.css'
 
-const amounts = [500, 1000, 2000, 5000, 10000, 25000]
+const amounts = [500, 1000, 2500, 5000, 10000, 25000, 50000, 100000]
 const purposes = [
     { value: 'general', label: 'General Donation' },
     { value: 'education', label: 'Education Support' },
@@ -257,7 +257,7 @@ export default function Donate() {
                     fullName: data.fullName,
                     mobile: data.phone,
                     email: data.email,
-                    address: data.address || 'Vijayawada, AP',
+                    address: data.address || 'Guntur, AP',
                     amount: finalAmount,
                     purpose: data.purpose,
                     verifiedToken: verifiedToken || `VERIFIED_CLICK:${Date.now()}`,
@@ -285,7 +285,7 @@ export default function Donate() {
                 fullName: data.fullName,
                 mobile: data.phone,
                 email: data.email,
-                address: data.address || 'Vijayawada, AP',
+                address: data.address || 'Guntur, AP',
                 itemCategory: data.itemCategory,
                 itemName: data.itemName,
                 itemQuantity: data.itemQuantity,
@@ -333,7 +333,7 @@ export default function Donate() {
                             <div className="ty-header">
                                 <div className="ty-icon"><FaCheckCircle /></div>
                                 <h2>Thank You, {receiptData.name}!</h2>
-                                <p>Your generous contribution has been received. You are making a huge difference in Vijayawada!</p>
+                                <p>Your generous contribution has been received. You are making a huge difference in Guntur & Palnadu districts!</p>
                             </div>
                             <div className="receipt-box">
                                 <h3><FaReceipt /> Donation Receipt</h3>
@@ -403,7 +403,7 @@ export default function Donate() {
                                     )}
                                 </div>
                                 <div className="receipt-legal">
-                                    <FaShieldAlt /> 80G Certificate will be sent to your email • PAN: AAATK1234X • Reg. No: TR-2026-001
+                                    <FaShieldAlt /> 80G Certificate will be sent to your email • PAN: AAGTK5575Q • Reg. No: TR-2026-001
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
@@ -629,7 +629,7 @@ export default function Donate() {
             {/* Trust Badges */}
             <div className="trust-badges-bar">
                 <div className="container trust-badges-inner">
-                    {['80G Tax Exemption Certified', '12A Registered', 'FCRA Compliant', 'PAN: AAATK1234X', '100% Transparency Guarantee'].map((b, i) => (
+                    {['80G Tax Exemption Certified', '12A Registered', 'FCRA Compliant', 'PAN: AAGTK5575Q', '100% Transparency Guarantee'].map((b, i) => (
                         <div key={i} className="trust-badge-item">
                             <FaShieldAlt /> {b}
                         </div>
@@ -663,23 +663,45 @@ export default function Donate() {
                             <div className="legal-info-box">
                                 <h4><FaFileAlt /> Legal & Tax Certificate Info</h4>
                                 <ul>
-                                    <li><FaCheckCircle /> PAN: AAATK1234X</li>
+                                    <li><FaCheckCircle /> PAN: AAGTK5575Q</li>
                                     <li><FaCheckCircle /> 80G Tax Exemption Receipt</li>
                                     <li><FaCheckCircle /> 12A Registration Active</li>
                                     <li><FaCheckCircle /> Reg. No: TR-2026-001</li>
                                     <li><FaCheckCircle /> CSR Funding CSR-1 Eligible</li>
                                     <li><FaCheckCircle /> FCRA Approved Account</li>
                                 </ul>
-                                <div className="bank-details">
-                                    <h5>Official Trust Bank Transfer (NEFT / RTGS / IMPS)</h5>
-                                    <p><strong>Account Name:</strong> Kiran Charitable Trust</p>
-                                    <p><strong>Bank:</strong> Canara Bank</p>
-                                    <p><strong>Account Number:</strong> 110319653482</p>
-                                    <p><strong>IFSC Code:</strong> CNRB0002492</p>
-                                    <p><strong>Branch:</strong> CM Nagar Branch (2492), Guntur</p>
-                                    <p style={{ marginTop: '8px', fontSize: '11px', color: '#047857', fontWeight: '600' }}>
-                                        <FaCheckCircle style={{ marginRight: '5px' }} /> Verified Trust Current Account
-                                    </p>
+                                <div className="bank-details" style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginTop: '16px' }}>
+                                    <h5 style={{ color: '#1e293b', fontSize: '14px', fontWeight: '700', marginBottom: '10px' }}>
+                                        Official Trust Bank Transfer (NEFT / RTGS / IMPS)
+                                    </h5>
+                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Account Name:</strong> Kiran Charitable Trust</p>
+                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Bank:</strong> Canara Bank</p>
+                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Account No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>110319653482</span></p>
+                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>CNRB0002492</span></p>
+                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>Branch:</strong> Chandramouli Nagar (2492), Guntur</p>
+                                    <p style={{ margin: '4px 0', fontSize: '13px' }}><strong>SWIFT Code:</strong> CNRBNBBBFD (Wire / Large Transfer)</p>
+                                    <div style={{ marginTop: '12px', textAlign: 'center', background: '#ffffff', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+                                        <div style={{ fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '6px' }}>Scan & Donate via Any UPI App</div>
+                                        <img src="/kiran_trust_upi_qr.png" alt="Kiran Trust Canara Bank UPI QR" style={{ width: '130px', height: '130px', display: 'block', margin: '0 auto', borderRadius: '6px' }} />
+                                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Supports PhonePe, GPay, Paytm, BHIM</div>
+                                    </div>
+                                    <div style={{ marginTop: '14px', borderTop: '1px dashed #cbd5e1', paddingTop: '10px' }}>
+                                        <div style={{ fontSize: '12px', fontWeight: '700', color: '#1e293b', marginBottom: '8px' }}>Official Trust Documents</div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                            <a href="/documents/12A-332(8).pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                📄 12A Registration Order (Form 106)
+                                            </a>
+                                            <a href="/documents/80G-354(4).pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                📄 80G Tax Exemption Approval (Form 106)
+                                            </a>
+                                            <a href="/documents/Trust_Pan_Card.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                📄 Trust PAN Card (AAGTK5575Q)
+                                            </a>
+                                            <a href="/documents/kiran_charitable_trust_account_statement.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                📄 Canara Bank Account Verification
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -860,7 +882,7 @@ export default function Donate() {
                                             >
                                                 <option value="">Select delivery mode</option>
                                                 <option value="dropoff">I will pack & courier / drop off at office</option>
-                                                <option value="pickup">Request free door-step pickup (Vijayawada region only)</option>
+                                                <option value="pickup">Request free door-step pickup (Guntur & Palnadu districts)</option>
                                             </select>
                                             {errors.deliveryMethod && <span className="error-msg">{errors.deliveryMethod.message}</span>}
                                         </div>

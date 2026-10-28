@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FaXTwitter } from 'react-icons/fa6'
 import {
     FaHeart, FaFacebook, FaInstagram, FaLinkedin,
     FaYoutube, FaWhatsapp, FaMapMarkerAlt, FaPhone,
@@ -29,6 +30,7 @@ export default function Footer() {
                         </p>
                         <div className="footer-socials">
                             <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebook /></a>
+                            <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="X (Twitter)"><FaXTwitter /></a>
                             <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
                             <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn"><FaLinkedin /></a>
                             <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
@@ -62,9 +64,9 @@ export default function Footer() {
                         </ul>
                         <h4 style={{ marginTop: '24px' }}>Legal Info</h4>
                         <ul className="footer-legal-list">
-                            <li>PAN: AAATK1234X</li>
-                            <li>80G Registered</li>
-                            <li>12A Certified</li>
+                            <li>PAN: AAGTK5575Q</li>
+                            <li>80G URN: AAGTK5575QF20261</li>
+                            <li>12A URN: AAGTK5575QE20261</li>
                             <li>Trust Reg. No: TR-2026-001</li>
                         </ul>
                     </div>
@@ -87,7 +89,7 @@ export default function Footer() {
                             </li>
                             <li>
                                 <FaEnvelope />
-                                <span>kirancharitabletrust01@gmail.com</span>
+                                <span>contact@kirancharitabletrust.org</span>
                             </li>
                             <li>
                                 <FaClock />

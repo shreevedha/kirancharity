@@ -14,7 +14,7 @@ import './Volunteers.css'
 
 const benefits = [
     { icon: <FaCertificate />, title: 'Incredible Experience', desc: 'Receive official recognition, and learn real leadership skills while working inside rural communities.', color: 'var(--primary)' },
-    { icon: <FaHeart />, title: 'Direct Human Impact', desc: 'Touch real human lives in Vijayawada - see the immediate joy of child support and elder care.', color: 'var(--primary-dark)' },
+    { icon: <FaHeart />, title: 'Direct Human Impact', desc: 'Touch real human lives in Guntur & Palnadu - see the immediate joy of child support and elder care.', color: 'var(--primary-dark)' },
     { icon: <FaNetworkWired />, title: 'Genuine Community', desc: 'Connect with 250+ passionate local citizens, medical experts, and social developers.', color: 'var(--primary-light)' },
     { icon: <FaGraduationCap />, title: 'Skill Development', desc: 'Gain true exposure to social action development, project management, and field health campaigns.', color: '#2563EB' },
 ]
@@ -23,19 +23,19 @@ const careersList = [
     {
         title: "Field Social Officer",
         type: "Full-Time (Paid Position)",
-        location: "Vijayawada Office (On-site)",
+        location: "Guntur & Palnadu Office (On-site)",
         description: "Join our active support team facilitating daily grocery supply distribution, coordinating local medical diagnostics, and conducting rural school visits. Ideal for MSW/BSW graduates who love field action.",
     },
     {
         title: "Logistics & Store Coordinator",
         type: "Part-Time / Weekend (Paid Position)",
-        location: "Vijayawada Hub (On-site)",
+        location: "Guntur & Palnadu Hub (On-site)",
         description: "Manages safe storage, logging, and packaging of in-kind donations (e.g. food kits, notebooks, clothes) and ensures smooth handover to distribution teams.",
     },
     {
         title: "Social Media Storyteller Intern",
         type: "6-Months Internship (Stipend provided)",
-        location: "Remote / Hybrid (Vijayawada)",
+        location: "Remote / Hybrid (Guntur & Palnadu)",
         description: "Document our daily achievements, photograph our charity camps, and write genuine, transparent stories of change. If you have a phone camera and love graphic stories, apply!",
     }
 ]
@@ -86,7 +86,7 @@ export default function Volunteers() {
                     <div className="section-title">
                         <p className="tagline">Join Our Community</p>
                         <h2>Why Join Kiran Trust?</h2>
-                        <p>Whether you volunteer your time on weekends or take up a professional career, you are making Vijayawada a better place!</p>
+                        <p>Whether you volunteer your time on weekends or take up a professional career, you are making Guntur & Palnadu a better place!</p>
                         <div className="title-underline"><span /><span /><span /></div>
                     </div>
                     <div className="benefits-grid">
@@ -308,7 +308,7 @@ export default function Volunteers() {
                                         <input
                                             id="vol-address"
                                             type="text"
-                                            placeholder="Your resident city (e.g. Vijayawada, Krishna)"
+                                            placeholder="Your resident city (e.g. Guntur, Narasaraopet, Palnadu)"
                                             {...register('address')}
                                         />
                                     </div>
@@ -352,7 +352,7 @@ export default function Volunteers() {
                                         <label htmlFor="vol-why"><FaHeart /> Tell us a bit about yourself & why you want to join us? *</label>
                                         <textarea
                                             id="vol-why"
-                                            placeholder="Share what motivates you to work for the local community of Vijayawada..."
+                                            placeholder="Share what motivates you to work for the local community of Guntur and Palnadu districts..."
                                             rows={4}
                                             className={errors.why ? 'input-error' : ''}
                                             {...register('why', { required: 'Please share your motivation' })}

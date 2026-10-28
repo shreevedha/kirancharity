@@ -6,7 +6,7 @@ import seniorImg from '../assets/cause_senior.png'
 import './CausePage.css'
 
 const highlights = [
-    'Monthly visits to old age homes across Vijayawada',
+    'Monthly visits to old age homes across Guntur & Palnadu districts',
     'Free medicines and health check-ups for seniors',
     'Festive celebrations — Ugadi, Sankranti, Diwali',
     'Emotional support, companionship & storytelling',

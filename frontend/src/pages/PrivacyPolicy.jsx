@@ -117,7 +117,7 @@ export default function PrivacyPolicy() {
                                 <div className="legal-contact-info">
                                     <p><strong>Kiran Charitable Trust</strong></p>
                                     <p>Mandepudi, Nemalikallu, Amaravathi, Palnaadu, Guntur - 522018</p>
-                                    <p><FaEnvelope /> kirancharitabletrust01@gmail.com</p>
+                                    <p><FaEnvelope /> contact@kirancharitabletrust.org</p>
                                 </div>
                             </div>
                         </div>
