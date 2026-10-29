@@ -913,7 +913,7 @@ export default function Donate() {
 
                                         {/* Payment Way Dropdown */}
                                         <div className="form-group" style={{ marginTop: '16px', marginBottom: '16px' }}>
-                                            <label htmlFor="pay-channel" style={{ fontWeight: '700', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <label htmlFor="pay-channel" style={{ fontWeight: '700', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                                                 <FaUniversity style={{ color: 'var(--primary)' }} /> Select Payment Way *
                                             </label>
                                             <select
@@ -922,19 +922,29 @@ export default function Donate() {
                                                 onChange={e => setPaymentChannel(e.target.value)}
                                                 style={{
                                                     width: '100%',
-                                                    padding: '12px 14px',
+                                                    maxWidth: '100%',
+                                                    boxSizing: 'border-box',
+                                                    padding: '11px 14px',
                                                     borderRadius: '8px',
                                                     border: '2px solid #2563eb',
                                                     background: '#ffffff',
                                                     fontWeight: '700',
                                                     fontSize: '14px',
                                                     color: '#1e293b',
-                                                    cursor: 'pointer'
+                                                    cursor: 'pointer',
+                                                    outline: 'none',
+                                                    boxShadow: '0 1px 3px rgba(37, 99, 235, 0.1)'
                                                 }}
                                             >
-                                                <option value="online">⚡ Online Payment Gateway (UPI, QR Code, Cards, NetBanking)</option>
-                                                <option value="bank_transfer">🏛️ Direct Bank Transfer (NEFT / RTGS / IMPS into Canara Bank)</option>
+                                                <option value="online">⚡ Online Payment (UPI, Cards)</option>
+                                                <option value="bank_transfer">🏛️ Direct Bank Transfer</option>
                                             </select>
+                                            <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', lineHeight: 1.4 }}>
+                                                {paymentChannel === 'online'
+                                                    ? '⚡ Supports Instant UPI Apps, QR Code, Cards & NetBanking'
+                                                    : '🏛️ Direct NEFT / RTGS / IMPS into Canara Bank account'
+                                                }
+                                            </p>
                                         </div>
 
                                         {/* Direct Bank Transfer Box with 1-Click Copy Buttons */}
