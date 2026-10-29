@@ -743,7 +743,6 @@ export default function Donate() {
                                     <li><FaCheckCircle /> <strong>80G URN:</strong> AAGTK5575QF20261 (Approval u/s 354)</li>
                                     <li><FaCheckCircle /> <strong>Application No:</strong> 715954770021026</li>
                                     <li><FaCheckCircle /> <strong>Tax Validity:</strong> AY 2026-27 to AY 2028-29</li>
-                                    <li><FaCheckCircle /> <strong>Bank Current A/C:</strong> Canara Bank (110319653482)</li>
                                 </ul>
                                 <div className="bank-details" style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginTop: '16px' }}>
                                     {/* Direct Official Canara Bank QR Code */}
