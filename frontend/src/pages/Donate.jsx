@@ -31,6 +31,8 @@ export default function Donate() {
     const [paymentChannel, setPaymentChannel] = useState('online') // 'online', 'qr_code', 'bank_transfer'
     const [copiedKey, setCopiedKey] = useState(null)
     const [utrNumber, setUtrNumber] = useState('')
+    const [showUpiPopup, setShowUpiPopup] = useState(false)
+    const [upiPopupTimer, setUpiPopupTimer] = useState(null)
 
     const handleCopy = (text, key, label) => {
         try {
@@ -47,6 +49,16 @@ export default function Donate() {
             setCopiedKey(key);
             toast.success(`${label} copied to clipboard!`, { autoClose: 2000 });
             setTimeout(() => setCopiedKey(null), 2500);
+
+            // If UPI ID was copied, show 5-second letter box with verified name & close 'X' button
+            if (key && key.includes('upi')) {
+                if (upiPopupTimer) clearTimeout(upiPopupTimer);
+                setShowUpiPopup(true);
+                const timer = setTimeout(() => {
+                    setShowUpiPopup(false);
+                }, 5000);
+                setUpiPopupTimer(timer);
+            }
         } catch (e) {
             toast.info(`Value: ${text}`);
         }
@@ -1517,6 +1529,122 @@ export default function Donate() {
                     </div>
                 </div>
             )}
+
+            {/* UPI ID Copied Notification Letter Box (5s auto-close with 'X' close button) */}
+            {showUpiPopup && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '24px',
+                    right: '24px',
+                    maxWidth: '380px',
+                    width: 'calc(100% - 32px)',
+                    zIndex: 99999,
+                    background: '#ffffff',
+                    border: '2px solid #2563eb',
+                    borderRadius: '14px',
+                    boxShadow: '0 12px 32px rgba(15, 23, 42, 0.22)',
+                    padding: '16px 18px',
+                    boxSizing: 'border-box'
+                }}>
+                    {/* Header with 'X' Close Button */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                                width: '22px',
+                                height: '22px',
+                                borderRadius: '50%',
+                                background: '#10b981',
+                                color: '#ffffff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '11px'
+                            }}>
+                                <FaCheck />
+                            </span>
+                            <strong style={{ fontSize: '14px', color: '#1e293b' }}>UPI ID Copied!</strong>
+                        </div>
+                        {/* Wrong / Close Button to dismiss */}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (upiPopupTimer) clearTimeout(upiPopupTimer);
+                                setShowUpiPopup(false);
+                            }}
+                            title="Close notification"
+                            aria-label="Close"
+                            style={{
+                                background: '#f1f5f9',
+                                border: '1px solid #cbd5e1',
+                                borderRadius: '50%',
+                                width: '26px',
+                                height: '26px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '16px',
+                                fontWeight: '700',
+                                color: '#64748b',
+                                lineHeight: 1
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#ef4444'; e.currentTarget.style.color = '#fff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#64748b'; }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    {/* Copied UPI ID */}
+                    <div style={{
+                        background: '#eff6ff',
+                        border: '1px dashed #3b82f6',
+                        borderRadius: '6px',
+                        padding: '6px 10px',
+                        fontSize: '13px',
+                        fontFamily: 'monospace',
+                        fontWeight: '700',
+                        color: '#1d4ed8',
+                        marginBottom: '10px',
+                        wordBreak: 'break-all'
+                    }}>
+                        340625862653482@cnrb
+                    </div>
+
+                    {/* Payee Name Notice */}
+                    <div style={{ fontSize: '12px', color: '#334155', lineHeight: 1.5, marginBottom: '8px' }}>
+                        When you paste this UPI ID in <strong>Google Pay, PhonePe, Paytm, or BHIM</strong>, the receiver name will be shown as:
+                    </div>
+
+                    <div style={{
+                        background: '#f0fdf4',
+                        border: '1.5px solid #86efac',
+                        borderRadius: '8px',
+                        padding: '8px 12px',
+                        textAlign: 'center',
+                        marginBottom: '10px'
+                    }}>
+                        <span style={{ fontSize: '11px', color: '#166534', fontWeight: '700', display: 'block', textTransform: 'uppercase' }}>
+                            Verified Payee Name in UPI Apps:
+                        </span>
+                        <strong style={{ fontSize: '15px', color: '#15803d', letterSpacing: '0.5px' }}>
+                            KIRAN CHARITABLE TRUST
+                        </strong>
+                        <span style={{ fontSize: '11px', color: '#166534', display: 'block', marginTop: '2px' }}>
+                            Bank: Canara Bank
+                        </span>
+                    </div>
+
+                    {/* Footer timer note */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#94a3b8' }}>
+                        <span>Auto-closing in 5s...</span>
+                        <span style={{ color: '#ef4444', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShowUpiPopup(false)}>
+                            Click ✕ to close
+                        </span>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
+
