@@ -28,7 +28,7 @@ export default function Donate() {
     const [donationType, setDonationType] = useState('cash') // 'cash' or 'item'
     const [selectedAmount, setSelectedAmount] = useState(1000)
     const [customAmount, setCustomAmount] = useState('')
-    const [paymentChannel, setPaymentChannel] = useState('qr_code') // 'qr_code', 'bank_transfer', 'online'
+    const [paymentChannel, setPaymentChannel] = useState('online') // 'online', 'qr_code', 'bank_transfer'
     const [copiedKey, setCopiedKey] = useState(null)
     const [utrNumber, setUtrNumber] = useState('')
 
@@ -772,7 +772,7 @@ export default function Donate() {
                                             <img
                                                 src="/documents/canara_trust_qr.png"
                                                 alt="Canara Bank UPI QR Code - Kiran Charitable Trust"
-                                                style={{ width: '160px', height: '160px', display: 'block', margin: '0 auto', borderRadius: '4px' }}
+                                                style={{ width: '210px', height: '210px', maxWidth: '100%', display: 'block', margin: '0 auto', borderRadius: '6px' }}
                                             />
                                         </div>
 
@@ -1012,26 +1012,33 @@ export default function Donate() {
                                                     width: '100%',
                                                     maxWidth: '100%',
                                                     boxSizing: 'border-box',
-                                                    padding: '11px 14px',
+                                                    padding: '11px 40px 11px 14px',
                                                     borderRadius: '8px',
                                                     border: '2px solid #2563eb',
-                                                    background: '#ffffff',
+                                                    backgroundColor: '#ffffff',
+                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232563eb' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                                    backgroundRepeat: 'no-repeat',
+                                                    backgroundPosition: 'right 14px center',
+                                                    backgroundSize: '16px 16px',
+                                                    appearance: 'none',
+                                                    WebkitAppearance: 'none',
+                                                    MozAppearance: 'none',
                                                     fontWeight: '700',
                                                     fontSize: '14px',
                                                     color: '#1e293b',
                                                     cursor: 'pointer',
                                                     outline: 'none',
-                                                    boxShadow: '0 1px 3px rgba(37, 99, 235, 0.1)'
+                                                    boxShadow: '0 1px 4px rgba(37, 99, 235, 0.12)'
                                                 }}
                                             >
-                                                <option value="qr_code">📱 1. Direct UPI QR &amp; UPI ID</option>
-                                                <option value="bank_transfer">🏛️ 2. Direct Bank Transfer</option>
-                                                <option value="online">⚡ 3. Online Gateway (SabPaisa)</option>
+                                                <option value="online">⚡ Online Payments (UPI, Cards, NetBanking)</option>
+                                                <option value="qr_code">📱 Direct UPI QR &amp; UPI ID</option>
+                                                <option value="bank_transfer">🏛️ Direct Bank Transfer</option>
                                             </select>
                                             <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', lineHeight: 1.4 }}>
+                                                {paymentChannel === 'online' && '⚡ Instant Online Gateway (SabPaisa): UPI Apps, QR, Cards & NetBanking'}
                                                 {paymentChannel === 'qr_code' && '📱 Instant scan with PhonePe, Google Pay, Paytm, BHIM & Canara ai1'}
                                                 {paymentChannel === 'bank_transfer' && '🏛️ Direct NEFT / RTGS / IMPS into Canara Bank account'}
-                                                {paymentChannel === 'online' && '⚡ SabPaisa Payment Gateway: Cards, NetBanking, Instant checkout'}
                                             </p>
                                         </div>
 
@@ -1065,7 +1072,7 @@ export default function Donate() {
                                                     <img
                                                         src="/documents/canara_trust_qr.png"
                                                         alt="Canara Bank UPI QR Code - Kiran Charitable Trust"
-                                                        style={{ width: '180px', height: '180px', display: 'block', margin: '0 auto', borderRadius: '4px' }}
+                                                        style={{ width: '240px', height: '240px', maxWidth: '100%', display: 'block', margin: '0 auto', borderRadius: '6px' }}
                                                     />
                                                 </div>
 
