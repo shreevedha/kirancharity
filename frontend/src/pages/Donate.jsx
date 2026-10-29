@@ -28,7 +28,7 @@ export default function Donate() {
     const [donationType, setDonationType] = useState('cash') // 'cash' or 'item'
     const [selectedAmount, setSelectedAmount] = useState(1000)
     const [customAmount, setCustomAmount] = useState('')
-    const [paymentChannel, setPaymentChannel] = useState('online') // 'online' or 'bank_transfer'
+    const [paymentChannel, setPaymentChannel] = useState('qr_code') // 'qr_code', 'bank_transfer', 'online'
     const [copiedKey, setCopiedKey] = useState(null)
     const [utrNumber, setUtrNumber] = useState('')
 
@@ -274,7 +274,12 @@ export default function Donate() {
         setIsSubmitting(true);
 
         if (donationType === 'cash') {
-            if (paymentChannel === 'bank_transfer') {
+            if (paymentChannel === 'qr_code' || paymentChannel === 'bank_transfer') {
+                const isQR = paymentChannel === 'qr_code';
+                const methodLabel = isQR
+                    ? `Canara Bank UPI QR (340625862653482@cnrb)${utrNumber ? ` - Ref: ${utrNumber}` : ''}`
+                    : `Canara Bank Transfer (NEFT/RTGS/IMPS)${utrNumber ? ` - Ref: ${utrNumber}` : ''}`;
+                const prefix = isQR ? 'KCT-UPI-' : 'KCT-NEFT-';
                 try {
                     const response = await axios.post(`${API_BASE_URL}/donations`, {
                         donationType: 'cash',
@@ -284,32 +289,38 @@ export default function Donate() {
                         address: data.address || 'Guntur, AP',
                         amount: finalAmount,
                         purpose: data.purpose,
-                        paymentMethod: `Canara Bank Transfer (NEFT/RTGS/IMPS)${utrNumber ? ` - Ref: ${utrNumber}` : ''}`,
+                        paymentMethod: methodLabel,
                     });
 
                     const savedDonation = response.data?.data;
                     const receipt = generateReceipt({
                         ...data,
-                        receiptNo: savedDonation?.receiptNumber || 'KCT-NEFT-' + Date.now().toString().slice(-6),
-                        txnId: utrNumber ? `UTR-${utrNumber}` : ('KCT-NEFT-' + Date.now().toString().slice(-8))
+                        receiptNo: savedDonation?.receiptNumber || prefix + Date.now().toString().slice(-6),
+                        txnId: utrNumber ? `UTR-${utrNumber}` : (prefix + Date.now().toString().slice(-8))
                     });
                     setReceiptData(receipt);
                     setShowThankYou(true);
                     reset();
                     setUtrNumber('');
-                    toast.success('Bank transfer recorded! 80G Tax Exemption Receipt generated.');
+                    toast.success(isQR 
+                        ? 'Direct UPI donation recorded! 80G Tax Exemption Receipt generated.' 
+                        : 'Bank transfer recorded! 80G Tax Exemption Receipt generated.'
+                    );
                 } catch (err) {
-                    console.error('Bank transfer recording error:', err);
+                    console.error('Donation recording error:', err);
                     const receipt = generateReceipt({
                         ...data,
-                        receiptNo: 'KCT-NEFT-' + Date.now().toString().slice(-6),
-                        txnId: utrNumber ? `UTR-${utrNumber}` : ('KCT-NEFT-' + Date.now().toString().slice(-8))
+                        receiptNo: prefix + Date.now().toString().slice(-6),
+                        txnId: utrNumber ? `UTR-${utrNumber}` : (prefix + Date.now().toString().slice(-8))
                     });
                     setReceiptData(receipt);
                     setShowThankYou(true);
                     reset();
                     setUtrNumber('');
-                    toast.success('Bank transfer recorded! 80G Tax Exemption Receipt generated.');
+                    toast.success(isQR 
+                        ? 'Direct UPI donation recorded! 80G Tax Exemption Receipt generated.' 
+                        : 'Bank transfer recorded! 80G Tax Exemption Receipt generated.'
+                    );
                 } finally {
                     setIsSubmitting(false);
                 }
@@ -735,6 +746,83 @@ export default function Donate() {
                                     <li><FaCheckCircle /> <strong>Bank Current A/C:</strong> Canara Bank (110319653482)</li>
                                 </ul>
                                 <div className="bank-details" style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginTop: '16px' }}>
+                                    {/* Direct Official Canara Bank QR Code */}
+                                    <div style={{
+                                        textAlign: 'center',
+                                        background: '#ffffff',
+                                        border: '1.5px solid #cbd5e1',
+                                        borderRadius: '10px',
+                                        padding: '14px 10px',
+                                        marginBottom: '14px',
+                                        boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                                    }}>
+                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#1e293b', marginBottom: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                            <FaQrcode style={{ color: '#2563eb' }} /> Scan &amp; Pay via any UPI App
+                                        </div>
+                                        <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>
+                                            Official Canara Bank Trust QR Code
+                                        </div>
+                                        <div style={{
+                                            background: '#ffffff',
+                                            padding: '6px',
+                                            borderRadius: '8px',
+                                            display: 'inline-block',
+                                            border: '1px solid #e2e8f0'
+                                        }}>
+                                            <img
+                                                src="/documents/canara_trust_qr.png"
+                                                alt="Canara Bank UPI QR Code - Kiran Charitable Trust"
+                                                style={{ width: '160px', height: '160px', display: 'block', margin: '0 auto', borderRadius: '4px' }}
+                                            />
+                                        </div>
+
+                                        {/* Down UPI Icons */}
+                                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', flexWrap: 'wrap', marginTop: '8px' }}>
+                                            <span style={{ fontSize: '10px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px', background: '#eef2ff', color: '#4338ca', border: '1px solid #c7d2fe' }}>PhonePe</span>
+                                            <span style={{ fontSize: '10px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px', background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0' }}>Google Pay</span>
+                                            <span style={{ fontSize: '10px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>Paytm</span>
+                                            <span style={{ fontSize: '10px', fontWeight: '700', padding: '2px 6px', borderRadius: '4px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a' }}>BHIM</span>
+                                        </div>
+
+                                        {/* Separate UPI ID with Copy Button */}
+                                        <div style={{
+                                            marginTop: '10px',
+                                            padding: '6px 8px',
+                                            background: '#f8fafc',
+                                            borderRadius: '6px',
+                                            border: '1px solid #e2e8f0',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            gap: '6px'
+                                        }}>
+                                            <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                                <span style={{ fontSize: '10px', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>UPI ID</span>
+                                                <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '12px' }}>340625862653482@cnrb</span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleCopy('340625862653482@cnrb', 'sidebar_upi', 'UPI ID')}
+                                                style={{
+                                                    padding: '3px 8px',
+                                                    fontSize: '11px',
+                                                    borderRadius: '4px',
+                                                    border: '1px solid #3b82f6',
+                                                    background: '#1d4ed8',
+                                                    color: '#fff',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '3px',
+                                                    fontWeight: '600',
+                                                    flexShrink: 0
+                                                }}
+                                            >
+                                                {copiedKey === 'sidebar_upi' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <h5 style={{ color: '#1e293b', fontSize: '14px', fontWeight: '700', marginBottom: '10px' }}>
                                         Official Trust Bank Transfer (NEFT / RTGS / IMPS)
                                     </h5>
@@ -936,16 +1024,131 @@ export default function Donate() {
                                                     boxShadow: '0 1px 3px rgba(37, 99, 235, 0.1)'
                                                 }}
                                             >
-                                                <option value="online">⚡ Online Payment (UPI, Cards)</option>
-                                                <option value="bank_transfer">🏛️ Direct Bank Transfer</option>
+                                                <option value="qr_code">📱 1. Direct UPI QR &amp; UPI ID</option>
+                                                <option value="bank_transfer">🏛️ 2. Direct Bank Transfer</option>
+                                                <option value="online">⚡ 3. Online Gateway (SabPaisa)</option>
                                             </select>
                                             <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', lineHeight: 1.4 }}>
-                                                {paymentChannel === 'online'
-                                                    ? '⚡ Supports Instant UPI Apps, QR Code, Cards & NetBanking'
-                                                    : '🏛️ Direct NEFT / RTGS / IMPS into Canara Bank account'
-                                                }
+                                                {paymentChannel === 'qr_code' && '📱 Instant scan with PhonePe, Google Pay, Paytm, BHIM & Canara ai1'}
+                                                {paymentChannel === 'bank_transfer' && '🏛️ Direct NEFT / RTGS / IMPS into Canara Bank account'}
+                                                {paymentChannel === 'online' && '⚡ SabPaisa Payment Gateway: Cards, NetBanking, Instant checkout'}
                                             </p>
                                         </div>
+
+                                        {/* Option 1: Direct UPI QR Code Box */}
+                                        {paymentChannel === 'qr_code' && (
+                                            <div style={{
+                                                background: '#f8fafc',
+                                                border: '1.5px solid #3b82f6',
+                                                borderRadius: '12px',
+                                                padding: '16px',
+                                                marginBottom: '18px',
+                                                textAlign: 'center'
+                                            }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                    <FaQrcode style={{ color: '#2563eb', fontSize: '18px' }} />
+                                                    <strong style={{ color: '#1e3a8a', fontSize: '15px' }}>Canara Bank Official Trust UPI QR</strong>
+                                                </div>
+                                                <p style={{ fontSize: '12px', color: '#475569', marginBottom: '10px', lineHeight: 1.5 }}>
+                                                    Scan this QR code with any UPI app on your mobile phone to donate directly:
+                                                </p>
+
+                                                {/* QR Code Container */}
+                                                <div style={{
+                                                    background: '#ffffff',
+                                                    padding: '8px',
+                                                    borderRadius: '10px',
+                                                    display: 'inline-block',
+                                                    border: '2px solid #e2e8f0',
+                                                    boxShadow: '0 2px 8px rgba(37, 99, 235, 0.08)'
+                                                }}>
+                                                    <img
+                                                        src="/documents/canara_trust_qr.png"
+                                                        alt="Canara Bank UPI QR Code - Kiran Charitable Trust"
+                                                        style={{ width: '180px', height: '180px', display: 'block', margin: '0 auto', borderRadius: '4px' }}
+                                                    />
+                                                </div>
+
+                                                {/* Down UPI Icons / Badges */}
+                                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '3px 8px', borderRadius: '4px', background: '#eef2ff', color: '#4338ca', border: '1px solid #c7d2fe' }}>PhonePe</span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '3px 8px', borderRadius: '4px', background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0' }}>Google Pay</span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '3px 8px', borderRadius: '4px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>Paytm</span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '3px 8px', borderRadius: '4px', background: '#fffbeb', color: '#b45309', border: '1px solid #fde68a' }}>BHIM UPI</span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '3px 8px', borderRadius: '4px', background: '#f8fafc', color: '#475569', border: '1px solid #cbd5e1' }}>Canara ai1</span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', padding: '3px 8px', borderRadius: '4px', background: '#fdf2f8', color: '#9d174d', border: '1px solid #fbcfe8' }}>Cred</span>
+                                                </div>
+
+                                                {/* Separate UPI ID with Copy Button */}
+                                                <div style={{
+                                                    margin: '12px 0 8px',
+                                                    padding: '9px 12px',
+                                                    background: '#ffffff',
+                                                    borderRadius: '8px',
+                                                    border: '1.5px solid #2563eb',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    gap: '8px'
+                                                }}>
+                                                    <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                                        <span style={{ fontSize: '10.5px', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Official UPI ID</span>
+                                                        <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '14px', wordBreak: 'break-all' }}>340625862653482@cnrb</span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleCopy('340625862653482@cnrb', 'form_upi', 'UPI ID')}
+                                                        style={{
+                                                            padding: '5px 12px',
+                                                            fontSize: '12px',
+                                                            borderRadius: '5px',
+                                                            border: 'none',
+                                                            background: '#1d4ed8',
+                                                            color: '#fff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                            fontWeight: '600',
+                                                            flexShrink: 0
+                                                        }}
+                                                    >
+                                                        {copiedKey === 'form_upi' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ textAlign: 'left', fontSize: '12px', color: '#475569', background: '#eff6ff', padding: '8px 12px', borderRadius: '6px', border: '1px solid #bfdbfe' }}>
+                                                    <div><strong>Payee Name:</strong> KIRAN CHARITABLE TRUST</div>
+                                                    <div><strong>Bank:</strong> Canara Bank (A/C: 110319653482)</div>
+                                                    <div><strong>Category:</strong> MCC 5169 (Charity &amp; Social Service)</div>
+                                                </div>
+
+                                                {/* UTR Input */}
+                                                <div style={{ marginTop: '12px', textAlign: 'left' }}>
+                                                    <label htmlFor="qr-utr-ref" style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#1e3a8a', marginBottom: '4px' }}>
+                                                        UPI Transaction ID / UTR Number (Optional):
+                                                    </label>
+                                                    <input
+                                                        id="qr-utr-ref"
+                                                        type="text"
+                                                        placeholder="e.g. 4298XXXXXXXX (from your UPI app)"
+                                                        value={utrNumber}
+                                                        onChange={e => setUtrNumber(e.target.value)}
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: '8px 12px',
+                                                            borderRadius: '6px',
+                                                            border: '1px solid #93c5fd',
+                                                            fontSize: '13px',
+                                                            boxSizing: 'border-box'
+                                                        }}
+                                                    />
+                                                    <span style={{ fontSize: '11px', color: '#64748b', display: 'block', marginTop: '3px' }}>
+                                                        Enter the 12-digit UTR to get an instant 80G Tax Exemption Receipt.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {/* Direct Bank Transfer Box with 1-Click Copy Buttons */}
                                         {paymentChannel === 'bank_transfer' && (
@@ -1197,9 +1400,11 @@ export default function Donate() {
                                     ) : (
                                         <>
                                             <FaHeart /> {donationType === 'cash' 
-                                                ? (paymentChannel === 'bank_transfer' 
-                                                    ? `Record Bank Transfer & Get 80G Receipt (₹${Number(finalAmount).toLocaleString('en-IN')})` 
-                                                    : `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} via Secure Gateway`)
+                                                ? (paymentChannel === 'qr_code'
+                                                    ? `Record UPI Donation & Get 80G Receipt (₹${Number(finalAmount).toLocaleString('en-IN')})`
+                                                    : (paymentChannel === 'bank_transfer'
+                                                        ? `Record Bank Transfer & Get 80G Receipt (₹${Number(finalAmount).toLocaleString('en-IN')})` 
+                                                        : `Donate ₹${Number(finalAmount).toLocaleString('en-IN')} via SabPaisa Gateway`))
                                                 : `Submit Item Donation Support`}
                                         </>
                                     )}
