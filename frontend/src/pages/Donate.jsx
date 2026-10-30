@@ -808,8 +808,8 @@ export default function Donate() {
                                             gap: '6px'
                                         }}>
                                             <div style={{ textAlign: 'left', minWidth: 0 }}>
-                                                <span style={{ fontSize: '10px', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>UPI ID</span>
-                                                <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '12px' }}>340625862653482@cnrb</span>
+                                                <span style={{ fontSize: '10.5px', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '2px' }}>Official UPI ID</span>
+                                                <span style={{ fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif", fontWeight: '800', color: '#1d4ed8', fontSize: '13.5px', letterSpacing: '1px' }}>340625862653482@cnrb</span>
                                             </div>
                                             <button
                                                 type="button"
@@ -837,29 +837,52 @@ export default function Donate() {
                                     <h5 style={{ color: '#1e293b', fontSize: '14px', fontWeight: '700', marginBottom: '10px' }}>
                                         Official Trust Bank Transfer (NEFT / RTGS / IMPS)
                                     </h5>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px' }}>
-                                        <span><strong>Account Name:</strong> Kiran Charitable Trust</span>
-                                        <button type="button" onClick={() => handleCopy('Kiran Charitable Trust', 'sidebar_name', 'Account Name')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    {/* Sidebar Account Name */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0', background: '#ffffff', padding: '9px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                        <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                            <span style={{ fontSize: '10.5px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>Account Name</span>
+                                            <span style={{ fontSize: '13.5px', fontWeight: '700', color: '#0f172a', letterSpacing: '0.3px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>Kiran Charitable Trust</span>
+                                        </div>
+                                        <button type="button" onClick={() => handleCopy('Kiran Charitable Trust', 'sidebar_name', 'Account Name')} style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '5px', border: '1px solid #cbd5e1', background: '#f8fafc', color: '#1e293b', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600', flexShrink: 0 }}>
                                             {copiedKey === 'sidebar_name' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
                                         </button>
                                     </div>
-                                    <p style={{ margin: '6px 0', fontSize: '13px' }}><strong>Bank:</strong> Canara Bank</p>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#e0f2fe', padding: '6px 8px', borderRadius: '6px' }}>
-                                        <span><strong>Account No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>110319653482</span></span>
-                                        <button type="button" onClick={() => handleCopy('110319653482', 'sidebar_acc', 'Account Number')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #3b82f6', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+
+                                    {/* Sidebar Account No */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0', background: '#eff6ff', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #3b82f6' }}>
+                                        <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                            <span style={{ fontSize: '10.5px', color: '#1d4ed8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>Account No (Canara Bank)</span>
+                                            <span style={{ fontSize: '15px', fontWeight: '800', color: '#1e40af', letterSpacing: '2px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>110319653482</span>
+                                        </div>
+                                        <button type="button" onClick={() => handleCopy('110319653482', 'sidebar_acc', 'Account Number')} style={{ padding: '5px 12px', fontSize: '11px', borderRadius: '5px', border: 'none', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '700', flexShrink: 0, letterSpacing: '0.3px' }}>
                                             {copiedKey === 'sidebar_acc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
                                         </button>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#e0f2fe', padding: '6px 8px', borderRadius: '6px' }}>
-                                        <span><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8' }}>CNRB0002492</span></span>
-                                        <button type="button" onClick={() => handleCopy('CNRB0002492', 'sidebar_ifsc', 'IFSC Code')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #3b82f6', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+
+                                    {/* Sidebar IFSC */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0', background: '#eff6ff', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid #3b82f6' }}>
+                                        <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                            <span style={{ fontSize: '10.5px', color: '#1d4ed8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>IFSC Code</span>
+                                            <span style={{ fontSize: '15px', fontWeight: '800', color: '#1e40af', letterSpacing: '2px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>CNRB0002492</span>
+                                        </div>
+                                        <button type="button" onClick={() => handleCopy('CNRB0002492', 'sidebar_ifsc', 'IFSC Code')} style={{ padding: '5px 12px', fontSize: '11px', borderRadius: '5px', border: 'none', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '700', flexShrink: 0, letterSpacing: '0.3px' }}>
                                             {copiedKey === 'sidebar_ifsc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
                                         </button>
                                     </div>
-                                    <p style={{ margin: '6px 0', fontSize: '13px' }}><strong>Branch:</strong> Chandramouli Nagar (2492), Guntur</p>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px' }}>
-                                        <span><strong>SWIFT Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '600' }}>CNRBNBBBFD</span></span>
-                                        <button type="button" onClick={() => handleCopy('CNRBNBBBFD', 'sidebar_swift', 'SWIFT Code')} style={{ padding: '3px 8px', fontSize: '11px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+
+                                    {/* Sidebar Branch */}
+                                    <div style={{ margin: '8px 0', padding: '8px 12px', background: '#ffffff', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '12px', color: '#334155' }}>
+                                        <span style={{ fontSize: '10.5px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>Branch Location</span>
+                                        <span style={{ fontWeight: '600', color: '#0f172a', letterSpacing: '0.2px' }}>Chandramouli Nagar (2492), Guntur</span>
+                                    </div>
+
+                                    {/* Sidebar SWIFT */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '8px 0', background: '#ffffff', padding: '9px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                        <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                            <span style={{ fontSize: '10.5px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>SWIFT Code</span>
+                                            <span style={{ fontSize: '14px', fontWeight: '800', color: '#0f172a', letterSpacing: '2px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>CNRBNBBBFD</span>
+                                        </div>
+                                        <button type="button" onClick={() => handleCopy('CNRBNBBBFD', 'sidebar_swift', 'SWIFT Code')} style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '5px', border: '1px solid #cbd5e1', background: '#f8fafc', color: '#1e293b', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600', flexShrink: 0 }}>
                                             {copiedKey === 'sidebar_swift' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
                                         </button>
                                     </div>
@@ -1110,8 +1133,8 @@ export default function Donate() {
                                                     gap: '8px'
                                                 }}>
                                                     <div style={{ textAlign: 'left', minWidth: 0 }}>
-                                                        <span style={{ fontSize: '10.5px', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Official UPI ID</span>
-                                                        <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '14px', wordBreak: 'break-all' }}>340625862653482@cnrb</span>
+                                                        <span style={{ fontSize: '11px', color: '#64748b', display: 'block', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.8px', marginBottom: '3px' }}>Official UPI ID</span>
+                                                        <span style={{ fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif", fontWeight: '800', color: '#1d4ed8', fontSize: '16px', letterSpacing: '1.2px', wordBreak: 'break-all' }}>340625862653482@cnrb</span>
                                                     </div>
                                                     <button
                                                         type="button"
@@ -1179,34 +1202,191 @@ export default function Donate() {
                                                     Transfer directly using your mobile banking app or NetBanking. Use the <strong>Copy</strong> buttons:
                                                 </p>
                                                 
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1px solid #dcfce7' }}>
-                                                    <span><strong>Account Name:</strong> Kiran Charitable Trust</span>
-                                                    <button type="button" onClick={() => handleCopy('Kiran Charitable Trust', 'form_name', 'Account Name')} style={{ padding: '4px 10px', fontSize: '12px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#f8fafc', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                {/* Account Name */}
+                                                <div style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    margin: '10px 0',
+                                                    background: '#ffffff',
+                                                    padding: '11px 14px',
+                                                    borderRadius: '8px',
+                                                    border: '1.5px solid #cbd5e1',
+                                                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                                                }}>
+                                                    <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                                        <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block', marginBottom: '3px' }}>
+                                                            Account Name
+                                                        </span>
+                                                        <span style={{ fontSize: '15px', fontWeight: '700', color: '#0f172a', letterSpacing: '0.4px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+                                                            Kiran Charitable Trust
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleCopy('Kiran Charitable Trust', 'form_name', 'Account Name')}
+                                                        style={{
+                                                            padding: '6px 14px',
+                                                            fontSize: '12px',
+                                                            borderRadius: '6px',
+                                                            border: '1px solid #cbd5e1',
+                                                            background: '#f8fafc',
+                                                            color: '#1e293b',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '5px',
+                                                            fontWeight: '600',
+                                                            flexShrink: 0
+                                                        }}
+                                                    >
                                                         {copiedKey === 'form_name' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
                                                     </button>
                                                 </div>
 
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #3b82f6' }}>
-                                                    <span><strong>Account No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '15px' }}>110319653482</span></span>
-                                                    <button type="button" onClick={() => handleCopy('110319653482', 'form_acc', 'Account Number')} style={{ padding: '5px 12px', fontSize: '12px', borderRadius: '4px', border: 'none', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+                                                {/* Account Number */}
+                                                <div style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    margin: '10px 0',
+                                                    background: '#ffffff',
+                                                    padding: '11px 14px',
+                                                    borderRadius: '8px',
+                                                    border: '2px solid #2563eb',
+                                                    boxShadow: '0 2px 5px rgba(37, 99, 235, 0.08)'
+                                                }}>
+                                                    <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                                        <span style={{ fontSize: '11px', color: '#1d4ed8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block', marginBottom: '3px' }}>
+                                                            Account Number (Canara Bank)
+                                                        </span>
+                                                        <span style={{ fontSize: '17px', fontWeight: '800', color: '#1e40af', letterSpacing: '2px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+                                                            110319653482
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleCopy('110319653482', 'form_acc', 'Account Number')}
+                                                        style={{
+                                                            padding: '7px 15px',
+                                                            fontSize: '12px',
+                                                            borderRadius: '6px',
+                                                            border: 'none',
+                                                            background: '#1d4ed8',
+                                                            color: '#ffffff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '5px',
+                                                            fontWeight: '700',
+                                                            flexShrink: 0,
+                                                            letterSpacing: '0.3px'
+                                                        }}
+                                                    >
                                                         {copiedKey === 'form_acc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
                                                     </button>
                                                 </div>
 
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1.5px solid #3b82f6' }}>
-                                                    <span><strong>IFSC Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#1d4ed8', fontSize: '15px' }}>CNRB0002492</span></span>
-                                                    <button type="button" onClick={() => handleCopy('CNRB0002492', 'form_ifsc', 'IFSC Code')} style={{ padding: '5px 12px', fontSize: '12px', borderRadius: '4px', border: 'none', background: '#1d4ed8', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}>
+                                                {/* IFSC Code */}
+                                                <div style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    margin: '10px 0',
+                                                    background: '#ffffff',
+                                                    padding: '11px 14px',
+                                                    borderRadius: '8px',
+                                                    border: '2px solid #2563eb',
+                                                    boxShadow: '0 2px 5px rgba(37, 99, 235, 0.08)'
+                                                }}>
+                                                    <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                                        <span style={{ fontSize: '11px', color: '#1d4ed8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block', marginBottom: '3px' }}>
+                                                            IFSC Code
+                                                        </span>
+                                                        <span style={{ fontSize: '17px', fontWeight: '800', color: '#1e40af', letterSpacing: '2px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+                                                            CNRB0002492
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleCopy('CNRB0002492', 'form_ifsc', 'IFSC Code')}
+                                                        style={{
+                                                            padding: '7px 15px',
+                                                            fontSize: '12px',
+                                                            borderRadius: '6px',
+                                                            border: 'none',
+                                                            background: '#1d4ed8',
+                                                            color: '#ffffff',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '5px',
+                                                            fontWeight: '700',
+                                                            flexShrink: 0,
+                                                            letterSpacing: '0.3px'
+                                                        }}
+                                                    >
                                                         {copiedKey === 'form_ifsc' ? <><FaCheck /> Copied</> : <><FaCopy /> Copy</>}
                                                     </button>
                                                 </div>
 
-                                                <div style={{ margin: '6px 0', fontSize: '12.5px', color: '#334155' }}>
-                                                    <strong>Branch:</strong> Chandramouli Nagar (2492), Ring Road, Guntur - 522007
+                                                {/* Branch Info */}
+                                                <div style={{
+                                                    margin: '10px 0',
+                                                    padding: '11px 14px',
+                                                    background: '#ffffff',
+                                                    borderRadius: '8px',
+                                                    border: '1.5px solid #cbd5e1',
+                                                    fontSize: '13px',
+                                                    color: '#334155',
+                                                    lineHeight: 1.5
+                                                }}>
+                                                    <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block', marginBottom: '3px' }}>
+                                                        Branch Location
+                                                    </span>
+                                                    <span style={{ fontWeight: '600', color: '#0f172a', letterSpacing: '0.3px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+                                                        Chandramouli Nagar (2492), Ring Road, Guntur - 522007
+                                                    </span>
                                                 </div>
 
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '6px 0', fontSize: '13px', background: '#ffffff', padding: '8px 10px', borderRadius: '6px', border: '1px solid #dcfce7' }}>
-                                                    <span><strong>SWIFT Code:</strong> <span style={{ fontFamily: 'monospace', fontWeight: '700' }}>CNRBNBBBFD</span></span>
-                                                    <button type="button" onClick={() => handleCopy('CNRBNBBBFD', 'form_swift', 'SWIFT Code')} style={{ padding: '4px 10px', fontSize: '12px', borderRadius: '4px', border: '1px solid #cbd5e1', background: '#f8fafc', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                {/* SWIFT Code */}
+                                                <div style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    margin: '10px 0',
+                                                    background: '#ffffff',
+                                                    padding: '11px 14px',
+                                                    borderRadius: '8px',
+                                                    border: '1.5px solid #cbd5e1',
+                                                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                                                }}>
+                                                    <div style={{ textAlign: 'left', minWidth: 0 }}>
+                                                        <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block', marginBottom: '3px' }}>
+                                                            SWIFT Code (International)
+                                                        </span>
+                                                        <span style={{ fontSize: '15px', fontWeight: '800', color: '#0f172a', letterSpacing: '2px', fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+                                                            CNRBNBBBFD
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleCopy('CNRBNBBBFD', 'form_swift', 'SWIFT Code')}
+                                                        style={{
+                                                            padding: '6px 14px',
+                                                            fontSize: '12px',
+                                                            borderRadius: '6px',
+                                                            border: '1px solid #cbd5e1',
+                                                            background: '#f8fafc',
+                                                            color: '#1e293b',
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '5px',
+                                                            fontWeight: '600',
+                                                            flexShrink: 0
+                                                        }}
+                                                    >
                                                         {copiedKey === 'form_swift' ? <><FaCheck style={{ color: '#10b981' }} /> Copied</> : <><FaCopy /> Copy</>}
                                                     </button>
                                                 </div>
@@ -1598,12 +1778,13 @@ export default function Donate() {
                     {/* Copied UPI ID */}
                     <div style={{
                         background: '#eff6ff',
-                        border: '1px dashed #3b82f6',
-                        borderRadius: '6px',
-                        padding: '6px 10px',
-                        fontSize: '13px',
-                        fontFamily: 'monospace',
-                        fontWeight: '700',
+                        border: '1.5px dashed #3b82f6',
+                        borderRadius: '8px',
+                        padding: '8px 12px',
+                        fontSize: '15px',
+                        fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+                        fontWeight: '800',
+                        letterSpacing: '1.2px',
                         color: '#1d4ed8',
                         marginBottom: '10px',
                         wordBreak: 'break-all'
