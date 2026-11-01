@@ -18,6 +18,14 @@ import galleryHero1 from '../assets/hero1.png'
 import galleryHero3 from '../assets/hero3.png'
 import imgDonFood1 from '../assets/6370f4a620b583aed909dadf8fb377b0.jpg'
 import imgDonEdu1 from '../assets/childrens-home.jpg'
+import LogoProgEducation from '../assets/program_logos/prog_education.png'
+import LogoProgHealthcare from '../assets/program_logos/prog_healthcare.png'
+import LogoProgFood from '../assets/program_logos/prog_food.png'
+import LogoProgWomen from '../assets/program_logos/prog_women.png'
+import LogoProgDisaster from '../assets/program_logos/prog_disaster.png'
+import LogoProgBlood from '../assets/program_logos/prog_blood.png'
+import LogoProgAnimal from '../assets/program_logos/prog_animal.png'
+import LogoProgSenior from '../assets/program_logos/prog_senior.png'
 import './Home.css'
 
 /* ─── Hero Slides — Clean Solid Overlay, No Gradients ─── */
@@ -66,16 +74,16 @@ const causeTabs = [
     { label: 'Senior Citizens', path: '/causes/senior-citizens', icon: <FaUserFriends />, color: '#D97706' },
 ]
 
-/* ─── All 8 Activities ─── */
+/* ─── All 8 Activities with Real Official Program Logos ─── */
 const activities = [
-    { icon: <FaGraduationCap />, title: 'Children Education', desc: 'Scholarships, school bags, and learning supplies for rural children', color: 'var(--primary)', path: '/causes/education' },
-    { icon: <FaStethoscope />, title: 'Free Medical Camps', desc: 'Doctor consultations, health check-ups, and medicine distribution', color: '#E74C3C', path: '/causes/healthcare' },
-    { icon: <FaUtensils />, title: 'Food & Nutrition', desc: 'Fresh cooked meals & monthly grocery kits for needy families', color: '#27AE60', path: '/causes/food-distribution' },
-    { icon: <FaFemale />, title: 'Women Empowerment', desc: 'Vocational skill training & micro-entrepreneurship for women', color: '#9B59B6', path: '/causes/women-empowerment' },
-    { icon: <FaHome />, title: 'Disaster Emergency Aid', desc: 'Rapid emergency relief, clothes & kits during natural floods', color: '#E67E22', path: '/causes/disaster-relief' },
-    { icon: <FaTint />, title: 'Blood Donation Drives', desc: 'Organizing voluntary blood donation camps to save hospital patients', color: '#C0392B', path: '/causes/blood-donation' },
-    { icon: <FaPaw />, title: 'Animal Welfare', desc: 'Feeding, rescue, and veterinary care for stray animals', color: '#16A085', path: '/causes/animal-welfare' },
-    { icon: <FaUserFriends />, title: 'Senior Citizen Dignity', desc: 'Companionship, healthcare support, and nutrition for homeless elders', color: '#D97706', path: '/causes/senior-citizens' },
+    { logo: LogoProgEducation, title: 'Children Education', desc: 'Scholarships, school bags, and learning supplies for rural children', color: 'var(--primary)', path: '/causes/education' },
+    { logo: LogoProgHealthcare, title: 'Free Medical Camps', desc: 'Doctor consultations, health check-ups, and medicine distribution', color: '#E74C3C', path: '/causes/healthcare' },
+    { logo: LogoProgFood, title: 'Food & Nutrition', desc: 'Fresh cooked meals & monthly grocery kits for needy families', color: '#27AE60', path: '/causes/food-distribution' },
+    { logo: LogoProgWomen, title: 'Women Empowerment', desc: 'Vocational skill training & micro-entrepreneurship for women', color: '#9B59B6', path: '/causes/women-empowerment' },
+    { logo: LogoProgDisaster, title: 'Disaster Emergency Aid', desc: 'Rapid emergency relief, clothes & kits during natural floods', color: '#E67E22', path: '/causes/disaster-relief' },
+    { logo: LogoProgBlood, title: 'Blood Donation Drives', desc: 'Organizing voluntary blood donation camps to save hospital patients', color: '#C0392B', path: '/causes/blood-donation' },
+    { logo: LogoProgAnimal, title: 'Animal Welfare', desc: 'Feeding, rescue, and veterinary care for stray animals', color: '#16A085', path: '/causes/animal-welfare' },
+    { logo: LogoProgSenior, title: 'Senior Citizen Dignity', desc: 'Companionship, healthcare support, and nutrition for homeless elders', color: '#D97706', path: '/causes/senior-citizens' },
 ]
 
 const stats = [
@@ -90,19 +98,19 @@ const latestActivities = [
         title: 'Blood Donation Camp 2026',
         date: 'June 15, 2026',
         desc: 'Organized a major blood donation camp with 60+ voluntary donors in Guntur & Palnadu districts, supplying local blood banks.',
-        icon: <FaTint />, color: '#C0392B',
+        logo: LogoProgBlood, color: '#C0392B',
     },
     {
         title: 'Monsoon Ration Relief Drive',
         date: 'July 2, 2026',
         desc: 'Distributed dry ration kits and essential hygiene supplies to 150+ families affected by seasonal flooding.',
-        icon: <FaHandsHelping />, color: 'var(--primary)',
+        logo: LogoProgDisaster, color: 'var(--primary)',
     },
     {
         title: 'Free Rural Health Camp',
         date: 'July 20, 2026',
         desc: 'Provided free health check-ups, eye screenings, and medicines to over 200 rural villagers and elderly citizens.',
-        icon: <FaStethoscope />, color: '#E74C3C',
+        logo: LogoProgHealthcare, color: '#E74C3C',
     },
 ]
 
@@ -379,8 +387,8 @@ export default function Home() {
                     <div className="activities-grid-home">
                         {activities.map((act, i) => (
                             <Link key={i} to={act.path} className="activity-card-home" style={{ '--card-color': act.color }}>
-                                <div className="activity-icon-home" style={{ background: act.color + '15', color: act.color }}>
-                                    {act.icon}
+                                <div className="activity-icon-home" style={{ background: '#ffffff', boxShadow: '0 3px 12px rgba(0,0,0,0.06)', border: '1.5px solid #e2e8f0', padding: '6px' }}>
+                                    <img src={act.logo} alt={act.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                 </div>
                                 <h3>{act.title}</h3>
                                 <p>{act.desc}</p>
@@ -432,9 +440,11 @@ export default function Home() {
                     <div className="latest-grid">
                         {latestActivities.map((act, i) => (
                             <div key={i} className="latest-card card">
-                                <div className="latest-card-top" style={{ background: act.color + '15', borderBottom: `3px solid ${act.color}` }}>
-                                    <div className="latest-icon" style={{ background: act.color, color: 'white' }}>{act.icon}</div>
-                                    <div className="latest-date"><FaCalendarAlt /> {act.date}</div>
+                                <div className="latest-card-top" style={{ background: '#ffffff', borderBottom: `3px solid ${act.color}`, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div className="latest-icon" style={{ background: '#f8fafc', border: '1px solid #e2e8f0', width: '52px', height: '52px', padding: '6px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <img src={act.logo} alt={act.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                    </div>
+                                    <div className="latest-date" style={{ color: '#64748b', fontSize: '13px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}><FaCalendarAlt /> {act.date}</div>
                                 </div>
                                 <div className="latest-card-body">
                                     <h3>{act.title}</h3>

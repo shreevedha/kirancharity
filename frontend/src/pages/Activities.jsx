@@ -1,10 +1,18 @@
 import { FaHeart, FaGraduationCap, FaStethoscope, FaUtensils, FaFemale, FaHandsHelping, FaTint, FaPaw, FaUserFriends, FaArrowRight, FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import LogoProgEducation from '../assets/program_logos/prog_education.png'
+import LogoProgHealthcare from '../assets/program_logos/prog_healthcare.png'
+import LogoProgFood from '../assets/program_logos/prog_food.png'
+import LogoProgWomen from '../assets/program_logos/prog_women.png'
+import LogoProgDisaster from '../assets/program_logos/prog_disaster.png'
+import LogoProgBlood from '../assets/program_logos/prog_blood.png'
+import LogoProgAnimal from '../assets/program_logos/prog_animal.png'
+import LogoProgSenior from '../assets/program_logos/prog_senior.png'
 import './Activities.css'
 
 const activitiesList = [
     {
-        icon: <FaGraduationCap />,
+        logo: LogoProgEducation,
         color: 'var(--primary)',
         title: 'Education Support',
         tag: 'Education',
@@ -14,7 +22,7 @@ const activitiesList = [
         highlights: ['Scholarships for 100+ students annually', 'Free stationery & school kits', 'Evening coaching classes', 'Computer literacy programs'],
     },
     {
-        icon: <FaStethoscope />,
+        logo: LogoProgHealthcare,
         color: '#E74C3C',
         title: 'Free Medical Camps',
         tag: 'Healthcare',
@@ -24,7 +32,7 @@ const activitiesList = [
         highlights: ['Free OPD with specialist doctors', 'Free medicines & diagnostics', 'Eye check-up & spectacles', 'Dental camps & awareness'],
     },
     {
-        icon: <FaUtensils />,
+        logo: LogoProgFood,
         color: '#27AE60',
         title: 'Food Distribution',
         tag: 'Food Security',
@@ -34,7 +42,7 @@ const activitiesList = [
         highlights: ['500+ meals distributed weekly', 'Monthly ration kits for 200 families', 'School mid-day meal support', 'Festival special distribution'],
     },
     {
-        icon: <FaFemale />,
+        logo: LogoProgWomen,
         color: '#9B59B6',
         title: 'Women Empowerment',
         tag: 'Women',
@@ -44,7 +52,7 @@ const activitiesList = [
         highlights: ['Stitching & tailoring classes', 'Self-help group formation', 'Legal rights awareness', 'Micro-finance assistance'],
     },
     {
-        icon: <FaHandsHelping />,
+        logo: LogoProgDisaster,
         color: '#E67E22',
         title: 'Disaster Relief',
         tag: 'Relief',
@@ -54,7 +62,7 @@ const activitiesList = [
         highlights: ['Emergency food & water kits', 'Medical aid deployment', 'Rehabilitation support', 'Psychological first aid'],
     },
     {
-        icon: <FaTint />,
+        logo: LogoProgBlood,
         color: '#C0392B',
         title: 'Blood Donation Camp',
         tag: 'Healthcare',
@@ -64,7 +72,7 @@ const activitiesList = [
         highlights: ['150+ units collected per camp', 'Hospital partnerships', 'Donor health screening', 'Blood group awareness'],
     },
     {
-        icon: <FaPaw />,
+        logo: LogoProgAnimal,
         color: '#16A085',
         title: 'Animal Welfare',
         tag: 'Animals',
@@ -74,7 +82,7 @@ const activitiesList = [
         highlights: ['Street animal feeding daily', 'Veterinary care & rescue', 'Adoption drives', 'Anti-cruelty awareness'],
     },
     {
-        icon: <FaUserFriends />,
+        logo: LogoProgSenior,
         color: '#D97706',
         title: 'Old Age Support',
         tag: 'Senior Citizens',
@@ -109,8 +117,8 @@ export default function Activities() {
                         {activitiesList.map((act, i) => (
                             <div key={i} className={`activity-item ${i % 2 === 1 ? 'reverse' : ''}`}>
                                 <div className="activity-item-visual" style={{ background: act.color + '10', borderColor: act.color + '30' }}>
-                                    <div className="act-icon-large" style={{ background: act.color + '15', color: act.color }}>
-                                        {act.icon}
+                                    <div className="act-icon-large" style={{ background: '#ffffff', border: '1.5px solid #e2e8f0', padding: '8px', boxShadow: '0 4px 14px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <img src={act.logo} alt={act.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                     </div>
                                     <div className="act-meta">
                                         <span className="act-tag" style={{ background: act.color + '20', color: act.color }}>
