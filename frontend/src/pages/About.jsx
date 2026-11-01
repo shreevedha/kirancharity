@@ -5,6 +5,12 @@ import ChairmanImg from '../assets/Pallepogu Kiranbabu Chairman.jpeg'
 import TreasurerImg from '../assets/Srungarapati Rakesh Treasurer.jpeg'
 import ViceChairmanImg from '../assets/Konda Ravi Teja Vice Chairman.png'
 import ExecutiveImg from '../assets/Konda Ravi Bharath Executive.png'
+import Logo12A from '../assets/compliance_logos/logo_12a.png'
+import Logo80G from '../assets/compliance_logos/logo_80g.png'
+import LogoDarpan from '../assets/compliance_logos/logo_darpan.png'
+import LogoTrustDeed from '../assets/compliance_logos/logo_trust_deed.png'
+import LogoPan from '../assets/compliance_logos/pan_card_preview.png'
+import LogoCanara from '../assets/compliance_logos/logo_canara.png'
 
 const timeline = [
     { year: 'Jan 2026', title: 'Foundation', desc: 'Kiran Charitable Trust was established in Guntur & Palnadu districts, Andhra Pradesh, with a mission to serve humanity.' },
@@ -214,50 +220,85 @@ export default function About() {
                         <div className="title-underline"><span /><span /><span /></div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', marginTop: '30px' }}>
-                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
-                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>📜</div>
-                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>12A Registration</h4>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Provisional Registration Order u/s 332 (URN: AAGTK5575QE20261)</p>
+                        {/* 12A Registration */}
+                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <img src={Logo12A} alt="Income Tax Department 12A" style={{ maxHeight: '66px', maxWidth: '130px', objectFit: 'contain' }} />
+                                </div>
+                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>12A Registration</h4>
+                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Provisional Registration Order u/s 332 (URN: <strong>AAGTK5575QE20261</strong>)</p>
+                            </div>
                             <a href="/documents/12A-332(8).pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
                                 View 12A PDF
                             </a>
                         </div>
-                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
-                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🛡️</div>
-                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>80G Tax Exemption</h4>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Income Tax Exemption Approval u/s 354 (URN: AAGTK5575QF20261)</p>
+
+                        {/* 80G Tax Exemption */}
+                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <img src={Logo80G} alt="Income Tax Department 80G" style={{ maxHeight: '66px', maxWidth: '130px', objectFit: 'contain' }} />
+                                </div>
+                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>80G Tax Exemption</h4>
+                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Income Tax Exemption Approval u/s 354 (URN: <strong>AAGTK5575QF20261</strong>)</p>
+                            </div>
                             <a href="/documents/80G-354(4).pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
                                 View 80G PDF
                             </a>
                         </div>
-                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
-                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🏛️</div>
-                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>NGO DARPAN Registration</h4>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>NITI Aayog, Govt. of India (Unique ID: <strong>AP/2026/1134813</strong>)</p>
+
+                        {/* NGO DARPAN Registration */}
+                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <img src={LogoDarpan} alt="NITI Aayog NGO DARPAN" style={{ maxHeight: '66px', maxWidth: '140px', objectFit: 'contain' }} />
+                                </div>
+                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>NGO DARPAN Registration</h4>
+                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>NITI Aayog, Govt. of India (Unique ID: <strong>AP/2026/1134813</strong>)</p>
+                            </div>
                             <a href="/documents/ngo_darpan_certificate.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
                                 View DARPAN PDF
                             </a>
                         </div>
-                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
-                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>📜</div>
-                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Trust Deed Certificate</h4>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Registered under The Indian Trusts Act, 1882 (Govt. of AP)</p>
+
+                        {/* Trust Deed Certificate */}
+                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <img src={LogoTrustDeed} alt="Govt of Andhra Pradesh Emblem" style={{ maxHeight: '66px', maxWidth: '130px', objectFit: 'contain' }} />
+                                </div>
+                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>Trust Deed Certificate</h4>
+                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Registered under The Indian Trusts Act, 1882 (Govt. of AP)</p>
+                            </div>
                             <a href="/documents/trust_deed.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
                                 View Trust Deed PDF
                             </a>
                         </div>
-                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
-                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>💳</div>
-                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Trust PAN Card</h4>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Permanent Account Number: <strong>AAGTK5575Q</strong></p>
+
+                        {/* Trust PAN Card */}
+                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <img src={LogoPan} alt="Income Tax Trust PAN Card" style={{ maxHeight: '56px', maxWidth: '115px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }} />
+                                </div>
+                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>Trust PAN Card</h4>
+                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Permanent Account Number: <strong>AAGTK5575Q</strong></p>
+                            </div>
                             <a href="/documents/Trust_Pan_Card.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
                                 View PAN Card
                             </a>
                         </div>
-                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
-                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🏛️</div>
-                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Bank Verification</h4>
-                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Canara Bank Current A/C (A/C: 110319653482, IFSC: CNRB0002492)</p>
+
+                        {/* Bank Verification */}
+                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                            <div>
+                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                                    <img src={LogoCanara} alt="Canara Bank Official Logo" style={{ maxHeight: '44px', maxWidth: '150px', objectFit: 'contain' }} />
+                                </div>
+                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>Bank Verification</h4>
+                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Canara Bank Current A/C (A/C: 110319653482, IFSC: CNRB0002492)</p>
+                            </div>
                             <a href="/documents/kiran_charitable_trust_account_statement.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
                                 View Statement
                             </a>
