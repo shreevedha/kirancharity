@@ -47,8 +47,7 @@ export default function Footer() {
                             <li><Link to="/founder-desk">Founder Desk</Link></li>
                             <li><Link to="/activities">Our Activities</Link></li>
                             <li><Link to="/gallery">Gallery</Link></li>
-                            <li><Link to="/careers">Careers</Link></li>
-                            <li><Link to="/donate">Donate</Link></li>
+                                                        <li><Link to="/donate">Donate</Link></li>
                             <li><Link to="/contact">Contact Us</Link></li>
                         </ul>
                     </div>
@@ -58,7 +57,7 @@ export default function Footer() {
                         <h4>Support Us</h4>
                         <ul className="footer-links">
                             <li><Link to="/donate">Make a Donation</Link></li>
-                            <li><Link to="/careers">Careers & Volunteers</Link></li>
+                            <li><Link to="/about">Trust Documents & Approvals</Link></li>
                             <li><Link to="/privacy-policy">Privacy Policy</Link></li>
                             <li><Link to="/terms-conditions">Terms & Conditions</Link></li>
                         </ul>

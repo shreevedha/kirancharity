@@ -32,16 +32,7 @@ const metaByPath = {
         description: 'Verified photographs of our on-ground food distribution, blood donation camps, school supply drives, and community welfare programs across Andhra Pradesh.',
         keywords: 'Kiran Charitable Trust Photos, Field Work Gallery, Charity Events Proof, Guntur NGO Activities'
     },
-    '/volunteers': {
-        title: 'Join as Volunteer or Team Member | Kiran Charitable Trust',
-        description: 'Be part of a compassionate humanitarian movement. Apply to volunteer or work with Kiran Charitable Trust across Guntur & Palnadu districts.',
-        keywords: 'Volunteer Kiran Trust, NGO Careers Andhra Pradesh, Social Work Guntur, Join NGO India'
-    },
-    '/careers': {
-        title: 'Careers & Volunteering Opportunities | Kiran Charitable Trust',
-        description: 'Be part of a compassionate humanitarian movement. Apply to volunteer or work with Kiran Charitable Trust across Guntur & Palnadu districts.',
-        keywords: 'Volunteer Kiran Trust, NGO Careers Andhra Pradesh, Social Work Guntur, Join NGO India'
-    },
+
     '/contact': {
         title: 'Contact Us | Kiran Charitable Trust | Guntur, Andhra Pradesh',
         description: 'Get in touch with Kiran Charitable Trust: Mandepudi Post, Amaravathi Mandal, Palnadu / Guntur - 522018. Phone: +91 7702468889, Email: contact@kirancharitabletrust.org.',

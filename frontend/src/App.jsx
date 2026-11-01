@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -38,8 +38,8 @@ function App() {
           <Route path="/founder-desk" element={<FounderDesk />} />
           <Route path="/activities" element={<Activities />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/volunteers" element={<Volunteers />} />
-          <Route path="/careers" element={<Volunteers />} />
+          <Route path="/volunteers" element={<Navigate to="/contact" replace />} />
+          <Route path="/careers" element={<Navigate to="/contact" replace />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

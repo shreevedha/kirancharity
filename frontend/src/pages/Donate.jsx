@@ -1,3 +1,8 @@
+import Logo12A from '../assets/compliance_logos/logo_12a.png'
+import Logo80G from '../assets/compliance_logos/logo_80g.png'
+import LogoDarpan from '../assets/compliance_logos/logo_darpan.png'
+import LogoTrustDeed from '../assets/compliance_logos/logo_trust_deed.png'
+import LogoPan from '../assets/compliance_logos/pan_card_preview.png'
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast, ToastContainer } from 'react-toastify'
@@ -889,29 +894,31 @@ export default function Donate() {
                                         </button>
                                     </div>
                                     <div style={{ marginTop: "14px", background: "#eff6ff", padding: "14px", borderRadius: "8px", border: "1px solid #bfdbfe" }}>
-                                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#1e40af", marginBottom: "4px" }}>⚡ Instant UPI & Card Donations:</div>
+                                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#1e40af", marginBottom: "4px", display: "flex", alignItems: "center", gap: "6px" }}><FaShieldAlt style={{ color: "#2563eb" }} /> Instant UPI & Card Donations:</div>
                                         <div style={{ fontSize: "12px", color: "#1e3a8a", lineHeight: 1.6 }}>To donate via <strong>PhonePe, Google Pay, Paytm, UPI QR, or Cards</strong> with an instant 80G tax receipt, fill the form on the right and click <strong>&quot;Proceed to Secure Payment&quot;</strong>.</div>
                                     </div>
                                     <div style={{ marginTop: '14px', borderTop: '1px dashed #cbd5e1', paddingTop: '10px' }}>
                                         <div style={{ fontSize: '12px', fontWeight: '700', color: '#1e293b', marginBottom: '8px' }}>Official Trust Documents</div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                            <a href="/documents/12A-332(8).pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                📄 12A Registration Order (Form 106)
+                                            <a href="/documents/12A-332(8).pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#1e40af', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '500' }}>
+                                                <img src={Logo12A} alt="12A Logo" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                                <span>12A Registration Order (Form 106)</span>
                                             </a>
-                                            <a href="/documents/80G-354(4).pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                📄 80G Tax Exemption Approval (Form 106)
+                                            <a href="/documents/80G-354(4).pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#1e40af', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '500' }}>
+                                                <img src={Logo80G} alt="80G Logo" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                                <span>80G Tax Exemption Approval (Form 106)</span>
                                             </a>
-                                            <a href="/documents/Trust_Pan_Card.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                📄 Trust PAN Card (AAGTK5575Q)
+                                            <a href="/documents/ngo_darpan_certificate.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#1e40af', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '500' }}>
+                                                <img src={LogoDarpan} alt="NGO DARPAN Logo" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                                <span>NGO DARPAN Registration (NITI Aayog)</span>
                                             </a>
-                                            <a href="/documents/ngo_darpan_certificate.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                🏛️ NGO DARPAN Registration (NITI Aayog)
+                                            <a href="/documents/trust_deed.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#1e40af', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '500' }}>
+                                                <img src={LogoTrustDeed} alt="Trust Deed Logo" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                                <span>Registered Trust Deed of Declaration</span>
                                             </a>
-                                            <a href="/documents/trust_deed.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                📜 Registered Trust Deed of Declaration
-                                            </a>
-                                            <a href="/documents/kiran_charitable_trust_account_statement.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                📄 Canara Bank Account Verification
+                                            <a href="/documents/Trust_Pan_Card.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#1e40af', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px', fontWeight: '500' }}>
+                                                <img src={LogoPan} alt="PAN Logo" style={{ width: '20px', height: '12px', objectFit: 'cover', borderRadius: '2px', border: '1px solid #cbd5e1' }} />
+                                                <span>Trust PAN Card (AAGTK5575Q)</span>
                                             </a>
                                         </div>
                                     </div>
@@ -1073,14 +1080,29 @@ export default function Donate() {
                                                     boxShadow: '0 1px 4px rgba(37, 99, 235, 0.12)'
                                                 }}
                                             >
-                                                <option value="online">⚡ Online Payments (UPI, Cards, NetBanking)</option>
-                                                <option value="qr_code">📱 Direct UPI QR &amp; UPI ID</option>
-                                                <option value="bank_transfer">🏛️ Direct Bank Transfer</option>
+                                                <option value="online">Online Payments (UPI, Cards, NetBanking)</option>
+                                                <option value="qr_code">Direct UPI QR &amp; UPI ID</option>
+                                                <option value="bank_transfer">Direct Bank Transfer (NEFT / IMPS / RTGS)</option>
                                             </select>
-                                            <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '5px', lineHeight: 1.4 }}>
-                                                {paymentChannel === 'online' && '⚡ Instant Online Gateway (SabPaisa): UPI Apps, QR, Cards & NetBanking'}
-                                                {paymentChannel === 'qr_code' && '📱 Instant scan with PhonePe, Google Pay, Paytm, BHIM & Canara ai1'}
-                                                {paymentChannel === 'bank_transfer' && '🏛️ Direct NEFT / RTGS / IMPS into Canara Bank account'}
+                                            <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', lineHeight: 1.4 }}>
+                                                {paymentChannel === 'online' && (
+                                                    <>
+                                                        <FaShieldAlt style={{ color: '#2563eb', flexShrink: 0 }} />
+                                                        <span>Instant Online Gateway (SabPaisa): UPI Apps, QR, Cards &amp; NetBanking</span>
+                                                    </>
+                                                )}
+                                                {paymentChannel === 'qr_code' && (
+                                                    <>
+                                                        <FaQrcode style={{ color: '#2563eb', flexShrink: 0 }} />
+                                                        <span>Instant scan with PhonePe, Google Pay, Paytm, BHIM &amp; Canara ai1</span>
+                                                    </>
+                                                )}
+                                                {paymentChannel === 'bank_transfer' && (
+                                                    <>
+                                                        <FaUniversity style={{ color: '#2563eb', flexShrink: 0 }} />
+                                                        <span>Direct NEFT / RTGS / IMPS into Canara Bank account</span>
+                                                    </>
+                                                )}
                                             </p>
                                         </div>
 

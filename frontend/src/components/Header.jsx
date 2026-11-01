@@ -10,7 +10,6 @@ const navLinks = [
     { path: '/activities', label: 'Our Programs' },
     { path: '/founder-desk', label: "Founder's Message" },
     { path: '/gallery', label: 'Field Gallery' },
-    { path: '/careers', label: 'Join as Volunteer' },
     { path: '/contact', label: 'Contact Us' },
 ]
 

@@ -229,8 +229,8 @@ export default function Home() {
                         <Link to="/donate" className="btn btn-primary">
                             <FaHeart /> Donate Now
                         </Link>
-                        <Link to="/careers" className="btn btn-secondary">
-                            <FaUsers /> Join as Volunteer
+                        <Link to="/activities" className="btn btn-secondary">
+                            <FaArrowRight /> Explore Programs
                         </Link>
                     </div>
                 </div>
@@ -544,7 +544,7 @@ export default function Home() {
                     <p>Your contribution directly provides food, medical care, and education to children and families across Andhra Pradesh. All donations are 80G tax deductible.</p>
                     <div className="cta-btns">
                         <Link to="/donate" className="btn btn-primary"><FaHeart /> Make a Donation</Link>
-                        <Link to="/careers" className="btn btn-secondary"><FaUsers /> Join as Volunteer</Link>
+                        <Link to="/contact" className="btn btn-secondary"><FaPhone /> Contact Us</Link>
                     </div>
                 </div>
             </section>

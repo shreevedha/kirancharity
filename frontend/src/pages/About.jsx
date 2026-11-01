@@ -10,7 +10,6 @@ import Logo80G from '../assets/compliance_logos/logo_80g.png'
 import LogoDarpan from '../assets/compliance_logos/logo_darpan.png'
 import LogoTrustDeed from '../assets/compliance_logos/logo_trust_deed.png'
 import LogoPan from '../assets/compliance_logos/pan_card_preview.png'
-import LogoCanara from '../assets/compliance_logos/logo_canara.png'
 
 const timeline = [
     { year: 'Jan 2026', title: 'Foundation', desc: 'Kiran Charitable Trust was established in Guntur & Palnadu districts, Andhra Pradesh, with a mission to serve humanity.' },
@@ -290,19 +289,7 @@ export default function About() {
                             </a>
                         </div>
 
-                        {/* Bank Verification */}
-                        <div className="card" style={{ padding: '24px 20px', borderRadius: '14px', border: '1.5px solid #e2e8f0', background: '#ffffff', textAlign: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                            <div>
-                                <div style={{ height: '72px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
-                                    <img src={LogoCanara} alt="Canara Bank Official Logo" style={{ maxHeight: '44px', maxWidth: '150px', objectFit: 'contain' }} />
-                                </div>
-                                <h4 style={{ fontSize: '17px', fontWeight: '700', color: '#0f172a', marginBottom: '8px' }}>Bank Verification</h4>
-                                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Canara Bank Current A/C (A/C: 110319653482, IFSC: CNRB0002492)</p>
-                            </div>
-                            <a href="/documents/kiran_charitable_trust_account_statement.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
-                                View Statement
-                            </a>
-                        </div>
+
                     </div>
                 </div>
             </section>
