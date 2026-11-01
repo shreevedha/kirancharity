@@ -127,7 +127,7 @@ const testimonials = [
     }
 ]
 
-const sponsors = ["80G Certified", "12A Approved", "Regd. NGO AP", "100% Transparent", "Guntur & Palnadu Based"]
+const sponsors = ["80G Certified", "12A Approved", "NGO DARPAN Regd", "100% Transparent", "Guntur & Palnadu Based"]
 
 function SafeCountUp({ end, duration = 2.5 }) {
     const [count, setCount] = useState(0);

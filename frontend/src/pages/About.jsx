@@ -231,6 +231,22 @@ export default function About() {
                             </a>
                         </div>
                         <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
+                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>🏛️</div>
+                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>NGO DARPAN Registration</h4>
+                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>NITI Aayog, Govt. of India (Unique ID: <strong>AP/2026/1134813</strong>)</p>
+                            <a href="/documents/ngo_darpan_certificate.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                                View DARPAN PDF
+                            </a>
+                        </div>
+                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
+                            <div style={{ fontSize: '32px', marginBottom: '10px' }}>📜</div>
+                            <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Trust Deed Certificate</h4>
+                            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Registered under The Indian Trusts Act, 1882 (Govt. of AP)</p>
+                            <a href="/documents/trust_deed.pdf" target="_blank" rel="noreferrer" className="btn btn-outline" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                                View Trust Deed PDF
+                            </a>
+                        </div>
+                        <div className="card" style={{ padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', textAlign: 'center' }}>
                             <div style={{ fontSize: '32px', marginBottom: '10px' }}>💳</div>
                             <h4 style={{ fontSize: '17px', fontWeight: '700', marginBottom: '8px' }}>Trust PAN Card</h4>
                             <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Permanent Account Number: <strong>AAGTK5575Q</strong></p>

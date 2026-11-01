@@ -753,6 +753,8 @@ export default function Donate() {
                                     <li><FaCheckCircle /> <strong>Trust PAN:</strong> AAGTK5575Q</li>
                                     <li><FaCheckCircle /> <strong>12A URN:</strong> AAGTK5575QE20261 (Order u/s 332)</li>
                                     <li><FaCheckCircle /> <strong>80G URN:</strong> AAGTK5575QF20261 (Approval u/s 354)</li>
+                                    <li><FaCheckCircle /> <strong>NGO DARPAN ID:</strong> AP/2026/1134813 (NITI Aayog, Active)</li>
+                                    <li><FaCheckCircle /> <strong>Trust Deed:</strong> Registered under The Indian Trusts Act, 1882</li>
                                     <li><FaCheckCircle /> <strong>Application No:</strong> 715954770021026</li>
                                     <li><FaCheckCircle /> <strong>Tax Validity:</strong> AY 2026-27 to AY 2028-29</li>
                                 </ul>
@@ -901,6 +903,12 @@ export default function Donate() {
                                             </a>
                                             <a href="/documents/Trust_Pan_Card.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                                 📄 Trust PAN Card (AAGTK5575Q)
+                                            </a>
+                                            <a href="/documents/ngo_darpan_certificate.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                🏛️ NGO DARPAN Registration (NITI Aayog)
+                                            </a>
+                                            <a href="/documents/trust_deed.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                📜 Registered Trust Deed of Declaration
                                             </a>
                                             <a href="/documents/kiran_charitable_trust_account_statement.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '12px', color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
                                                 📄 Canara Bank Account Verification
